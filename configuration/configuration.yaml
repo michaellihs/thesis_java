@@ -1,0 +1,15 @@
+LoggerClass: de.mknoll.thesis.framework.logger.ConsoleLogger
+BaseDirectory: /Users/mimi/Dropbox/Diplomarbeit/Framework/Testruns/
+Tests:
+  - 
+    Class: de.mknoll.thesis.tests.newman.NewmanTest
+    PostgresDsn: jdbc:postgresql://localhost/recdata
+    PostgresUser: bibtip
+    PostgresPassword: bibtip
+    PostgresRecTable: recommendationtime
+    PostgresDescTable: descriptions
+    Neo4jUrl: http://localhost:7474/db/data/
+#  - 
+#   Class: de.mknoll.thesis.tests.rgmc.RandomizedGreedyModularityTest
+#  - 
+#   Class: Testclass30
