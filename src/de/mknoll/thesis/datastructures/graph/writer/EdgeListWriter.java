@@ -4,11 +4,9 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.HashMap;
 
-import org.picocontainer.annotations.Inject;
-
-import de.mknoll.thesis.datastructures.graph.DefaultIdProvider;
+import de.mknoll.thesis.datastructures.graph.DefaultNamespaces;
+import de.mknoll.thesis.datastructures.graph.IdNodeMap;
 import de.mknoll.thesis.datastructures.graph.IdProvider;
 import de.mknoll.thesis.datastructures.graph.Recommendation;
 import de.mknoll.thesis.datastructures.graph.RecommendationGraph;
@@ -24,10 +22,9 @@ import de.mknoll.thesis.framework.logger.LoggerInterface;
 public class EdgeListWriter implements GraphWriter {
 	
 	/**
-	 * Holds ID provider which gets an id from a given recommendation
-	 * @Inject
+	 * Holds ID node map
 	 */
-	private IdProvider idProvider;
+	private IdNodeMap idNodeMap;
 	
 	
 	
@@ -61,13 +58,9 @@ public class EdgeListWriter implements GraphWriter {
 	 * TODO add optional parameters for
 	 * - delimiter = string to separate vertices in edgelist
 	 * - newline = string to separate one line from another
-	 * - idProviderClass = class name of id provider
-	 * 
-	 * @param configuration
 	 */
-	public EdgeListWriter(LoggerInterface logger, IdProvider idProvider) {
+	public EdgeListWriter(LoggerInterface logger) {
 		this.logger = logger;
-		this.idProvider = idProvider;
 	}
 	
 	
@@ -80,7 +73,9 @@ public class EdgeListWriter implements GraphWriter {
 	 * @throws Exception
 	 * @Override 
 	 */
-	 public void write(RecommendationGraph graph, String destination) throws Exception {
+	public void write(RecommendationGraph graph, String destination) throws Exception {
+		
+		this.idNodeMap = graph.getIdNodeMap(); 
 		 
 		// Try to get export path 
 		String fileName = destination;
@@ -116,11 +111,17 @@ public class EdgeListWriter implements GraphWriter {
 	 */
 	protected void writeGraphToStream(RecommendationGraph graph, Writer out) throws IOException {
 		for(Recommendation recommendation : graph.getAllRecommendations()) {
-			String edge = this.idProvider.getId(recommendation.getSourceRecommendation()) + 
+			/*String edge = this.idProvider.getId(recommendation.getSourceRecommendation()) + 
 					this.delimiter + 
 					this.idProvider.getId(recommendation.getTargetRecommendation()) + 
-					this.newLine;
+					this.newLine;*/
 			// this.logger.log("Writing edge: " + edge);
+			
+			String edge = this.idNodeMap.getInternalIdByNamespaceAndExternalId(DefaultNamespaces.BIBTIP, recommendation.getSourceRecommendation().getDocId()).toString() +
+					this.delimiter + 
+					this.idNodeMap.getInternalIdByNamespaceAndExternalId(DefaultNamespaces.BIBTIP, recommendation.getTargetRecommendation().getDocId()).toString() +
+					this.newLine;
+			
 			out.write(edge);
 		}
 	}

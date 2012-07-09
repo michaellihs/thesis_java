@@ -21,10 +21,8 @@ import de.mknoll.thesis.datastructures.dendrogram.XmlDendrogramWriter;
 import de.mknoll.thesis.datastructures.graph.DefaultIdNodeMap;
 import de.mknoll.thesis.datastructures.graph.IdNodeMap;
 import de.mknoll.thesis.datastructures.graph.IdProvider;
-import de.mknoll.thesis.datastructures.graph.IdentifierRecommenderObjectMap;
 import de.mknoll.thesis.datastructures.graph.RecommendationGraph;
 import de.mknoll.thesis.datastructures.graph.RecommenderObject;
-import de.mknoll.thesis.datastructures.graph.UniqueIdProvider;
 import de.mknoll.thesis.datastructures.graph.reader.GraphReader;
 import de.mknoll.thesis.datastructures.graph.reader.PostgresReader;
 import de.mknoll.thesis.datastructures.graph.writer.EdgeListWriter;
@@ -99,13 +97,6 @@ public class NewmanTest extends AbstractTest {
 	
 	
 	/**
-	 * Holds unique ID provider from which we can get ID mapping after exporting edgelist
-	 */
-	private UniqueIdProvider uniqueIdProvider;
-	
-	
-	
-	/**
 	 * Actually runs the test itself.
 	 * @throws Exception 
 	 * 
@@ -126,9 +117,11 @@ public class NewmanTest extends AbstractTest {
 		
 		
 		// Write recommendation graph to Neo4J graph database
+		/*
 		this.logger.log("Writing recommendation graph to N4J database...");
 		Neo4jWriter n4jWriter = new Neo4jWriter();
 		n4jWriter.write(this.recommendationGraph, this.testConfiguration.getNeo4jUrl());
+		*/
 
 		
 		// Writing recommendation graph to an edge list file required by Newman algorithm implementation
@@ -147,8 +140,9 @@ public class NewmanTest extends AbstractTest {
 		
 		
 		// Read cluster results (dendrogram) from Newman algorithm into datastructure
-		String dendrogramFile = this.fileManager.getCurrentResultsPath() + FILE_NAME + "-fc_a.joins"; 
-		NewmanJoinsDendrogramReader dendrogramReader = this.container.getComponent(NewmanJoinsDendrogramReader.class);
+		String dendrogramFile = this.fileManager.getCurrentResultsPath() + FILE_NAME + "-fc_a.joins";
+		RecommenderObjectDendrogramBuilder dBuilder = new RecommenderObjectDendrogramBuilder(this.recommendationGraph.getIdNodeMap());
+		NewmanJoinsDendrogramReader dendrogramReader = new NewmanJoinsDendrogramReader(dBuilder, this.logger);
 		LinkDendrogram<RecommenderObject> dendrogram = (LinkDendrogram<RecommenderObject>) dendrogramReader.read(dendrogramFile);
 		this.logger.log("Size of dendrogram: " + dendrogram.memberSet().size());
 		
@@ -159,6 +153,7 @@ public class NewmanTest extends AbstractTest {
 		
 		
 		// Write cluster results (dendrogram) to neo4j graph database
+		/*
 		String uri = "http://localhost:7474/db/data/";
 		LoggerInterface logger = new ConsoleLogger();
 		RestAPI restApi = new RestAPI(uri);
@@ -166,7 +161,7 @@ public class NewmanTest extends AbstractTest {
 		this.logger.log("Start writing dendrogram into neo4j");
 		writer.write(dendrogram);
 		this.logger.log("Finished writing dendrogram into neo4j");
-		
+		*/
 		
 		// Write dendrogram to JSON file
 		//JsonDendrogramWriter<RecommenderObject> writer = new JsonDendrogramWriter<RecommenderObject>();
@@ -243,19 +238,10 @@ public class NewmanTest extends AbstractTest {
 		// We add test-wide singleton of file manager
 		this.container.addComponent(FileManager.class, this.fileManager);
 		
-		// We add an instance of a identifier map. This should be a singleton within the scope of our test!
-		this.container.addComponent(IdentifierRecommenderObjectMap.class, new IdentifierRecommenderObjectMap());
-		
-		// We create unique ID provider to get ID mapping later on
-		this.container.addComponent(UniqueIdProvider.class);
-		this.uniqueIdProvider = this.container.getComponent(UniqueIdProvider.class);
-		this.container.addComponent(IdProvider.class, this.uniqueIdProvider);
-		
 		this.container.addComponent(
 				EdgeListWriter.class, 
 				EdgeListWriter.class, 
-				new ConstantParameter(this.logger),
-				new ConstantParameter(this.container.getComponent(IdProvider.class))
+				new ConstantParameter(this.logger)
 		);
 		
 		this.container.addComponent(

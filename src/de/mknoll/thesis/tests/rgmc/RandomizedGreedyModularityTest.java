@@ -9,6 +9,7 @@ import org.picocontainer.PicoBuilder;
 import org.picocontainer.annotations.Inject;
 import org.picocontainer.parameters.ConstantParameter;
 
+import de.mknoll.thesis.analysis.ClusterSizeAtStepAnalyzer;
 import de.mknoll.thesis.datastructures.dendrogram.LinkDendrogram;
 import de.mknoll.thesis.datastructures.dendrogram.Neo4jDendrogramWriter;
 import de.mknoll.thesis.datastructures.dendrogram.NewmanJoinsDendrogramReader;
@@ -136,7 +137,7 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 		//this.metisWriter.write(this.recommendationGraph, metisFilePath);
 		
 		
-		// Calling Newman algorithm implementation to cluster recommendation graph
+		// Calling RGMC algorithm implementation to cluster recommendation graph
 		this.logger.log("Start clustering via randomized greedy modularity clustering...");
 		HashMap<String, String> arguments = new HashMap<String, String>();
 		arguments.put("--file", metisFilePath);
@@ -149,15 +150,15 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 		// Read cluster results (dendrogram) from RGMC algorithm into datastructure
 		this.logger.log("Start reading dendrogram from joins file...");
 		String dendrogramFile = this.fileManager.getCurrentResultsPath() + FILE_NAME + ".joins"; 
-		
-		
-		//NewmanJoinsDendrogramReader dendrogramReader = this.container.getComponent(NewmanJoinsDendrogramReader.class);
 		RecommenderObjectDendrogramBuilder dBuilder = new RecommenderObjectDendrogramBuilder(biggestComponentSubgraph.getIdNodeMap());
 		NewmanJoinsDendrogramReader dendrogramReader = new NewmanJoinsDendrogramReader(dBuilder, this.logger);
-		
-		
 		LinkDendrogram<RecommenderObject> dendrogram = (LinkDendrogram<RecommenderObject>) dendrogramReader.read(dendrogramFile);
 		this.logger.log("Size of dendrogram: " + dendrogram.memberSet().size());
+		
+		
+		// Plot step-cluster-size
+		ClusterSizeAtStepAnalyzer analyzer1 = this.container.getComponent(ClusterSizeAtStepAnalyzer.class);
+		analyzer1.plotClusterSizeAtStep(dBuilder);
 		
 		
 		// Write cluster results (dendrogram) to neo4j graph database
@@ -205,6 +206,8 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 		this.container.addComponent(IdNodeMap.class, new DefaultIdNodeMap());
 		
 		this.container.addComponent(GraphReader.class, PostgresReader.class);
+
+		this.container.addComponent(ClusterSizeAtStepAnalyzer.class, ClusterSizeAtStepAnalyzer.class);
 		
 		this.graphReader = this.container.getComponent(GraphReader.class);
 		
