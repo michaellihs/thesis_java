@@ -16,25 +16,20 @@ import de.mknoll.thesis.datastructures.dendrogram.RecommenderObjectDendrogramBui
 import de.mknoll.thesis.datastructures.dendrogram.XmlDendrogramWriter;
 import de.mknoll.thesis.datastructures.graph.DefaultIdNodeMap;
 import de.mknoll.thesis.datastructures.graph.IdNodeMap;
-import de.mknoll.thesis.datastructures.graph.IdProvider;
-import de.mknoll.thesis.datastructures.graph.IdentifierRecommenderObjectMap;
 import de.mknoll.thesis.datastructures.graph.RecommendationGraph;
 import de.mknoll.thesis.datastructures.graph.RecommenderObject;
-import de.mknoll.thesis.datastructures.graph.UniqueIdProvider;
 import de.mknoll.thesis.datastructures.graph.inspectors.RecommendationGraphConnectivityInspector;
 import de.mknoll.thesis.datastructures.graph.reader.GraphReader;
 import de.mknoll.thesis.datastructures.graph.reader.PostgresReader;
 import de.mknoll.thesis.datastructures.graph.writer.EdgeListWriter;
 import de.mknoll.thesis.datastructures.graph.writer.MetisWriter;
 import de.mknoll.thesis.datastructures.graph.writer.Neo4jWriter;
-import de.mknoll.thesis.externaltools.wrapper.FastModularity;
 import de.mknoll.thesis.externaltools.wrapper.RandomizedGreedyModularityClustering;
 import de.mknoll.thesis.framework.data.TestResult;
 import de.mknoll.thesis.framework.filesystem.FileManager;
 import de.mknoll.thesis.framework.logger.ConsoleLogger;
 import de.mknoll.thesis.framework.logger.LoggerInterface;
 import de.mknoll.thesis.framework.testsuite.AbstractTest;
-import de.mknoll.thesis.framework.testsuite.Test;
 
 
 
@@ -106,13 +101,8 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 	 */
 	private HashMap<String, String> edgeListWriterConfiguration;
 
-
-
-	/**
-	 * Holds unique ID provider from which we can get ID mapping after exporting edgelist
-	 */
-	private UniqueIdProvider uniqueIdProvider;
-
+	
+	
 	@Override
 	public TestResult run() throws Exception {
 		this.logger.log("Start running test " + this.getClass().toString());
@@ -159,7 +149,11 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 		// Read cluster results (dendrogram) from RGMC algorithm into datastructure
 		this.logger.log("Start reading dendrogram from joins file...");
 		String dendrogramFile = this.fileManager.getCurrentResultsPath() + FILE_NAME + ".joins"; 
-		NewmanJoinsDendrogramReader dendrogramReader = this.container.getComponent(NewmanJoinsDendrogramReader.class);
+		
+		//NewmanJoinsDendrogramReader dendrogramReader = this.container.getComponent(NewmanJoinsDendrogramReader.class);
+		RecommenderObjectDendrogramBuilder dBuilder = new RecommenderObjectDendrogramBuilder(this.recommendationGraph.getIdNodeMap());
+		NewmanJoinsDendrogramReader dendrogramReader = new NewmanJoinsDendrogramReader(dBuilder, this.logger);
+		
 		LinkDendrogram<RecommenderObject> dendrogram = (LinkDendrogram<RecommenderObject>) dendrogramReader.read(dendrogramFile);
 		this.logger.log("Size of dendrogram: " + dendrogram.memberSet().size());
 		
@@ -186,14 +180,6 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 			//.withComponentFactory(new MultiInjection())
 			.build();
 		
-		// We add an instance of a identifier map. This should be a singleton within the scope of our test!
-		this.container.addComponent(IdentifierRecommenderObjectMap.class, new IdentifierRecommenderObjectMap());
-		
-		// We create unique ID provider to get ID mapping later on
-		this.container.addComponent(UniqueIdProvider.class);
-		this.uniqueIdProvider = this.container.getComponent(UniqueIdProvider.class);
-		this.container.addComponent(IdProvider.class, this.uniqueIdProvider);
-		
 		this.container.addComponent(MetisWriter.class);
 		
 		// Adding clustering wrapper to container
@@ -213,6 +199,7 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 		this.container.addComponent(XmlDendrogramWriter.class);
 		
 		this.container.addComponent(IdNodeMap.class, new DefaultIdNodeMap());
+		
 		this.container.addComponent(GraphReader.class, PostgresReader.class);
 		
 		this.graphReader = this.container.getComponent(GraphReader.class);

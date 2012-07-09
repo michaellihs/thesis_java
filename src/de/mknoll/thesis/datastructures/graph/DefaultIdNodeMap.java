@@ -31,6 +31,13 @@ public class DefaultIdNodeMap implements IdNodeMap {
 	 * Holds a mapping namespace->externalId->node
 	 */
 	HashMap<Namespaces, HashMap<String, Node>> reverseMapping = new HashMap<Namespaces, HashMap<String, Node>>();
+	
+	
+	
+	/**
+	 * Holds a mapping internalId --> node
+	 */
+	HashMap<Integer, Node> internalIdToNodeMapping = new HashMap<Integer, Node>();
 
 	
 	
@@ -66,6 +73,7 @@ public class DefaultIdNodeMap implements IdNodeMap {
 	public void addExternalId(Node node, Namespaces namespace, String externalId) {
 		HashMap<Namespaces, String> nodeIdsFromIndexMapping =  this.getNodeIdsFromIndexMapping(node);
 		nodeIdsFromIndexMapping.put(namespace, externalId);
+		this.internalIdToNodeMapping.put(node.internalId(), node);
 		this.reverseMapping.get(namespace).put(externalId, node);
 	}
 	
@@ -99,6 +107,12 @@ public class DefaultIdNodeMap implements IdNodeMap {
 	public Node getNodeByNamespaceAndExternalId(Namespaces namespace, String externalId) {
 		return this.reverseMapping.get(namespace).get(externalId);
 	}
+
+
+
+	public Node getNodeByInternalId(Integer internalId) {
+		return this.internalIdToNodeMapping.get(internalId);
+	}
 	
 	
 	
@@ -118,6 +132,7 @@ public class DefaultIdNodeMap implements IdNodeMap {
 			}
 		}
 		this.indexMapping.add(node.internalId() - 1, new HashMap<Namespaces, String>());
+		this.internalIdToNodeMapping.put(node.internalId(), node);
 	}
 	
 	

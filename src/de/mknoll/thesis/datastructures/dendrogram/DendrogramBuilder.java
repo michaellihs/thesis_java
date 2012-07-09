@@ -59,8 +59,9 @@ public abstract class DendrogramBuilder<T> {
 	 * 
 	 * @param Id to be found within first dendrogram to be merged
 	 * @param Id to be found within second dendrogram to be merged
+	 * @throws Exception 
 	 */
-	public void mergeByIds(String id1, String id2) {
+	public void mergeByIds(String id1, String id2) throws Exception {
 		this.mergeDendrograms(
 				this.getDendrogramById(id1),
 				this.getDendrogramById(id2)
@@ -138,8 +139,9 @@ public abstract class DendrogramBuilder<T> {
 	 * 
 	 * @param ID to get dendrogram for (the dendrogram that actually contains the id)
 	 * @return Dendrogram found or created for given id
+	 * @throws Exception 
 	 */
-	private Dendrogram<T> getDendrogramById(String id) {
+	private Dendrogram<T> getDendrogramById(String id) throws Exception {
 		Dendrogram<T> dendrogram;
 		if (this.idToDendrogramMap.containsKey(id)) {
 			dendrogram = this.idToDendrogramMap.get(id);
@@ -160,15 +162,18 @@ public abstract class DendrogramBuilder<T> {
 	 * @param dendrogramById
 	 * @param dendrogramById2
 	 */
-	private void mergeDendrograms(Dendrogram<T> dendrogram1,
-			Dendrogram<T> dendrogram2) {
+	private void mergeDendrograms(Dendrogram<T> dendrogram1, Dendrogram<T> dendrogram2) {
 		
 		this.dendrograms.remove(dendrogram1);
 		this.dendrograms.remove(dendrogram2);
+		
 		LinkDendrogram<T> mergedDendrogram = new LinkDendrogram<T>(dendrogram1, dendrogram2);
 		this.steps.add(mergedDendrogram);
+		
+		
 		this.removeIdsFromMapByGivenDendrogram(mergedDendrogram);
 		this.addIdsToMapByGivenDendrogram(mergedDendrogram);
+		
 		this.dendrograms.add(mergedDendrogram);
 	}
 
@@ -206,8 +211,9 @@ public abstract class DendrogramBuilder<T> {
 	 * Template method to be implemented by concrete implementation of this class.
 	 * 
 	 * @return Object of generic type T to be used in dendrogram
+	 * @throws Exception 
 	 */
-	protected abstract T getInstanceOfTypeObject(String id);
+	protected abstract T getInstanceOfTypeObject(String id) throws Exception;
 	
 	
 

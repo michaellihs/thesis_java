@@ -29,6 +29,10 @@ public interface IdNodeMap {
 	
 	
 	
+	public Node getNodeByInternalId(Integer internalId);
+	
+	
+	
 	public Integer getInternalIdByNamespaceAndExternalId(Namespaces namespace, String externalId);
 
 }

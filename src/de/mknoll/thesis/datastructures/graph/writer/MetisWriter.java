@@ -13,7 +13,6 @@ import de.mknoll.thesis.datastructures.graph.IdProvider;
 import de.mknoll.thesis.datastructures.graph.Node;
 import de.mknoll.thesis.datastructures.graph.Recommendation;
 import de.mknoll.thesis.datastructures.graph.RecommendationGraph;
-import de.mknoll.thesis.datastructures.graph.UniqueIdProvider;
 import de.mknoll.thesis.framework.logger.LoggerInterface;
 
 

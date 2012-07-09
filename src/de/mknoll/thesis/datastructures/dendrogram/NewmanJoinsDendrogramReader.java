@@ -33,13 +33,6 @@ public class NewmanJoinsDendrogramReader {
 	
 	
 	/**
-	 * Holds optional id mapping
-	 */
-	private HashMap<String, String> idMapping;
-	
-	
-	
-	/**
 	 * Holds regex pattern for matching IDs in a single joins file line
 	 */
 	private Pattern joinsFilePattern;
@@ -83,7 +76,6 @@ public class NewmanJoinsDendrogramReader {
 	 * @throws IOException 
 	 */
 	public Dendrogram<RecommenderObject> read(String filePath, HashMap<String, String> idMapping) throws Exception {
-		this.idMapping = idMapping;
 		return this.read(filePath);
 	}
 	
@@ -124,8 +116,10 @@ public class NewmanJoinsDendrogramReader {
 		// TODO think about how we get a new empty dendrogram
 		FileInputStream dendrogramFileInputStream = new FileInputStream(this.filePath);
 		InputStreamReader dendrogramInputStreamReader = new InputStreamReader(dendrogramFileInputStream);
-		Scanner dendrogramInputStreamScanner = new Scanner(dendrogramFileInputStream); 
+		Scanner dendrogramInputStreamScanner = new Scanner(dendrogramFileInputStream);
+		int i = 1;
 		while (dendrogramInputStreamScanner.hasNextLine()) {
+			this.logger.log("Reading line " + i++);
 			this.addJoinToDendrogramByLine(dendrogramInputStreamScanner.nextLine());
 		}
 		dendrogramInputStreamScanner.close();
@@ -152,15 +146,19 @@ public class NewmanJoinsDendrogramReader {
 	 * <firstId>  <secondId>  <maxModularity>  <timeStep>
 	 * 
 	 * @param nextLine
+	 * @throws Exception 
 	 */
-	private void addJoinToDendrogramByLine(String line) {
+	private void addJoinToDendrogramByLine(String line) throws Exception {
 		// for some reason, first line of joins starts with "-1 -1" so we step over
 		if (!(line.startsWith("-1"))) {
 			Matcher joinsFileMatcher = this.joinsFilePattern.matcher(line);
 			joinsFileMatcher.find();
 			String absorberId = joinsFileMatcher.group(1);
 			String absorbedId = joinsFileMatcher.group(2);
-			this.dendrogramBuilder.mergeByIds(absorberId, absorbedId);
+			// rgmc seems to fuck up some merges at the end of joins file (merging 1 with 1)
+			if (!(absorbedId.equals(absorberId))) {
+				this.dendrogramBuilder.mergeByIds(absorberId, absorbedId);
+			}
 		}
 	}
 	

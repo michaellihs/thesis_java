@@ -113,6 +113,16 @@ public class IdNodeMapTest {
 	
 	
 	
+	@Test
+	public void nodeCanBeRetrievedByInternalId() {
+		IdNodeMap map = new DefaultIdNodeMap();
+		Node node = new Node(map);
+		Integer internalId = node.internalId();
+		Assert.assertTrue(map.getNodeByInternalId(internalId).equals(node));
+	}
+	
+	
+	
 	/**
 	 * Enumeration of dummy namespaces for this testcase
 	 * 
