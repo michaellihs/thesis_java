@@ -119,8 +119,8 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 		);
 		
 		// Use this to get biggest component of graph
-		//RecommendationGraphConnectivityInspector connectivityInspector = new RecommendationGraphConnectivityInspector(this.recommendationGraph);
-		//RecommendationGraph biggestComponentSubgraph = connectivityInspector.biggestComponentAsSubgraph();
+		RecommendationGraphConnectivityInspector connectivityInspector = new RecommendationGraphConnectivityInspector(this.recommendationGraph);
+		RecommendationGraph biggestComponentSubgraph = connectivityInspector.biggestComponentAsSubgraph();
 		
 		// Write recommendation graph to Neo4J graph database
 		//this.logger.log("Writing recommendation graph to N4J database...");
@@ -132,8 +132,8 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 		this.logger.log("Writing METIS file...");
 		String metisFilePath = this.fileManager.getResultFilePath(FILE_NAME + ".graph");
 		this.metisWriter = this.container.getComponent(MetisWriter.class);
-		//this.metisWriter.write(biggestComponentSubgraph, metisFilePath);
-		this.metisWriter.write(this.recommendationGraph, metisFilePath);
+		this.metisWriter.write(biggestComponentSubgraph, metisFilePath);
+		//this.metisWriter.write(this.recommendationGraph, metisFilePath);
 		
 		
 		// Calling Newman algorithm implementation to cluster recommendation graph
@@ -150,15 +150,18 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 		this.logger.log("Start reading dendrogram from joins file...");
 		String dendrogramFile = this.fileManager.getCurrentResultsPath() + FILE_NAME + ".joins"; 
 		
+		
 		//NewmanJoinsDendrogramReader dendrogramReader = this.container.getComponent(NewmanJoinsDendrogramReader.class);
-		RecommenderObjectDendrogramBuilder dBuilder = new RecommenderObjectDendrogramBuilder(this.recommendationGraph.getIdNodeMap());
+		RecommenderObjectDendrogramBuilder dBuilder = new RecommenderObjectDendrogramBuilder(biggestComponentSubgraph.getIdNodeMap());
 		NewmanJoinsDendrogramReader dendrogramReader = new NewmanJoinsDendrogramReader(dBuilder, this.logger);
+		
 		
 		LinkDendrogram<RecommenderObject> dendrogram = (LinkDendrogram<RecommenderObject>) dendrogramReader.read(dendrogramFile);
 		this.logger.log("Size of dendrogram: " + dendrogram.memberSet().size());
 		
 		
 		// Write cluster results (dendrogram) to neo4j graph database
+		/*
 		String uri = "http://localhost:7474/db/data/";
 		LoggerInterface logger = new ConsoleLogger();
 		RestAPI restApi = new RestAPI(uri);
@@ -168,6 +171,7 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 		this.logger.log("Finished writing dendrogram into neo4j");
 		
 		this.logger.log("Finished running test " + this.getClass().toString());
+		*/
 		return null;
 	}
 	

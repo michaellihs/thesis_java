@@ -62,10 +62,13 @@ public abstract class DendrogramBuilder<T> {
 	 * @throws Exception 
 	 */
 	public void mergeByIds(String id1, String id2) throws Exception {
-		this.mergeDendrograms(
+		Dendrogram<T> mergedDendrogram = this.mergeDendrograms(
 				this.getDendrogramById(id1),
 				this.getDendrogramById(id2)
 		);
+		this.idToDendrogramMap.remove(id1);
+		this.idToDendrogramMap.remove(id2);
+		this.idToDendrogramMap.put(id1, mergedDendrogram);
 	}
 	
 
@@ -162,7 +165,7 @@ public abstract class DendrogramBuilder<T> {
 	 * @param dendrogramById
 	 * @param dendrogramById2
 	 */
-	private void mergeDendrograms(Dendrogram<T> dendrogram1, Dendrogram<T> dendrogram2) {
+	private LinkDendrogram<T> mergeDendrograms(Dendrogram<T> dendrogram1, Dendrogram<T> dendrogram2) {
 		
 		this.dendrograms.remove(dendrogram1);
 		this.dendrograms.remove(dendrogram2);
@@ -170,11 +173,12 @@ public abstract class DendrogramBuilder<T> {
 		LinkDendrogram<T> mergedDendrogram = new LinkDendrogram<T>(dendrogram1, dendrogram2);
 		this.steps.add(mergedDendrogram);
 		
-		
-		this.removeIdsFromMapByGivenDendrogram(mergedDendrogram);
-		this.addIdsToMapByGivenDendrogram(mergedDendrogram);
+		//this.removeIdsFromMapByGivenDendrogram(mergedDendrogram);
+		//this.addIdsToMapByGivenDendrogram(mergedDendrogram);
 		
 		this.dendrograms.add(mergedDendrogram);
+		
+		return mergedDendrogram;
 	}
 
 

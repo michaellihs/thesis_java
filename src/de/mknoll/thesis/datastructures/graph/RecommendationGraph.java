@@ -1,11 +1,16 @@
 package de.mknoll.thesis.datastructures.graph;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.persistence.oxm.unmapped.DefaultUnmappedContentHandler;
+import org.jgrapht.UndirectedGraph;
+import org.jgrapht.graph.AsUndirectedGraph;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
+import org.jgrapht.graph.SimpleGraph;
 
 
 
@@ -229,6 +234,39 @@ public class RecommendationGraph extends DefaultDirectedWeightedGraph<Node, Reco
 		}
 		
 		return g;
+	}
+	
+	
+	
+	/**
+	 * Returns an array of node sets that can be used for writing METIS file format.
+	 * 
+	 * RGMC algorithm requires UNDIRECTED graph, so we have to export
+	 * an undirected version of this graph. Therefore we generate an arraylist
+	 * 
+	 * (nodeId => Set(neighborIds))
+	 * 
+	 * which can easily be written into METIS file afterwards.
+	 * 
+	 * @return List of sets of neighbors. Index of list corresponds to internal ID of node for which neighbor set is returned.
+	 */
+	public ArrayList<Set<Integer>> metisEdgeList() {
+		ArrayList<Set<Integer>> metisEdgeList = new ArrayList<Set<Integer>>();
+		
+		// Initialize metis edge list
+		for (int i = 0; i < this.vertexSet().size(); i++) {
+			metisEdgeList.add(new HashSet<Integer>());
+		}
+		
+		// Write neighbors of nodes into metis edge list
+		for (Node n : this.vertexSet()) {
+			for (Recommendation rec : this.edgesOf(n)) {
+				metisEdgeList.get(n.internalId() - 1).add(rec.getTarget().internalId());
+				metisEdgeList.get(rec.getTarget().internalId() - 1).add(n.internalId());
+			}
+		}
+		
+		return metisEdgeList;
 	}
 
 

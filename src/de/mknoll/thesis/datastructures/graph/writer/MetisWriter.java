@@ -3,15 +3,11 @@ package de.mknoll.thesis.datastructures.graph.writer;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Set;
 
 import org.picocontainer.annotations.Inject;
 
-import de.mknoll.thesis.datastructures.graph.DefaultIdProvider;
-import de.mknoll.thesis.datastructures.graph.IdProvider;
-import de.mknoll.thesis.datastructures.graph.Node;
-import de.mknoll.thesis.datastructures.graph.Recommendation;
 import de.mknoll.thesis.datastructures.graph.RecommendationGraph;
 import de.mknoll.thesis.framework.logger.LoggerInterface;
 
@@ -58,20 +54,23 @@ public class MetisWriter implements GraphWriter {
 	private void writeGraphToStream(RecommendationGraph graph, BufferedWriter out) throws IOException {
 		// First line of Metis needs to be #vertices #edges
 		out.write(graph.vertexSet().size() + " " + graph.edgeSet().size() + "\n");
-		for(Node n: graph.vertexSet()) {
-			this.writeNodeListToStream(graph, n, out);
+		
+		// We get a list (node.internalId => set(neighbors))
+		ArrayList<Set<Integer>> metisEdgeList = graph.metisEdgeList();
+		for (int i = 0; i < metisEdgeList.size(); i++) {
+			this.writeNodeListToStream(metisEdgeList.get(i), out);
 		}
 	}
 
 
 
-	private void writeNodeListToStream(RecommendationGraph graph, Node n, BufferedWriter out) throws IOException {
+	private void writeNodeListToStream(Set<Integer> nodes, BufferedWriter out) throws IOException {
 		boolean notFirst = false;
-		for (Node neighbor : graph.getNeighborsOf(n)) {
+		for (Integer id : nodes) {
 			if (notFirst) {
 				out.write(" ");
 			}
-			out.write(new Integer(neighbor.internalId()).toString());
+			out.write(id.toString());
 			notFirst = true;
 		}
 		out.write("\n");
