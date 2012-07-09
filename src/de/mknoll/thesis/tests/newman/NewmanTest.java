@@ -11,6 +11,7 @@ import org.picocontainer.annotations.Inject;
 import org.picocontainer.parameters.ConstantParameter;
 
 import de.mknoll.thesis.analysis.ClusterSizeAtStepAnalyzer;
+import de.mknoll.thesis.analysis.ComponentSizeComponentCountAnalyzer;
 import de.mknoll.thesis.datastructures.dendrogram.Dendrogram;
 import de.mknoll.thesis.datastructures.dendrogram.JsonDendrogramWriter;
 import de.mknoll.thesis.datastructures.dendrogram.LinkDendrogram;
@@ -130,6 +131,11 @@ public class NewmanTest extends AbstractTest {
 		String edgeListFilePath = this.fileManager.getResultFilePath(FILE_NAME + ".pairs");
 		this.edgeListWriter = this.container.getComponent(EdgeListWriter.class);
 		this.edgeListWriter.write(this.recommendationGraph, edgeListFilePath);
+		
+		
+		// Plot component size / component count using R
+		ComponentSizeComponentCountAnalyzer cscaAnalyzer = this.container.getComponent(ComponentSizeComponentCountAnalyzer.class);
+		cscaAnalyzer.plotComponentSizeComponentCount(edgeListFilePath);
 		
 		
 		// Calling Newman algorithm implementation to cluster recommendation graph
@@ -259,6 +265,7 @@ public class NewmanTest extends AbstractTest {
 		this.container.addComponent(GraphReader.class, PostgresReader.class);
 		
 		this.container.addComponent(ClusterSizeAtStepAnalyzer.class, ClusterSizeAtStepAnalyzer.class);
+		this.container.addComponent(ComponentSizeComponentCountAnalyzer.class, ComponentSizeComponentCountAnalyzer.class);
 		
 		this.graphReader = this.container.getComponent(GraphReader.class);
 		

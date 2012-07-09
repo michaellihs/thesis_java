@@ -25,20 +25,19 @@ public class R {
 	
 	
 	
-	/**
-	 * @Inject
-	 */
 	private LoggerInterface logger;
 	
 	
 	
-	public R(String scriptsBasePath) {
+	public R(String scriptsBasePath, LoggerInterface logger) {
+		this(logger);
 		this.scriptsBasePath = scriptsBasePath;
 	}
 	
 	
 	
-	public R() {
+	public R(LoggerInterface logger) {
+		this.logger = logger;
 		this.scriptsBasePath = R.SCRIPTS_PATH;
 	}
 	
@@ -49,6 +48,7 @@ public class R {
 		String command = this.buildCommandString(script, arguments);
 		boolean success = false;
 		try {
+			this.logger.log("Running R command: " + command);
 			Process process = run.exec(command) ;
 			BufferedReader outputBuffer = new BufferedReader(new InputStreamReader(process.getInputStream()));
 			String output;

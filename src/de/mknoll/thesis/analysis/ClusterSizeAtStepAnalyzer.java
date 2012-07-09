@@ -90,7 +90,7 @@ public class ClusterSizeAtStepAnalyzer {
 					fw.write(size2.toString() + "\n");
 				}
 			}
-			R r = new R();
+			R r = new R(this.logger);
 			r.run("ClusterSizeOnMerge.r", stepClusterSizeFileName + " " + outputFilePath);
 		} catch (Exception e) {
 			this.logger.log("Error while trying to write cluster-sizes-per-step file: " + e.getMessage());
