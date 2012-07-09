@@ -10,9 +10,7 @@ import de.mknoll.thesis.tests.datastructures.dendrogram.Neo4jDendrogramWriterTes
 import de.mknoll.thesis.tests.datastructures.dendrogram.NewmanJoinsDendrogramReaderTest;
 import de.mknoll.thesis.tests.datastructures.dendrogram.RecommenderObjectDendrogramBuilderTest;
 import de.mknoll.thesis.tests.datastructures.graph.IdNodeMapTest;
-import de.mknoll.thesis.tests.datastructures.graph.IdentifierRecommenderObjectMapTest;
 import de.mknoll.thesis.tests.datastructures.graph.NodeTest;
-import de.mknoll.thesis.tests.datastructures.graph.UniqueIdProviderTest;
 import de.mknoll.thesis.tests.datastructures.graph.writer.MetisWriterTest;
 import de.mknoll.thesis.tests.datastructures.graph.writer.Neo4jWriterTest;
 import de.mknoll.thesis.tests.di.DependencyInjectionTest;
@@ -38,8 +36,6 @@ import de.mknoll.thesis.tests.neo4j.Neo4jTest;
 	LinkDendrogramTest.class, 
 	RecommenderObjectDendrogramBuilderTest.class,
 	NewmanJoinsDendrogramReaderTest.class,
-	IdentifierRecommenderObjectMapTest.class,
-	UniqueIdProviderTest.class,
 	JsonDendrogramWriterTest.class,
 	Neo4jTest.class,
 	Neo4jWriterTest.class,
