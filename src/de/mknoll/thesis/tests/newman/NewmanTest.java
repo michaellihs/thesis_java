@@ -150,7 +150,7 @@ public class NewmanTest extends AbstractTest {
 		
 		// Plot step-cluster-size
 		ClusterSizeAtStepAnalyzer analyzer1 = this.container.getComponent(ClusterSizeAtStepAnalyzer.class);
-		analyzer1.plotClusterSizeAtStep(this.container.getComponent(RecommenderObjectDendrogramBuilder.class));
+		analyzer1.plotClusterSizeAtStep(dBuilder);
 		
 		
 		// Write cluster results (dendrogram) to neo4j graph database
