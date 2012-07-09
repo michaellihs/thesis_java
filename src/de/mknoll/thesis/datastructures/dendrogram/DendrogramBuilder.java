@@ -176,34 +176,6 @@ public abstract class DendrogramBuilder<T> {
 
 
 	/**
-	 * Removes all IDs contained by given dendrogram from mapping id -> dendrogram
-	 * 
-	 * @param dendrogram
-	 */
-	private void removeIdsFromMapByGivenDendrogram(
-			LinkDendrogram<T> dendrogram) {
-		for (T containedObject: dendrogram.memberSet()) {
-			this.idToDendrogramMap.remove(this.getIdFromObject(containedObject));
-		}
-		
-	}
-
-
-
-	/**
-	 * Adds all IDs contained by given dendrogram to mapping id -> dendrogram
-	 * 
-	 * @param dendrogram
-	 */
-	private void addIdsToMapByGivenDendrogram(LinkDendrogram<T> dendrogram) {
-		for (T containedObject: dendrogram.memberSet()) {
-			this.idToDendrogramMap.put(this.getIdFromObject(containedObject), dendrogram);
-		}
-	}
-
-
-
-	/**
 	 * Template method to be implemented by concrete implementation of this class.
 	 * 
 	 * @return Object of generic type T to be used in dendrogram
