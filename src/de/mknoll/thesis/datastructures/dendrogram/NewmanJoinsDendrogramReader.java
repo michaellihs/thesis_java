@@ -117,9 +117,7 @@ public class NewmanJoinsDendrogramReader {
 		FileInputStream dendrogramFileInputStream = new FileInputStream(this.filePath);
 		InputStreamReader dendrogramInputStreamReader = new InputStreamReader(dendrogramFileInputStream);
 		Scanner dendrogramInputStreamScanner = new Scanner(dendrogramFileInputStream);
-		int i = 1;
 		while (dendrogramInputStreamScanner.hasNextLine()) {
-			this.logger.log("Reading line " + i++);
 			this.addJoinToDendrogramByLine(dendrogramInputStreamScanner.nextLine());
 		}
 		dendrogramInputStreamScanner.close();
