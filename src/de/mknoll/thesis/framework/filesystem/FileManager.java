@@ -25,6 +25,8 @@ public class FileManager {
 	 */
 	private static final String SETTINGS_PATH = "settings/";
 	private static final String RESULTS_PATH = "results/";
+	private static final String PLOTS_PATH = "plots/";
+	private static final String TMP_PATH = "tmp/";
 	
 	
 	
@@ -120,9 +122,43 @@ public class FileManager {
 		String currentSettingsPath = this.testRunDirectory + this.currentTest + SETTINGS_PATH;
 		File currentSettingsDir = new File(currentSettingsPath);
 		if (!currentSettingsDir.exists() && createIfNotExists) {
-			this.createDirectory(this.getCurrentSettingsPath());
+			this.createDirectory(currentSettingsPath);
 		}
 		return currentSettingsPath;
+	}
+	
+	
+	
+	public String getCurrentPlotsPath() {
+		return this.getCurrentPlotsPath(true);
+	}
+	
+	
+	
+	public String getCurrentPlotsPath(Boolean createIfNotExists) {
+		String currentPlotsPath = this.testRunDirectory + this.currentTest + PLOTS_PATH;
+		File currentPlotsDir = new File(currentPlotsPath);
+		if (!currentPlotsDir.exists() && createIfNotExists) {
+			this.createDirectory(currentPlotsPath);
+		}
+		return currentPlotsPath;
+	}
+	
+	
+	
+	public String getCurrentTempPath() {
+		return this.getCurrentTempPath(true);
+	}
+	
+	
+	
+	public String getCurrentTempPath(Boolean createIfNotExists) {
+		String currentTempPath = this.testRunDirectory + this.currentTest + TMP_PATH;
+		File currentTempDir = new File(currentTempPath);
+		if (!currentTempDir.exists() && createIfNotExists) {
+			this.createDirectory(currentTempPath);
+		}
+		return currentTempPath;
 	}
 	
 	
@@ -141,6 +177,24 @@ public class FileManager {
 			throw new Exception("Cannot create new settings file writer without having set current test!");
 		}
 		return this.getCurrentSettingsPath() + fileName;
+	}
+	
+	
+	
+	public String getPlotsFilePath(String fileName) throws Exception {
+		if (this.currentTest == null) {
+			throw new Exception("Cannot create new plot file path without having set current test!");
+		}
+		return this.getCurrentPlotsPath() + fileName;
+	}
+	
+	
+	
+	public String getTempFilePath(String fileName) throws Exception {
+		if (this.currentTest == null) {
+			throw new Exception("Cannot create new temp file path without having set current test!");
+		}
+		return this.getCurrentTempPath() + fileName;
 	}
 	
 	
@@ -174,11 +228,49 @@ public class FileManager {
 	 * @throws Exception
 	 */
 	public FileWriter getNewSettingsFileWriter(String fileName) throws Exception {
-		File currentResultsDir = new File(this.getCurrentSettingsPath());
-		if (!currentResultsDir.exists()) {
+		File currentSettingsDir = new File(this.getCurrentSettingsPath());
+		if (!currentSettingsDir.exists()) {
 			this.createDirectory(this.getCurrentSettingsPath());
 		}
 		return this.createFileWriterForPath(this.getSettingsFilePath(fileName));
+	}
+	
+	
+	
+	/**
+	 * Creates a new file writer with given filename within current temp directory.
+	 * 
+	 * You have to set current test before!
+	 * 
+	 * @param fileName
+	 * @return
+	 * @throws Exception
+	 */
+	public FileWriter getNewTempFileWriter(String fileName) throws Exception {
+		File currentTempDir = new File(this.getCurrentTempPath());
+		if (!currentTempDir.exists()) {
+			this.createDirectory(this.getTempFilePath(fileName));
+		}
+		return this.createFileWriterForPath(this.getTempFilePath(fileName));
+	}
+
+
+	
+	/**
+	 * Creates a new file writer with given filename within current plots directory.
+	 * 
+	 * You have to set current test before!
+	 * 
+	 * @param fileName
+	 * @return
+	 * @throws Exception
+	 */
+	public FileWriter getNewPlotsFileWriter(String fileName) throws Exception {
+		File currentPlotsDir = new File(this.getCurrentPlotsPath());
+		if (!currentPlotsDir.exists()) {
+			this.createDirectory(this.getCurrentPlotsPath());
+		}
+		return this.createFileWriterForPath(this.getPlotsFilePath(fileName));
 	}
 
 

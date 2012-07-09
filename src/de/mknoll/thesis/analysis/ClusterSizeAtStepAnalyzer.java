@@ -56,7 +56,7 @@ public class ClusterSizeAtStepAnalyzer {
 	 */
 	public void plotClusterSizeAtStep(DendrogramBuilder<RecommenderObject> dBuilder) {
 		try {
-			String plotOutputFile = this.fileManager.getResultFilePath("clusterSizeAtStep.pdf");
+			String plotOutputFile = this.fileManager.getPlotsFilePath("clusterSizeAtStep.pdf");
 			this.plotClusterSizeAtStep(dBuilder, plotOutputFile);
 		} catch (Exception e) {
 			this.logger.log("Error while trying to create pdf output file path: " + e.getMessage());
@@ -79,8 +79,8 @@ public class ClusterSizeAtStepAnalyzer {
 		 * 2. Call R command that plots diagram for given steps file
 		 */
 		try {
-			String stepClusterSizeFileName = this.fileManager.getResultFilePath("dendrogramStepClusterSize.txt");
-			FileWriter fw = this.fileManager.getNewResultFileWriter("dendrogramStepClusterSize.txt");
+			String stepClusterSizeFileName = this.fileManager.getTempFilePath("dendrogramStepClusterSize.txt");
+			FileWriter fw = this.fileManager.getNewTempFileWriter("dendrogramStepClusterSize.txt");
 			for (LinkDendrogram<RecommenderObject> ld : dBuilder.steps()) {
 				Integer size1 = ld.dendrogram1().size();
 				Integer size2 = ld.dendrogram2().size();
