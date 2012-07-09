@@ -2,6 +2,7 @@ package de.mknoll.thesis.tests.rgmc;
 
 import java.util.HashMap;
 
+import org.jgrapht.alg.ConnectivityInspector;
 import org.neo4j.rest.graphdb.RestAPI;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoBuilder;
@@ -20,6 +21,7 @@ import de.mknoll.thesis.datastructures.graph.IdentifierRecommenderObjectMap;
 import de.mknoll.thesis.datastructures.graph.RecommendationGraph;
 import de.mknoll.thesis.datastructures.graph.RecommenderObject;
 import de.mknoll.thesis.datastructures.graph.UniqueIdProvider;
+import de.mknoll.thesis.datastructures.graph.inspectors.RecommendationGraphConnectivityInspector;
 import de.mknoll.thesis.datastructures.graph.reader.GraphReader;
 import de.mknoll.thesis.datastructures.graph.reader.PostgresReader;
 import de.mknoll.thesis.datastructures.graph.writer.EdgeListWriter;
@@ -126,33 +128,37 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 				+ this.recommendationGraph.vertexSet().size() + " nodes"
 		);
 		
+		// Use this to get biggest component of graph
+		//RecommendationGraphConnectivityInspector connectivityInspector = new RecommendationGraphConnectivityInspector(this.recommendationGraph);
+		//RecommendationGraph biggestComponentSubgraph = connectivityInspector.biggestComponentAsSubgraph();
 		
 		// Write recommendation graph to Neo4J graph database
-		this.logger.log("Writing recommendation graph to N4J database...");
-		Neo4jWriter n4jWriter = new Neo4jWriter();
-		n4jWriter.write(this.recommendationGraph, "http://localhost:7474/db/data/");
+		//this.logger.log("Writing recommendation graph to N4J database...");
+		//Neo4jWriter n4jWriter = new Neo4jWriter();
+		//n4jWriter.write(this.recommendationGraph, "http://localhost:7474/db/data/");
 		
 		
 		// Writing recommendation graph to an Metis file required by Randomized Greedy Modularity Clustering
-		this.logger.log("Writing edgelist...");
-		String metisFilePath = this.fileManager.getResultFilePath(FILE_NAME + ".pairs");
+		this.logger.log("Writing METIS file...");
+		String metisFilePath = this.fileManager.getResultFilePath(FILE_NAME + ".graph");
 		this.metisWriter = this.container.getComponent(MetisWriter.class);
+		//this.metisWriter.write(biggestComponentSubgraph, metisFilePath);
 		this.metisWriter.write(this.recommendationGraph, metisFilePath);
 		
 		
 		// Calling Newman algorithm implementation to cluster recommendation graph
+		this.logger.log("Start clustering via randomized greedy modularity clustering...");
 		HashMap<String, String> arguments = new HashMap<String, String>();
-		arguments.put("--f", metisFilePath);
-		
-		
-		// TODO create new class for randomized greedy clustering
+		arguments.put("--file", metisFilePath);
+		arguments.put("--joinsfile", this.fileManager.getCurrentResultsPath() + FILE_NAME + ".joins");
 		RandomizedGreedyModularityClustering rgmc = this.container.getComponent(RandomizedGreedyModularityClustering.class);
 		rgmc.logOutput(false); // Remove this line, if you want to get output of algorithm as debug output
 		rgmc.run(arguments);
 		
 		
 		// Read cluster results (dendrogram) from RGMC algorithm into datastructure
-		String dendrogramFile = this.fileManager.getCurrentResultsPath() + FILE_NAME + "-fc_a.joins"; 
+		this.logger.log("Start reading dendrogram from joins file...");
+		String dendrogramFile = this.fileManager.getCurrentResultsPath() + FILE_NAME + ".joins"; 
 		NewmanJoinsDendrogramReader dendrogramReader = this.container.getComponent(NewmanJoinsDendrogramReader.class);
 		LinkDendrogram<RecommenderObject> dendrogram = (LinkDendrogram<RecommenderObject>) dendrogramReader.read(dendrogramFile);
 		this.logger.log("Size of dendrogram: " + dendrogram.memberSet().size());
@@ -199,6 +205,10 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 		);
 		
 		this.container.addComponent(RecommenderObjectDendrogramBuilder.class);
+		RecommenderObjectDendrogramBuilder dBuilder =  this.container.getComponent(RecommenderObjectDendrogramBuilder.class);
+		this.container.removeComponent(RecommenderObjectDendrogramBuilder.class);
+		this.container.addComponent(RecommenderObjectDendrogramBuilder.class, dBuilder);
+		
 		this.container.addComponent(NewmanJoinsDendrogramReader.class);
 		this.container.addComponent(XmlDendrogramWriter.class);
 		

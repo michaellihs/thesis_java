@@ -69,32 +69,34 @@ public class TestSuiteBuilder {
 		FileManager fileManager = this.container.getComponent(FileManager.class);
 		
 		for (TestConfiguration testConfiguration : this.testSuiteConfiguration) {
-			this.logger.log("Trying to add test class to test suite: " + testConfiguration.getTestClassName());
-			try {
-				ClassLoader classLoader = TestSuiteBuilder.class.getClassLoader();
-		        Class testClass = classLoader.loadClass(testConfiguration.getTestClassName());
-		        
-		        MutablePicoContainer localContainer = new PicoBuilder(this.container)
-		        	.withCaching()
-		        	.withComponentFactory(new MultiInjection())
-		        	.build();
-		        
-		        // TODO replace this with configuration later
-		        localContainer.addComponent(IdNodeMap.class, new DefaultIdNodeMap());
-		        localContainer.addComponent(MutablePicoContainer.class, localContainer);
-		        localContainer.addComponent(TestConfiguration.class, testConfiguration);
-		        localContainer.addComponent(FileManager.class, fileManager);
-		        localContainer.addComponent(testClass);
-		        
-		        Test test = localContainer.getComponent(testClass);
-		        test.index(testIndex);
-		        
-				testSuite.add(test);
-			} catch (Exception e) {
-				this.logger.log("An error occured when trying to add test class " + testConfiguration.getTestClassName() + " to test suite: " + e.getMessage());
-				e.printStackTrace();
+			if (testConfiguration.isActivated()) {
+				this.logger.log("Trying to add test class to test suite: " + testConfiguration.getTestClassName());
+				try {
+					ClassLoader classLoader = TestSuiteBuilder.class.getClassLoader();
+					Class testClass = classLoader.loadClass(testConfiguration.getTestClassName());
+					
+					MutablePicoContainer localContainer = new PicoBuilder(this.container)
+					.withCaching()
+					.withComponentFactory(new MultiInjection())
+					.build();
+					
+					// TODO replace this with configuration later
+					localContainer.addComponent(IdNodeMap.class, new DefaultIdNodeMap());
+					localContainer.addComponent(MutablePicoContainer.class, localContainer);
+					localContainer.addComponent(TestConfiguration.class, testConfiguration);
+					localContainer.addComponent(FileManager.class, fileManager);
+					localContainer.addComponent(testClass);
+					
+					Test test = localContainer.getComponent(testClass);
+					test.index(testIndex);
+					
+					testSuite.add(test);
+				} catch (Exception e) {
+					this.logger.log("An error occured when trying to add test class " + testConfiguration.getTestClassName() + " to test suite: " + e.getMessage());
+					e.printStackTrace();
+				}
+				testIndex++;
 			}
-			testIndex++;
 		}
 		
 		return testSuite;

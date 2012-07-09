@@ -32,6 +32,21 @@ public class TestConfiguration {
 	
 	
 	/**
+	 * Returns true, if test is activated. Else returns false.
+	 * 
+	 * @return
+	 */
+	public Boolean isActivated() {
+		if (((Integer)this.yamlTestConfiguration.get("Activated")) == 1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	
+	
+	/**
 	 * Returns class name of test class for given test configuration
 	 * 
 	 * @return
