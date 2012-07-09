@@ -13,7 +13,7 @@ import de.mknoll.thesis.datastructures.graph.RecommenderObject;
  * 
  * @author Michael Knoll <mimi@kaktusteam.de>
  */
-public class RecommenderObjectDendrogramBuilder extends DendrogramBuilder<RecommenderObject> {
+abstract public class RecommenderObjectDendrogramBuilder extends DendrogramBuilder<RecommenderObject> {
 	
 	/**
 	 * Holds mapping of internal / external IDs and recommender objects

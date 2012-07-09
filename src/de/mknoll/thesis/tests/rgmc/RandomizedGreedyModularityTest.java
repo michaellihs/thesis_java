@@ -14,6 +14,7 @@ import de.mknoll.thesis.datastructures.dendrogram.LinkDendrogram;
 import de.mknoll.thesis.datastructures.dendrogram.Neo4jDendrogramWriter;
 import de.mknoll.thesis.datastructures.dendrogram.NewmanJoinsDendrogramReader;
 import de.mknoll.thesis.datastructures.dendrogram.RecommenderObjectDendrogramBuilder;
+import de.mknoll.thesis.datastructures.dendrogram.RgmcDendrogramBuilder;
 import de.mknoll.thesis.datastructures.dendrogram.XmlDendrogramWriter;
 import de.mknoll.thesis.datastructures.graph.DefaultIdNodeMap;
 import de.mknoll.thesis.datastructures.graph.IdNodeMap;
@@ -150,7 +151,7 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 		// Read cluster results (dendrogram) from RGMC algorithm into datastructure
 		this.logger.log("Start reading dendrogram from joins file...");
 		String dendrogramFile = this.fileManager.getCurrentResultsPath() + FILE_NAME + ".joins"; 
-		RecommenderObjectDendrogramBuilder dBuilder = new RecommenderObjectDendrogramBuilder(biggestComponentSubgraph.getIdNodeMap());
+		RgmcDendrogramBuilder dBuilder = new RgmcDendrogramBuilder(biggestComponentSubgraph.getIdNodeMap());
 		NewmanJoinsDendrogramReader dendrogramReader = new NewmanJoinsDendrogramReader(dBuilder, this.logger);
 		LinkDendrogram<RecommenderObject> dendrogram = (LinkDendrogram<RecommenderObject>) dendrogramReader.read(dendrogramFile);
 		this.logger.log("Size of dendrogram: " + dendrogram.memberSet().size());
@@ -194,11 +195,6 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 				new ConstantParameter(new String("/Users/mimi/Dropbox/Diplomarbeit/Code/rgmc_release1_mod/dist/Debug/GNU-MacOSX")),
 				new ConstantParameter(this.container.getComponent(LoggerInterface.class))
 		);
-		
-		this.container.addComponent(RecommenderObjectDendrogramBuilder.class);
-		RecommenderObjectDendrogramBuilder dBuilder =  this.container.getComponent(RecommenderObjectDendrogramBuilder.class);
-		this.container.removeComponent(RecommenderObjectDendrogramBuilder.class);
-		this.container.addComponent(RecommenderObjectDendrogramBuilder.class, dBuilder);
 		
 		this.container.addComponent(NewmanJoinsDendrogramReader.class);
 		this.container.addComponent(XmlDendrogramWriter.class);

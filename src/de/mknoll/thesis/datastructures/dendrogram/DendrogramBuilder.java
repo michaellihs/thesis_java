@@ -21,7 +21,7 @@ public abstract class DendrogramBuilder<T> {
 	/**
 	 * Map to identify each dendrogram within the forest of dendrograms
 	 */
-	private HashMap<String, Dendrogram<T>> idToDendrogramMap;
+	protected HashMap<String, Dendrogram<T>> idToDendrogramMap;
 	
 	
 	
@@ -61,15 +61,7 @@ public abstract class DendrogramBuilder<T> {
 	 * @param Id to be found within second dendrogram to be merged
 	 * @throws Exception 
 	 */
-	public void mergeByIds(String id1, String id2) throws Exception {
-		Dendrogram<T> mergedDendrogram = this.mergeDendrograms(
-				this.getDendrogramById(id1),
-				this.getDendrogramById(id2)
-		);
-		this.idToDendrogramMap.remove(id1);
-		this.idToDendrogramMap.remove(id2);
-		this.idToDendrogramMap.put(id1, mergedDendrogram);
-	}
+	abstract public void mergeByIds(String id1, String id2) throws Exception;
 	
 
 
@@ -144,7 +136,7 @@ public abstract class DendrogramBuilder<T> {
 	 * @return Dendrogram found or created for given id
 	 * @throws Exception 
 	 */
-	private Dendrogram<T> getDendrogramById(String id) throws Exception {
+	protected Dendrogram<T> getDendrogramById(String id) throws Exception {
 		Dendrogram<T> dendrogram;
 		if (this.idToDendrogramMap.containsKey(id)) {
 			dendrogram = this.idToDendrogramMap.get(id);
@@ -165,7 +157,7 @@ public abstract class DendrogramBuilder<T> {
 	 * @param dendrogramById
 	 * @param dendrogramById2
 	 */
-	private LinkDendrogram<T> mergeDendrograms(Dendrogram<T> dendrogram1, Dendrogram<T> dendrogram2) {
+	protected LinkDendrogram<T> mergeDendrograms(Dendrogram<T> dendrogram1, Dendrogram<T> dendrogram2) {
 		
 		this.dendrograms.remove(dendrogram1);
 		this.dendrograms.remove(dendrogram2);
