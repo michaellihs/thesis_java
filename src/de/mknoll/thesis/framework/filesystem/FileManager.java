@@ -27,6 +27,7 @@ public class FileManager {
 	private static final String RESULTS_PATH = "results/";
 	private static final String PLOTS_PATH = "plots/";
 	private static final String TMP_PATH = "tmp/";
+	private static final String NEO4J_PATH = "neo4j/";
 	
 	
 	
@@ -163,6 +164,23 @@ public class FileManager {
 	
 	
 	
+	public String getCurrentNeo4jPath() {
+		return this.getCurrentNeo4jPath(true);
+	}
+	
+	
+	
+	public String getCurrentNeo4jPath(Boolean createIfNotExists) {
+		String currentNeo4jPath = this.testRunDirectory + this.currentTest + NEO4J_PATH;
+		File currentNeo4jDir = new File(currentNeo4jPath);
+		if (!currentNeo4jDir.exists() && createIfNotExists) {
+			this.createDirectory(currentNeo4jPath);
+		}
+		return currentNeo4jPath;
+	}
+	
+	
+	
 	public String getResultFilePath(String fileName) throws Exception {
 		if (this.currentTest == null) {
 			throw new Exception("Cannot create new result file path without having set current test!");
@@ -195,6 +213,15 @@ public class FileManager {
 			throw new Exception("Cannot create new temp file path without having set current test!");
 		}
 		return this.getCurrentTempPath() + fileName;
+	}
+	
+	
+	
+	public String getNeo4jFilePath(String fileName) throws Exception {
+		if (this.currentTest == null) {
+			throw new Exception("Cannot create new neo4j file path without having set current test!");
+		}
+		return this.getCurrentNeo4jPath() + fileName;
 	}
 	
 	
@@ -271,6 +298,25 @@ public class FileManager {
 			this.createDirectory(this.getCurrentPlotsPath());
 		}
 		return this.createFileWriterForPath(this.getPlotsFilePath(fileName));
+	}
+
+
+	
+	/**
+	 * Creates a new file writer with given filename within current neo4j directory.
+	 * 
+	 * You have to set current test before!
+	 * 
+	 * @param fileName
+	 * @return
+	 * @throws Exception
+	 */
+	public FileWriter getNewNeo4jFileWriter(String fileName) throws Exception {
+		File currentNeo4jDir = new File(this.getCurrentNeo4jPath());
+		if (!currentNeo4jDir.exists()) {
+			this.createDirectory(this.getCurrentNeo4jPath());
+		}
+		return this.createFileWriterForPath(this.getNeo4jFilePath(fileName));
 	}
 
 
