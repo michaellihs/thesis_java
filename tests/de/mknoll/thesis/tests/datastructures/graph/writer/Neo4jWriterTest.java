@@ -9,7 +9,7 @@ import de.mknoll.thesis.datastructures.graph.IdNodeMap;
 import de.mknoll.thesis.datastructures.graph.Recommendation;
 import de.mknoll.thesis.datastructures.graph.RecommendationGraph;
 import de.mknoll.thesis.datastructures.graph.RecommenderObject;
-import de.mknoll.thesis.datastructures.graph.writer.Neo4jWriter;
+import de.mknoll.thesis.datastructures.graph.writer.Neo4jDbWriter;
 import de.mknoll.thesis.tests.div.MockGraphBuilder;
 
 
@@ -18,14 +18,14 @@ import de.mknoll.thesis.tests.div.MockGraphBuilder;
  * Class implements a testcase for neo4j graph writer
  * 
  * @author Michael Knoll <mimi@kaktusteam.de>
- * @see de.mknoll.thesis.datastructures.graph.writer.Neo4jWriter
+ * @see de.mknoll.thesis.datastructures.graph.writer.Neo4jDbWriter
  */
 public class Neo4jWriterTest {
 
 	@Test
 	public void testWrite() throws Exception {
 		RecommendationGraph recGraph = MockGraphBuilder.createRecommendationTestGraph();
-		Neo4jWriter writer = new Neo4jWriter();
+		Neo4jDbWriter writer = new Neo4jDbWriter();
 		writer.write(recGraph, "http://localhost:7474/db/data/");
 	}
 

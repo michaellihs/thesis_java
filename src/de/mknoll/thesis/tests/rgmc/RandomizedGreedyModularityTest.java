@@ -25,7 +25,7 @@ import de.mknoll.thesis.datastructures.graph.reader.GraphReader;
 import de.mknoll.thesis.datastructures.graph.reader.PostgresReader;
 import de.mknoll.thesis.datastructures.graph.writer.EdgeListWriter;
 import de.mknoll.thesis.datastructures.graph.writer.MetisWriter;
-import de.mknoll.thesis.datastructures.graph.writer.Neo4jWriter;
+import de.mknoll.thesis.datastructures.graph.writer.Neo4jDbWriter;
 import de.mknoll.thesis.externaltools.wrapper.RandomizedGreedyModularityClustering;
 import de.mknoll.thesis.framework.data.TestResult;
 import de.mknoll.thesis.framework.filesystem.FileManager;

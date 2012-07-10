@@ -10,7 +10,7 @@ import de.mknoll.thesis.datastructures.graph.DefaultIdNodeMap;
 import de.mknoll.thesis.datastructures.graph.IdNodeMap;
 import de.mknoll.thesis.datastructures.graph.RecommendationGraph;
 import de.mknoll.thesis.datastructures.graph.RecommenderObject;
-import de.mknoll.thesis.datastructures.graph.writer.Neo4jWriter;
+import de.mknoll.thesis.datastructures.graph.writer.Neo4jDbWriter;
 import de.mknoll.thesis.framework.logger.ConsoleLogger;
 import de.mknoll.thesis.framework.logger.LoggerInterface;
 
@@ -65,7 +65,7 @@ public class Neo4jDendrogramWriterTest {
 		this.recommendationGraph.addRecommendation(r3, r4);
 		
 		// Persist recommendation graph to neo4j to have n4j ids for nodes
-		Neo4jWriter n4jGraphWriter = new Neo4jWriter();
+		Neo4jDbWriter n4jGraphWriter = new Neo4jDbWriter();
 		n4jGraphWriter.write(this.recommendationGraph, this.n4jUri);
 		
 		
