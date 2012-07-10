@@ -11,7 +11,7 @@ import org.picocontainer.parameters.ConstantParameter;
 
 import de.mknoll.thesis.analysis.ClusterSizeAtStepAnalyzer;
 import de.mknoll.thesis.datastructures.dendrogram.LinkDendrogram;
-import de.mknoll.thesis.datastructures.dendrogram.Neo4jDendrogramWriter;
+import de.mknoll.thesis.datastructures.dendrogram.Neo4jDendrogramDbWriter;
 import de.mknoll.thesis.datastructures.dendrogram.NewmanJoinsDendrogramReader;
 import de.mknoll.thesis.datastructures.dendrogram.RecommenderObjectDendrogramBuilder;
 import de.mknoll.thesis.datastructures.dendrogram.RgmcDendrogramBuilder;

@@ -15,7 +15,7 @@ import de.mknoll.thesis.analysis.ComponentSizeComponentCountAnalyzer;
 import de.mknoll.thesis.datastructures.dendrogram.Dendrogram;
 import de.mknoll.thesis.datastructures.dendrogram.JsonDendrogramWriter;
 import de.mknoll.thesis.datastructures.dendrogram.LinkDendrogram;
-import de.mknoll.thesis.datastructures.dendrogram.Neo4jDendrogramWriter;
+import de.mknoll.thesis.datastructures.dendrogram.Neo4jDendrogramDbWriter;
 import de.mknoll.thesis.datastructures.dendrogram.NewmanDendrogramBuilder;
 import de.mknoll.thesis.datastructures.dendrogram.NewmanJoinsDendrogramReader;
 import de.mknoll.thesis.datastructures.dendrogram.RecommenderObjectDendrogramBuilder;
