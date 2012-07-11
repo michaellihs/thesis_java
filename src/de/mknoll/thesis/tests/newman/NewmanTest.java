@@ -28,8 +28,7 @@ import de.mknoll.thesis.datastructures.graph.RecommenderObject;
 import de.mknoll.thesis.datastructures.graph.reader.GraphReader;
 import de.mknoll.thesis.datastructures.graph.reader.PostgresReader;
 import de.mknoll.thesis.datastructures.graph.writer.EdgeListWriter;
-import de.mknoll.thesis.datastructures.graph.writer.Neo4jDbWriter;
-import de.mknoll.thesis.datastructures.graph.writer.Neo4jFileWriter;
+import de.mknoll.thesis.datastructures.graph.writer.Neo4jWriter;
 import de.mknoll.thesis.externaltools.wrapper.FastModularity;
 import de.mknoll.thesis.framework.data.TestResult;
 import de.mknoll.thesis.framework.filesystem.FileManager;
@@ -130,8 +129,8 @@ public class NewmanTest extends AbstractTest {
 		// Write recommendation graph to Neo4J file
 		this.logger.log("Writing recommendation graph to N4J file...");
 		String n4jFilePath = this.fileManager.getCurrentNeo4jPath();
-		Neo4jFileWriter n4jFileWriter = new Neo4jFileWriter();
-		n4jFileWriter.write(this.recommendationGraph, n4jFilePath);
+		Neo4jWriter n4jWriter = Neo4jWriter.getFileWriterForDatabasePath(n4jFilePath);
+		n4jWriter.write(this.recommendationGraph);
 
 		
 		// Writing recommendation graph to an edge list file required by Newman algorithm implementation

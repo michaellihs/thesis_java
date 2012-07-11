@@ -8,7 +8,10 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 
 import de.mknoll.thesis.datastructures.graph.DefaultNamespaces;
+import de.mknoll.thesis.datastructures.graph.Recommendation;
 import de.mknoll.thesis.datastructures.graph.RecommendationGraph;
+import de.mknoll.thesis.neo4j.Neo4jDbWriter;
+import de.mknoll.thesis.neo4j.Neo4jFileWriter;
 
 
 
@@ -22,7 +25,36 @@ import de.mknoll.thesis.datastructures.graph.RecommendationGraph;
  * @author Michael Knoll <mimi@kaktusteam.de>
  *
  */
-public abstract class Neo4jWriter implements GraphWriter {
+public class Neo4jWriter {
+	
+	/**
+	 * Returns a new instance of this class for writing into 
+	 * database server given by URL
+	 * 
+	 * @param databaseUrl URL of database to be used for writing
+	 * @return Neo4j writer for given database URL
+	 */
+	public static Neo4jWriter getDbWriterForDatabaseUrl(String databaseUrl) {
+		de.mknoll.thesis.neo4j.Neo4jDbWriter dbWriter = new Neo4jDbWriter(databaseUrl);
+		return new Neo4jWriter(dbWriter);
+	}
+	
+	
+	
+	/**
+	 * Returns a new instance of this class for writing into database
+	 * files given by database path
+	 * 
+	 * @param databasePath Path to database files used as storage
+	 * @return Neo4j writer for given database path
+	 */
+	public static Neo4jWriter getFileWriterForDatabasePath(String databasePath) {
+		de.mknoll.thesis.neo4j.Neo4jFileWriter fileWriter = new Neo4jFileWriter(databasePath);
+		return new Neo4jWriter(fileWriter);
+	}
+	
+	
+	
 
 	/**
 	 * Holds mapping of already inserted nodes
@@ -37,9 +69,52 @@ public abstract class Neo4jWriter implements GraphWriter {
 	protected RecommendationGraph recommendationGraph;
 	
 	
-
-	public Neo4jWriter() {
-		super();
+	
+	/**
+	 * Holds graph writer for neo4j storage
+	 */
+	private de.mknoll.thesis.neo4j.Neo4jWriter writer;
+	
+	
+	
+	/**
+	 * Constructor takes writer class for concrete graph storage
+	 * 
+	 * @param writer
+	 */
+	public Neo4jWriter(de.mknoll.thesis.neo4j.Neo4jWriter writer) {
+		this.writer = writer;
+	}
+	
+	
+	
+	/**
+	 * Writes given graph into Neo4j database.
+	 * 
+	 * @throws Exception 
+	 * @Override
+	 */
+	public void write(RecommendationGraph graph) throws Exception {
+		this.recommendationGraph = graph;
+		
+		// Try to write graph in a single transaction
+		this.writer.beginTransaction();
+		try {
+			for(Recommendation rec: graph.getAllRecommendations()) {
+				Node sourceNode = this.insertNode(rec.getSource());
+				Node targetNode = this.insertNode(rec.getTarget());
+				
+				this.createRelationship(
+						sourceNode, 
+						targetNode, 
+						RecommenderRelationshipTypes.IS_RECOMMENDATION_FOR, 
+						null
+				);
+			}
+			this.writer.successTransaction();
+		} finally {
+			this.writer.finishTransaction();
+		}
 	}
 	
 	
@@ -86,7 +161,9 @@ public abstract class Neo4jWriter implements GraphWriter {
 	 * @param properties
 	 * @return
 	 */
-	abstract protected Node createNode(Map<String, Object> properties);
+	protected Node createNode(Map<String, Object> properties) {
+		return this.writer.createNode(properties);
+	}
 	
 	
 	
@@ -99,7 +176,9 @@ public abstract class Neo4jWriter implements GraphWriter {
 	 * @param properties
 	 * @return
 	 */
-	abstract protected Relationship createRelationship(Node sourceNode, Node targetNode,
-			 RecommenderRelationshipTypes type, Map<String,Object> properties);
+	protected Relationship createRelationship(Node sourceNode, Node targetNode,
+			 RecommenderRelationshipTypes type, Map<String,Object> properties) {
+		return this.writer.createRelationship(sourceNode, targetNode, type, properties);
+	}
 
 }
