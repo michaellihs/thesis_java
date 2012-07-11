@@ -1,7 +1,6 @@
 package de.mknoll.thesis.datastructures.graph.writer;
 
 
-import java.util.List;
 import java.util.Map;
 
 import org.neo4j.graphdb.Node;
@@ -30,6 +29,10 @@ public class Neo4jDbWriter extends Neo4jWriter {
 	
 	
 	
+	private de.mknoll.thesis.neo4j.Neo4jDbWriter writer;
+	
+	
+	
 	/**
 	 * Writes given graph into Neo4j database.
 	 * @throws Exception 
@@ -55,7 +58,7 @@ public class Neo4jDbWriter extends Neo4jWriter {
 
 	
 	private void initializeRestApi(String destination) {
-		this.graphRestApi = new RestAPI(destination);
+		this.writer = new de.mknoll.thesis.neo4j.Neo4jDbWriter(destination);
 	}
 	
 	
@@ -64,8 +67,7 @@ public class Neo4jDbWriter extends Neo4jWriter {
 	 * Creates a node using rest API and returns created node
 	 */
 	protected Node createNode(Map<String, Object> properties) {
-		Node n4jNode = this.graphRestApi.createNode(properties);
-		return n4jNode;
+		return this.writer.createNode(properties);
 	}
 	
 	
@@ -75,13 +77,7 @@ public class Neo4jDbWriter extends Neo4jWriter {
 	 */
 	protected Relationship createRelationship(Node sourceNode, Node targetNode,
 			 RecommenderRelationshipTypes type, Map<String,Object> properties) {
-		Relationship relationship = this.graphRestApi.createRelationship(
-				sourceNode, 
-				targetNode, 
-				type, 
-				properties
-		);
-		return relationship;
+		return this.writer.createRelationship(sourceNode, targetNode, type, properties);
 	}
 
 }

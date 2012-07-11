@@ -120,18 +120,16 @@ public class NewmanTest extends AbstractTest {
 		
 		
 		// Write recommendation graph to Neo4J graph database
-		/*
 		this.logger.log("Writing recommendation graph to N4J database...");
-		Neo4jWriter n4jWriter = new Neo4jWriter();
+		Neo4jDbWriter n4jWriter = new Neo4jDbWriter();
 		n4jWriter.write(this.recommendationGraph, this.testConfiguration.getNeo4jUrl());
-		*/
 		
 		
 		// Write recommendation graph to Neo4J file
-		this.logger.log("Writing recommendation graph to N4J file...");
+		/*this.logger.log("Writing recommendation graph to N4J file...");
 		String n4jFilePath = this.fileManager.getCurrentNeo4jPath();
 		Neo4jFileWriter n4jFileWriter = new Neo4jFileWriter();
-		n4jFileWriter.write(this.recommendationGraph, n4jFilePath);
+		n4jFileWriter.write(this.recommendationGraph, n4jFilePath);*/
 
 		
 		// Writing recommendation graph to an edge list file required by Newman algorithm implementation

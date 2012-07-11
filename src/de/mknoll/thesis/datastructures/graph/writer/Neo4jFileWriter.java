@@ -36,6 +36,10 @@ public class Neo4jFileWriter extends Neo4jWriter {
 	private GraphDatabaseService graphDb;
 	
 	
+	
+	private de.mknoll.thesis.neo4j.Neo4jFileWriter writer;
+	
+	
 
 	@Override
 	public void write(RecommendationGraph graph, String destination) throws Exception {
@@ -78,6 +82,8 @@ public class Neo4jFileWriter extends Neo4jWriter {
     		newEmbeddedDatabaseBuilder(this.destination) .
     		loadPropertiesFromFile(this.pathToConfig + "neo4j.properties") .
     		newGraphDatabase();
+		
+		this.writer = new de.mknoll.thesis.neo4j.Neo4jFileWriter(this.graphDb);
 	}
 	
 	
@@ -95,28 +101,15 @@ public class Neo4jFileWriter extends Neo4jWriter {
 
 	@Override
 	protected Node createNode(Map<String, Object> properties) {
-		Node createdNode = this.graphDb.createNode();
-		if (properties != null) {
-			for (String key : properties.keySet()) {
-				createdNode.setProperty(key, properties.get(key));
-			}
-		}
-		return createdNode;
+		return this.writer.createNode(properties);
 	}
 
 
 
 	@Override
 	protected Relationship createRelationship(Node sourceNode, Node targetNode,
-			 RecommenderRelationshipTypes type, Map<String,Object> properties) {
-		
-		Relationship relationship = sourceNode.createRelationshipTo(targetNode, type);
-		if (properties != null) {
-			for (String key: properties.keySet()) {
-				relationship.setProperty(key, properties.get(key));
-			}
-		}
-		return relationship;
+			RecommenderRelationshipTypes type, Map<String, Object> properties) {
+		return this.writer.createRelationship(sourceNode, targetNode, type, properties);
 	}
 
 }
