@@ -124,6 +124,7 @@ public class Neo4jDendrogramWriter<T extends TagCloudContainer> {
 	private Node createNodeForLink(LinkDendrogram<T> dendrogram) {
 		HashMap<String, Object> properties = new HashMap<String, Object>();
 		properties.put("cluster_size", dendrogram.size());
+		properties.put("tags", dendrogram.tagCloud().getTagsAsStringArray());
 		return this.writer.createNode(properties);
 	}
 

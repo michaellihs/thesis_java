@@ -444,6 +444,19 @@ public class Cloud implements Serializable {
 	}
 	
 	/**
+	 * Returns tags as an array of strings
+	 * @return Contained tags as an array of strings
+	 */
+	public String[] getTagsAsStringArray() {
+		List<Tag> allTags = this.allTags();
+		String[] tags = new String[allTags.size()];
+		for (int i = 0; i < allTags.size(); i++) {
+			tags[i] = allTags.get(i).getName();
+		}
+		return tags;
+	}
+	
+	/**
 	 * Returns true, if given tag name is contained by this tag cloud
 	 * @param name Tag name to be searched within tag cloud
 	 * @return True, if a tag with given name is contained by this tag cloud.
