@@ -103,10 +103,22 @@ public class RecommenderObject
 	/**
 	 * Constructor for recommender object for a given id
 	 * 
-	 * @param id
+	 * @param docId
 	 */
-	public RecommenderObject(String id) {
-		this(id, "", "");
+	public RecommenderObject(String docId) {
+		this(docId, "", "");
+	}
+	
+	
+	
+	/**
+	 * Constructor for recommender object for a given id and a description (title)
+	 * 
+	 * @param docId
+	 * @param description
+	 */
+	public RecommenderObject(String docId, String description) {
+		this(docId, description, "");
 	}
 	
 	

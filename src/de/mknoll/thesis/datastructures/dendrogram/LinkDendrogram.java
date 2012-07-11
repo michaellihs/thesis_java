@@ -14,6 +14,7 @@ import org.mcavallo.opencloud.Cloud;
  * A link is an inner node of a dendrogram acting as a merge of two connected children.
  * 
  * @author Michael Knoll <mimi@kaktusteam.de>
+ * @see de.mknoll.thesis.tests.datastructures.dendrogram.LinkDendrogramTest
  */
 public class LinkDendrogram<T> extends Dendrogram<T> {
 
@@ -128,7 +129,7 @@ public class LinkDendrogram<T> extends Dendrogram<T> {
 	 * of both children.
 	 */
 	protected void createTagCloud() {
-		this.tagCloud = new Cloud(this.dendrogram1.tagCloud);
+		this.tagCloud = new Cloud(this.dendrogram1.tagCloud());
 		this.tagCloud.addTags(this.dendrogram2.tagCloud().tags());
 	}
 	

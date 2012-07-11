@@ -5,7 +5,10 @@ import static org.junit.Assert.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.junit.Test;
+import org.mcavallo.opencloud.Cloud;
 
 import de.mknoll.thesis.datastructures.dendrogram.LeafDendrogram;
 import de.mknoll.thesis.datastructures.dendrogram.LinkDendrogram;
@@ -18,6 +21,7 @@ import de.mknoll.thesis.datastructures.graph.RecommenderObject;
  * Testcase implements some tests for dendrogram implementation of this thesis
  * 
  * @author Michael Knoll <mimi@kaktusteam.de>
+ * @see de.mknoll.thesis.datastructures.dendrogram.LinkDendrogram
  */
 public class LinkDendrogramTest {
 	
@@ -112,6 +116,26 @@ public class LinkDendrogramTest {
 		} catch (Exception e) {
 			return;
 		}
+	}
+	
+	
+	
+	@Test
+	public void tagCloudReturnsExpectedTagCloud() {
+		RecommenderObject recObj1 = new RecommenderObject("1","tag1 tag2 tag3");
+		RecommenderObject recObj2 = new RecommenderObject("2","tag1 tag2 tag4");
+		LeafDendrogram<RecommenderObject> leaf1 = new LeafDendrogram<RecommenderObject>(recObj1);
+		LeafDendrogram<RecommenderObject> leaf2 = new LeafDendrogram<RecommenderObject>(recObj2);
+		LinkDendrogram<RecommenderObject> link1 = new LinkDendrogram<RecommenderObject>(leaf1, leaf2);
+		Cloud c = link1.tagCloud();
+		Assert.assertTrue(c.containsName("tag1"));
+		Assert.assertTrue(c.containsName("tag2"));
+		Assert.assertTrue(c.containsName("tag3"));
+		Assert.assertTrue(c.containsName("tag4"));
+		Assert.assertTrue(c.getTag("tag1").getScore() == 2);
+		Assert.assertTrue(c.getTag("tag2").getScore() == 2);
+		Assert.assertTrue(c.getTag("tag3").getScore() == 1);
+		Assert.assertTrue(c.getTag("tag4").getScore() == 1);
 	}
 	
 	

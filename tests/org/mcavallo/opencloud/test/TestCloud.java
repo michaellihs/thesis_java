@@ -444,5 +444,13 @@ public class TestCloud extends TestCase {
 		// Checks that the two collection are equal
 		assertEquals(tagsToAdd, tags);
 	}
-
+	
+	public void testContains() {
+		Cloud c = new Cloud();
+		Tag tag = new Tag("tag1");
+		c.addTag(tag);
+		assertTrue(c.containsName("tag1"));
+		assertFalse(c.containsName("tag2"));
+	}
+	
 }

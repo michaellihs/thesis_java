@@ -20,8 +20,13 @@ import java.util.regex.Pattern;
 
 import org.mcavallo.opencloud.filters.Filter;
 
+
+
 /**
  * Class representing a tag cloud.
+ * 
+ * Further functionality has been added by Michael Knoll <mimi@kaktusteam.de>
+ * @see org.mcavallo.opencloud.test.TestCloud
  */
 public class Cloud implements Serializable {
 
@@ -436,6 +441,19 @@ public class Cloud implements Serializable {
 	 */
 	public List<Tag> allTags() {
 		return new ArrayList<Tag>(getCloud().values());
+	}
+	
+	/**
+	 * Returns true, if given tag name is contained by this tag cloud
+	 * @param name Tag name to be searched within tag cloud
+	 * @return True, if a tag with given name is contained by this tag cloud.
+	 */
+	public Boolean containsName(String name) {
+		if (cloud.get(this.extractKey(name)) != null) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
