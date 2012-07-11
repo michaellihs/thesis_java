@@ -73,4 +73,11 @@ public interface Neo4jWriter {
 	 */
 	public void finishTransaction() throws Exception;
 	
+	
+	
+	/**
+	 * Shuts down db connection
+	 */
+	public void shutdown();
+	
 }

@@ -59,4 +59,10 @@ public abstract class AbstractTest implements Test {
 		this.index = index;
 	}
 	
+	
+	
+	public void shutdown() {
+		// normally, nothing's to do here
+	}
+	
 }

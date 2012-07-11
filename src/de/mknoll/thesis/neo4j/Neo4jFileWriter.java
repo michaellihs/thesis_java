@@ -130,4 +130,13 @@ public class Neo4jFileWriter implements Neo4jWriter {
 		return this.graphDb.getNodeById(id);
 	}
 	
+	
+	
+	/**
+	 * Shuts down connection to graph db
+	 */
+	public void shutdown() {
+		this.graphDb.shutdown();
+	}
+	
 }

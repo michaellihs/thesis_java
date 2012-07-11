@@ -21,6 +21,13 @@ public interface Test {
 	
 	
 	/**
+	 * Is called, when test has finished and testsuite shuts down
+	 */
+	public void shutdown();
+	
+	
+	
+	/**
 	 * Getter for index of test within testsuite.
 	 * 
 	 * Each test needs to have an index to be identifiable within a testrun.

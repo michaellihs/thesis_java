@@ -98,5 +98,14 @@ public class Neo4jDbWriter implements Neo4jWriter {
 	public Node getNodeById(Long id) {
 		return this.graphRestApi.getNodeById(id);
 	}
+	
+	
+	
+	/**
+	 * Shuts down graph db connection
+	 */
+	public void shutdown() {
+		// Nothing to do here (rest API does not need shutdown)
+	}
 
 }

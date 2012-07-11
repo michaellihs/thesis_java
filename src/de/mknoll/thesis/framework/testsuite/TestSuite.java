@@ -41,6 +41,7 @@ public class TestSuite extends ArrayList<Test> {
 			this.logger.log("Running test " + test.toString());
 			TestResult testResult = test.run();
 			testSuiteResult.add(testResult);
+			test.shutdown();
 			this.logger.log("Finished running test " + test.toString());
 		}
 		return testSuiteResult;

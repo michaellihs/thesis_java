@@ -287,5 +287,11 @@ public class NewmanTest extends AbstractTest {
 		this.neo4jWriter = new Neo4jFileWriter(this.fileManager.getCurrentNeo4jPath());
 		
 	}
+	
+	
+	
+	public void shutdown() {
+		this.neo4jWriter.shutdown();
+	}
 
 }
