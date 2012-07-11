@@ -15,7 +15,7 @@ import de.mknoll.thesis.analysis.ComponentSizeComponentCountAnalyzer;
 import de.mknoll.thesis.datastructures.dendrogram.Dendrogram;
 import de.mknoll.thesis.datastructures.dendrogram.JsonDendrogramWriter;
 import de.mknoll.thesis.datastructures.dendrogram.LinkDendrogram;
-import de.mknoll.thesis.datastructures.dendrogram.Neo4jDendrogramDbWriter;
+import de.mknoll.thesis.datastructures.dendrogram.Neo4jDendrogramWriter;
 import de.mknoll.thesis.datastructures.dendrogram.NewmanDendrogramBuilder;
 import de.mknoll.thesis.datastructures.dendrogram.NewmanJoinsDendrogramReader;
 import de.mknoll.thesis.datastructures.dendrogram.RecommenderObjectDendrogramBuilder;
@@ -35,6 +35,7 @@ import de.mknoll.thesis.framework.filesystem.FileManager;
 import de.mknoll.thesis.framework.logger.ConsoleLogger;
 import de.mknoll.thesis.framework.logger.LoggerInterface;
 import de.mknoll.thesis.framework.testsuite.AbstractTest;
+import de.mknoll.thesis.neo4j.Neo4jFileWriter;
 
 
 
@@ -99,6 +100,17 @@ public class NewmanTest extends AbstractTest {
 	
 	
 	/**
+	 * Holds an instance of a graph db writer (either file writer or db writer)
+	 * 
+	 * This object is test-wide singleton keeping track of which neo4j db we want to
+	 * write into. Used by graph writers and dendrogram writers to make sure, that 
+	 * the same database is used whenever writing to n4j.
+	 */
+	private de.mknoll.thesis.neo4j.Neo4jWriter neo4jWriter;
+	
+	
+	
+	/**
 	 * Actually runs the test itself.
 	 * @throws Exception 
 	 * 
@@ -128,8 +140,7 @@ public class NewmanTest extends AbstractTest {
 		
 		// Write recommendation graph to Neo4J file
 		this.logger.log("Writing recommendation graph to N4J file...");
-		String n4jFilePath = this.fileManager.getCurrentNeo4jPath();
-		Neo4jWriter n4jWriter = Neo4jWriter.getFileWriterForDatabasePath(n4jFilePath);
+		Neo4jWriter n4jWriter = new Neo4jWriter(this.neo4jWriter);
 		n4jWriter.write(this.recommendationGraph);
 
 		
@@ -167,15 +178,10 @@ public class NewmanTest extends AbstractTest {
 		
 		
 		// Write cluster results (dendrogram) to neo4j graph database
-		/*
-		String uri = "http://localhost:7474/db/data/";
-		LoggerInterface logger = new ConsoleLogger();
-		RestAPI restApi = new RestAPI(uri);
-		Neo4jDendrogramWriter<RecommenderObject> writer = new Neo4jDendrogramWriter<RecommenderObject>(logger, restApi, this.container.getComponent(IdNodeMap.class));
+		Neo4jDendrogramWriter<RecommenderObject> writer = new Neo4jDendrogramWriter<RecommenderObject>(logger, this.neo4jWriter, this.container.getComponent(IdNodeMap.class));
 		this.logger.log("Start writing dendrogram into neo4j");
 		writer.write(dendrogram);
 		this.logger.log("Finished writing dendrogram into neo4j");
-		*/
 		
 		// Write dendrogram to JSON file
 		//JsonDendrogramWriter<RecommenderObject> writer = new JsonDendrogramWriter<RecommenderObject>();
@@ -277,6 +283,8 @@ public class NewmanTest extends AbstractTest {
 		this.graphReader = this.container.getComponent(GraphReader.class);
 		
 		this.fileManager.setCurrentTest(this.index(), this.getClass().getName());
+		
+		this.neo4jWriter = new Neo4jFileWriter(this.fileManager.getCurrentNeo4jPath());
 		
 	}
 

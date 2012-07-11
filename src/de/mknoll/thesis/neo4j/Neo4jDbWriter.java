@@ -92,4 +92,11 @@ public class Neo4jDbWriter implements Neo4jWriter {
 		// http://lists.neo4j.org/pipermail/user/2011-August/011266.html
 	}
 
+
+
+	@Override
+	public Node getNodeById(Long id) {
+		return this.graphRestApi.getNodeById(id);
+	}
+
 }

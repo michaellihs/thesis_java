@@ -43,6 +43,16 @@ public interface Neo4jWriter {
 	
 	
 	/**
+	 * Returns node for given id from connected graph database
+	 * 
+	 * @param id ID to get node for
+	 * @return Node for given ID
+	 */
+	public Node getNodeById(Long id);
+	
+	
+	
+	/**
 	 * Starts a new transaction
 	 */
 	public void beginTransaction();

@@ -1,7 +1,6 @@
 package de.mknoll.thesis.datastructures.graph.writer;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.neo4j.graphdb.Node;
@@ -16,11 +15,26 @@ import de.mknoll.thesis.neo4j.Neo4jFileWriter;
 
 
 /**
- * Class implements an abstract base class for neo4j writers
+ * Class implements a neo4j graph writer
  * 
- * We have n4j writers that write into a (running) database server
- * and others that write into an neo4j file. Methods shared by both
- * writers are put into this class.
+ * 
+ * @example Instantiating a writer that uses neo4j files directly:
+ * <code>
+ * de.mknoll.thesis.neo4j.Neo4jWriter neo4jWriter = new Neo4jFileWriter("/path/to/database/files/");
+ * Neo4jWriter graphWriter = new Neo4jWriter(neo4jWriter);
+ * graphWriter.write(graph);
+ * </code>
+ * 
+ * 
+ * 
+ * @example Instantiating a writer that uses neo4j database server:
+ * <code>
+ * de.mknoll.thesis.neo4j.Neo4jWriter neo4jWriter = new Neo4jDbWriter("http://localhost:7474/db/data/s");
+ * Neo4jWriter graphWriter = new Neo4jWriter(neo4jWriter);
+ * graphWriter.write(graph);
+ * </code>
+ * 
+ * 
  * 
  * @author Michael Knoll <mimi@kaktusteam.de>
  *
@@ -34,7 +48,7 @@ public class Neo4jWriter {
 	 * @param databaseUrl URL of database to be used for writing
 	 * @return Neo4j writer for given database URL
 	 */
-	public static Neo4jWriter getDbWriterForDatabaseUrl(String databaseUrl) {
+	public static Neo4jWriter getDbWriter(String databaseUrl) {
 		de.mknoll.thesis.neo4j.Neo4jDbWriter dbWriter = new Neo4jDbWriter(databaseUrl);
 		return new Neo4jWriter(dbWriter);
 	}
@@ -48,14 +62,13 @@ public class Neo4jWriter {
 	 * @param databasePath Path to database files used as storage
 	 * @return Neo4j writer for given database path
 	 */
-	public static Neo4jWriter getFileWriterForDatabasePath(String databasePath) {
+	public static Neo4jWriter getFileWriter(String databasePath) {
 		de.mknoll.thesis.neo4j.Neo4jFileWriter fileWriter = new Neo4jFileWriter(databasePath);
 		return new Neo4jWriter(fileWriter);
 	}
 	
 	
 	
-
 	/**
 	 * Holds mapping of already inserted nodes
 	 */

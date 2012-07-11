@@ -5,7 +5,7 @@ import org.neo4j.rest.graphdb.RestAPI;
 
 import de.mknoll.thesis.datastructures.dendrogram.LeafDendrogram;
 import de.mknoll.thesis.datastructures.dendrogram.LinkDendrogram;
-import de.mknoll.thesis.datastructures.dendrogram.Neo4jDendrogramDbWriter;
+import de.mknoll.thesis.datastructures.dendrogram.Neo4jDendrogramWriter;
 import de.mknoll.thesis.datastructures.graph.DefaultIdNodeMap;
 import de.mknoll.thesis.datastructures.graph.IdNodeMap;
 import de.mknoll.thesis.datastructures.graph.RecommendationGraph;
@@ -20,7 +20,7 @@ import de.mknoll.thesis.framework.logger.LoggerInterface;
  * Class implements a testcase for neo4j writer
  * 
  * @author Michael Knoll <mimi@kaktusteam.de>
- * @see de.mknoll.thesis.datastructures.dendrogram.Neo4jDendrogramDbWriter
+ * @see de.mknoll.thesis.datastructures.dendrogram.Neo4jDendrogramWriter
  */
 public class Neo4jDendrogramWriterTest {
 
@@ -38,7 +38,7 @@ public class Neo4jDendrogramWriterTest {
 		
 		this.createDendrogram();
 		
-		Neo4jDendrogramDbWriter<RecommenderObject> writer = new Neo4jDendrogramDbWriter<RecommenderObject>(
+		Neo4jDendrogramWriter<RecommenderObject> writer = new Neo4jDendrogramWriter<RecommenderObject>(
 				logger, 
 				restApi, 
 				this.recommendationGraph.getIdNodeMap()

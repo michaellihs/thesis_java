@@ -122,5 +122,12 @@ public class Neo4jFileWriter implements Neo4jWriter {
 			throw new Exception("Cannot call success on transaction, as no transaction exists!");
 		}
 	}
+
+
+
+	@Override
+	public Node getNodeById(Long id) {
+		return this.graphDb.getNodeById(id);
+	}
 	
 }
