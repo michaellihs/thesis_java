@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Stack;
 
 import de.mknoll.thesis.datastructures.graph.RecommenderObject;
+import de.mknoll.thesis.datastructures.tagcloud.TagCloudContainer;
 import de.mknoll.thesis.framework.filesystem.FileManager;
 import de.mknoll.thesis.framework.logger.LoggerInterface;
 
@@ -17,7 +18,7 @@ import de.mknoll.thesis.framework.logger.LoggerInterface;
  *  
  * @author Michael Knoll <mimi@kaktusteam.de>
  */
-public class XmlDendrogramWriter<T> {
+public class XmlDendrogramWriter<T extends TagCloudContainer> {
 	
 	/**
 	 * Holds logger

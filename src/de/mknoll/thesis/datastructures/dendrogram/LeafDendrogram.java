@@ -8,17 +8,22 @@ import java.util.Stack;
 import org.hibernate.type.descriptor.sql.SmallIntTypeDescriptor;
 
 import de.mknoll.thesis.datastructures.graph.Recommendation;
+import de.mknoll.thesis.datastructures.tagcloud.TagCloudContainer;
 
 
 
 /**
- * Class implements a leaf within a dendrogram
+ * Class implements a leaf node within a dendrogram
+ * 
+ * A single object of parameterized object can be attached to a
+ * dendrogram leaf node.
  * 
  * @author Michael Knoll <mimi@kaktusteam.de>
  *
- * @param <E> Type of object that should be stored within dendrogram
+ * @param <T> Type of object that should be stored within dendrogram
+ * @see de.mknoll.thesis.tests.datastructures.dendrogram.LeafDendrogramTest
  */
-public class LeafDendrogram<T> extends Dendrogram<T> {
+public class LeafDendrogram<T extends TagCloudContainer> extends Dendrogram<T> {
 	
 	/**
 	 * Holds object that is actually contained by this leaf
@@ -97,6 +102,15 @@ public class LeafDendrogram<T> extends Dendrogram<T> {
 	@Override
 	public boolean isLeaf() {
 		return true;
+	}
+	
+	
+	
+	/**
+	 * Creates tag cloud of this dendrogram leaf node by using attached object's tag cloud
+	 */
+	protected void createTagCloud() {
+		this.tagCloud = this.containedObject.getTagCloud();
 	}
 
 }

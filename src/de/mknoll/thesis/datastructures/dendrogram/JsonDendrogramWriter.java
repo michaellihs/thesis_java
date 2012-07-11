@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Stack;
 
 import de.mknoll.thesis.datastructures.graph.RecommenderObject;
+import de.mknoll.thesis.datastructures.tagcloud.TagCloudContainer;
 
 
 
@@ -12,7 +13,7 @@ import de.mknoll.thesis.datastructures.graph.RecommenderObject;
  *  
  * @author Michael Knoll <mimi@kaktusteam.de>
  */
-public class JsonDendrogramWriter<T> {
+public class JsonDendrogramWriter<T extends TagCloudContainer> {
 
 	public String write(Dendrogram<T> dendrogram) {
 		String json = this.writeToJson(dendrogram);

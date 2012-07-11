@@ -43,8 +43,8 @@ public class NodeTest {
 	
 	@Test 
 	public void getPropertiesReturnsPropertiesOfAddedNodeProperties() {
-		HashMap<String, String> property1 = new HashMap<String, String>();
-		HashMap<String, String> property2 = new HashMap<String, String>();
+		HashMap<String, Object> property1 = new HashMap<String, Object>();
+		HashMap<String, Object> property2 = new HashMap<String, Object>();
 		NodePropertyMock nodeProperty1 = new NodePropertyMock(property1);
 		NodePropertyMock nodeProperty2 = new NodePropertyMock(property2);
 		
@@ -53,7 +53,7 @@ public class NodeTest {
 		node.addProperty("nodeProperty1", nodeProperty1);
 		node.addProperty("nodeProperty2", nodeProperty2);
 		
-		HashMap<String, HashMap<String, String>> properties = node.getPropertiesMap();
+		HashMap<String, HashMap<String, Object>> properties = node.getPropertiesMap();
 		Assert.assertTrue(properties.containsKey("nodeProperty1"));
 		Assert.assertTrue(properties.containsKey("nodeProperty2"));
 		Assert.assertTrue(properties.get("nodeProperty1").equals(property1));
@@ -105,7 +105,7 @@ public class NodeTest {
 	public void getFlatPropertiesMapReturnsExpectedMap() {
 		IdNodeMap idNodeMapping = new DefaultIdNodeMap();
 		Node node = new Node(idNodeMapping);
-		HashMap<String, String> properties = new HashMap<String, String>();
+		HashMap<String, Object> properties = new HashMap<String, Object>();
 		properties.put("innerKey1", "value1");
 		properties.put("innerKey2", "value2");
 		node.addProperty("key", new NodePropertyMock(properties));
@@ -153,24 +153,24 @@ public class NodeTest {
 	 */
 	private class NodePropertyMock implements NodeProperty {
 		
-		private HashMap<String, String> properties;
+		private HashMap<String, Object> properties;
 
 
 		
 		public NodePropertyMock() {
-			this.properties = new HashMap<String, String>();
+			this.properties = new HashMap<String, Object>();
 		}
 		
 		
 		
-		public NodePropertyMock(HashMap<String, String> properties) {
+		public NodePropertyMock(HashMap<String, Object> properties) {
 			this.properties = properties;
 		}
 		
 		
 
 		@Override
-		public HashMap<String, String> getProperties() {
+		public HashMap<String, Object> getProperties() {
 			return this.properties;
 		}
 		

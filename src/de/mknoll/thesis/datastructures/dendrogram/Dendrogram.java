@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 
+import org.mcavallo.opencloud.Cloud;
+
 
 
 /**
@@ -24,6 +26,13 @@ public abstract class Dendrogram<T> {
 	 * Holds reference link to most upper parent
 	 */
 	private Dendrogram<T> referenceLink;
+	
+	
+	
+	/**
+	 * Holds a tag cloud of contained objects
+	 */
+	protected Cloud tagCloud = null;
 
 
 
@@ -186,16 +195,19 @@ public abstract class Dendrogram<T> {
 	
 	
 	
-	/**
-	 * Does a split on dendrogram. 
-	 * 
-	 * @param resultSet
-	 * @param queue
-	 */
-	abstract void split(HashSet<Dendrogram<T>> resultSet, LinkedList<Dendrogram<T>> queue);
+	public Cloud tagCloud() {
+		if (this.tagCloud == null) {
+			this.createTagCloud();
+		}
+		return this.tagCloud;
+	}
 	
 	
 	
+	abstract protected void createTagCloud();
+
+
+
 	/**
 	 * Template method for getting member set of dendrogram
 	 * 
@@ -212,6 +224,16 @@ public abstract class Dendrogram<T> {
 	 * @return Set of members
 	 */
 	abstract public void addMembers(Set<T> set);
+	
+	
+	
+	/**
+	 * Does a split on dendrogram. 
+	 * 
+	 * @param resultSet
+	 * @param queue
+	 */
+	abstract void split(HashSet<Dendrogram<T>> resultSet, LinkedList<Dendrogram<T>> queue);
 	
 	
 	

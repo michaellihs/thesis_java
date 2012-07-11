@@ -3,6 +3,8 @@ package de.mknoll.thesis.datastructures.dendrogram;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import de.mknoll.thesis.datastructures.tagcloud.TagCloudContainer;
+
 
 
 /**
@@ -16,7 +18,7 @@ import java.util.HashMap;
  * @author Michael Knoll <mimi@kaktusteam.de>
  * @see de.mknoll.thesis.tests.datastructures.dendrogram.RecommenderObjectDendrogramBuilderTest
  */
-public abstract class DendrogramBuilder<T> {
+public abstract class DendrogramBuilder<T extends TagCloudContainer> {
 	
 	/**
 	 * Map to identify each dendrogram within the forest of dendrograms

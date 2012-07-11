@@ -18,6 +18,6 @@ public interface NodeProperty {
 	 * 
 	 * @return Map of properties for this property.
 	 */
-	public HashMap<String,String> getProperties();
+	public HashMap<String,Object> getProperties();
 	
 }

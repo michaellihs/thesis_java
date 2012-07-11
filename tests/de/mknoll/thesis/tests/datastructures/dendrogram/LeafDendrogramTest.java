@@ -15,6 +15,7 @@ import org.picocontainer.parameters.ConstantParameter;
 
 import de.mknoll.thesis.datastructures.dendrogram.LeafDendrogram;
 import de.mknoll.thesis.datastructures.graph.Recommendation;
+import de.mknoll.thesis.datastructures.graph.RecommenderObject;
 import de.mknoll.thesis.datastructures.graph.writer.EdgeListWriter;
 import de.mknoll.thesis.framework.logger.ConsoleLogger;
 import de.mknoll.thesis.framework.logger.LoggerInterface;
@@ -31,26 +32,26 @@ public class LeafDendrogramTest {
 	
 	@Test
 	public void LeafDendrogramCanBeCreatedForArbitraryObject() {
-		Recommendation rec = new Recommendation();
-		LeafDendrogram<Recommendation> leaf = new LeafDendrogram<Recommendation>(rec);
+		RecommenderObject recObj = new RecommenderObject();
+		LeafDendrogram<RecommenderObject> leaf = new LeafDendrogram<RecommenderObject>(recObj);
 	}
 	
 	
 	
 	@Test
 	public void getContainedObjectReturnsContainedObject() {
-		Recommendation rec = new Recommendation();
-		LeafDendrogram<Recommendation> leaf = new LeafDendrogram<Recommendation>(rec);
-		assertTrue(leaf.object() == rec);
+		RecommenderObject recObj = new RecommenderObject();
+		LeafDendrogram<RecommenderObject> leaf = new LeafDendrogram<RecommenderObject>(recObj);
+		assertTrue(leaf.object() == recObj);
 	}
 	
 	
 	
 	@Test
 	public void memberSetReturnsContainedObject() {
-		Recommendation rec = new Recommendation();
-		LeafDendrogram<Recommendation> leaf = new LeafDendrogram<Recommendation>(rec);
-		assertTrue(leaf.memberSet().contains(rec));
+		RecommenderObject recObj = new RecommenderObject();
+		LeafDendrogram<RecommenderObject> leaf = new LeafDendrogram<RecommenderObject>(recObj);
+		assertTrue(leaf.memberSet().contains(recObj));
 		assertTrue(leaf.memberSet().size() == 1);
 	}
 	
@@ -58,11 +59,11 @@ public class LeafDendrogramTest {
 	
 	@Test
 	public void addMembersAddsContainedObjectToGivenSet() {
-		HashSet<Recommendation> set = new HashSet<Recommendation>();
-		Recommendation rec = new Recommendation();
-		LeafDendrogram<Recommendation> leaf = new LeafDendrogram<Recommendation>(rec);
+		HashSet<RecommenderObject> set = new HashSet<RecommenderObject>();
+		RecommenderObject recObj = new RecommenderObject();
+		LeafDendrogram<RecommenderObject> leaf = new LeafDendrogram<RecommenderObject>(recObj);
 		leaf.addMembers(set);
-		assertTrue(set.contains(rec));
+		assertTrue(set.contains(recObj));
 		assertTrue(set.size() == 1);
 	}
 	

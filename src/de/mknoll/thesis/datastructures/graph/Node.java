@@ -140,8 +140,8 @@ public class Node {
 	 * 
 	 * @return
 	 */
-	public HashMap<String, HashMap<String, String>> getPropertiesMap() {
-		HashMap<String, HashMap<String, String>> properties = new HashMap<String, HashMap<String,String>>();
+	public HashMap<String, HashMap<String, Object>> getPropertiesMap() {
+		HashMap<String, HashMap<String, Object>> properties = new HashMap<String, HashMap<String,Object>>();
 		for (String propertyName: this.properties.keySet()) {
 			properties.put(propertyName, this.properties.get(propertyName).getProperties());
 		}
@@ -175,7 +175,7 @@ public class Node {
 		Map<String, Object> flatPropertiesMap = new HashMap<String, Object>();
 		for (String key : this.properties.keySet()) {
 			for (String innerKey : this.properties.get(key).getProperties().keySet()) {
-				String property = this.properties.get(key).getProperties().get(innerKey);
+				Object property = this.properties.get(key).getProperties().get(innerKey);
 				
 				// Make sure, we do not have null values as those are not allowed as properties in n4j!
 				if (property == null) {

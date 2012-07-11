@@ -124,9 +124,9 @@ public class NewmanJoinsDendrogramReader {
 		dendrogramInputStreamReader.close();
 		dendrogramFileInputStream.close();
 		
-		for (Dendrogram<RecommenderObject> dendrogram: dendrogramBuilder.getDendrograms()) {
-			this.logger.log("Got dendrogram with size " + dendrogram.size());
-		}
+		//for (Dendrogram<RecommenderObject> dendrogram: dendrogramBuilder.getDendrograms()) {
+		//	this.logger.log("Got dendrogram with size " + dendrogram.size());
+		//}
 		
 		Dendrogram<RecommenderObject> biggestDendrogram = this.dendrogramBuilder.getBiggestDendrogram(); 
 		this.logger.log("Biggest dendrogram has size " + biggestDendrogram.size());

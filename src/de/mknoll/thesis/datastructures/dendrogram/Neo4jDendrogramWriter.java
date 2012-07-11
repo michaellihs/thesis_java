@@ -8,6 +8,7 @@ import de.mknoll.thesis.datastructures.graph.DefaultNamespaces;
 import de.mknoll.thesis.datastructures.graph.IdNodeMap;
 import de.mknoll.thesis.datastructures.graph.RecommenderObject;
 import de.mknoll.thesis.datastructures.graph.writer.RecommenderRelationshipTypes;
+import de.mknoll.thesis.datastructures.tagcloud.TagCloudContainer;
 import de.mknoll.thesis.framework.logger.LoggerInterface;
 import de.mknoll.thesis.neo4j.Neo4jWriter;
 
@@ -22,7 +23,7 @@ import de.mknoll.thesis.neo4j.Neo4jWriter;
  * @author Michael Knoll <mimi@kaktusteam.de>
  * @see de.mknoll.thesis.tests.datastructures.dendrogram.Neo4jDendrogramWriterTest
  */
-public class Neo4jDendrogramWriter<T> {
+public class Neo4jDendrogramWriter<T extends TagCloudContainer> {
 	
 	/**
 	 * Holds n4j writer used for writing nodes and relationship to database

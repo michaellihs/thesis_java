@@ -2,6 +2,13 @@ package de.mknoll.thesis.datastructures.graph;
 
 import java.util.HashMap;
 
+import org.mcavallo.opencloud.Cloud;
+import org.mcavallo.opencloud.Tag;
+
+import de.mknoll.thesis.datastructures.tagcloud.DefaultTagCloud;
+import de.mknoll.thesis.datastructures.tagcloud.TagCloudContainer;
+import de.mknoll.thesis.datastructures.tagcloud.TagExtractor;
+
 
 
 /**
@@ -12,10 +19,10 @@ import java.util.HashMap;
  * recommender service.
  * 
  * @author Michael Knoll <mimi@kaktusteam.de>
- *
+ * @see de.mknoll.thesis.tests.datastructures.graph.RecommenderObjectTest
  */
 public class RecommenderObject 
-		implements AttachableToNode {
+		implements AttachableToNode, TagCloudContainer {
 
 	/**
 	 * Holds property name if this object is attached to a node
@@ -63,6 +70,24 @@ public class RecommenderObject
 	 * Holds node to which recommender object is attached to
 	 */
 	private Node node;
+	
+	
+	
+	/**
+	 * Holds tags for this recommender object
+	 * 
+	 * Tags are filtered!
+	 */
+	private Tag[] tags = null;
+
+
+
+	/**
+	 * Holds tags as string array
+	 * 
+	 * Tags are filtered!
+	 */
+	private String[] tagsAsStrings;
 	
 	
 	
@@ -178,13 +203,35 @@ public class RecommenderObject
 
 
 	@Override
-	public HashMap<String, String> getProperties() {
-		HashMap<String, String> properties = new HashMap<String, String>();
+	public HashMap<String, Object> getProperties() {
+		if (this.tags == null) {
+			this.createTags();
+		}
+		HashMap<String, Object> properties = new HashMap<String, Object>();
+		properties.put("tags", this.tagsAsStrings);
 		properties.put("description", this.description);
 		properties.put("isbn12", this.isbn12);
 		properties.put(DefaultNamespaces.BIBTIP.toString(), this.docId);
 		properties.put("internalId", new Integer(this.node.internalId()).toString());
 		return properties;
+	}
+
+
+
+	/**
+	 * Reads recommender object's title and creates an array of tags for 
+	 * this object.
+	 */
+	private void createTags() {
+		TagExtractor extractor = new TagExtractor();
+		DefaultTagCloud cloud = new DefaultTagCloud();
+		cloud.addTags(extractor.extractTags(this.description));
+		Tag[] tags = new Tag[cloud.tags().size()];
+		this.tags = cloud.tags().toArray(tags); 
+		this.tagsAsStrings = new String[tags.length];
+		for (int i = 0; i < tags.length; i++) {
+			this.tagsAsStrings[i] = this.tags[i].getName();
+		}
 	}
 
 
@@ -211,6 +258,46 @@ public class RecommenderObject
 		} else {
 			return false;
 		}
+	}
+	
+	
+	
+	/**
+	 * Returns array of tags for this recommender object
+	 * 
+	 * @return Array of tags for this recommender object
+	 */
+	public Tag[] tags() {
+		return this.tags;
+	}
+	
+	
+	
+	/**
+	 * Returns tags as array of strings for this recommender object
+	 * 
+	 * @return Tags as array of strings for this recommender object
+	 */
+	public String[] tagsAsStrings() {
+		return this.tagsAsStrings;
+	}
+
+
+
+	/**
+	 * Returns a tag cloud for this recommender object
+	 * 
+	 * @Override
+	 */
+	public Cloud getTagCloud() {
+		Cloud tagCloud = new Cloud();
+		if (this.tags == null) {
+			this.createTags();
+		}
+		for (int i = 0; i < this.tags.length; i++) {
+			tagCloud.addTag(this.tags[i]);
+		}
+		return tagCloud;
 	}
 	
 }

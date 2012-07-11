@@ -11,12 +11,15 @@ import de.mknoll.thesis.tests.datastructures.dendrogram.NewmanJoinsDendrogramRea
 import de.mknoll.thesis.tests.datastructures.dendrogram.RecommenderObjectDendrogramBuilderTest;
 import de.mknoll.thesis.tests.datastructures.graph.IdNodeMapTest;
 import de.mknoll.thesis.tests.datastructures.graph.NodeTest;
+import de.mknoll.thesis.tests.datastructures.graph.RecommenderObjectTest;
 import de.mknoll.thesis.tests.datastructures.graph.writer.MetisWriterTest;
 import de.mknoll.thesis.tests.datastructures.graph.writer.Neo4jWriterTest;
 import de.mknoll.thesis.tests.di.DependencyInjectionTest;
 import de.mknoll.thesis.tests.framework.core.BootstrapTest;
 import de.mknoll.thesis.tests.framework.database.PostgresConnectionTest;
 import de.mknoll.thesis.tests.datastructures.graph.RecommendationGraphTest;
+import de.mknoll.thesis.tests.datastructures.tagcloud.DefaultTagCloudTest;
+import de.mknoll.thesis.tests.datastructures.tagcloud.TagExtractorTest;
 import de.mknoll.thesis.tests.neo4j.Neo4jTest;
 
 
@@ -42,7 +45,10 @@ import de.mknoll.thesis.tests.neo4j.Neo4jTest;
 	Neo4jDendrogramWriterTest.class,
 	NodeTest.class,
 	IdNodeMapTest.class,
-	MetisWriterTest.class
+	MetisWriterTest.class,
+	TagExtractorTest.class,
+	DefaultTagCloudTest.class,
+	RecommenderObjectTest.class
 } )
 
 public class AllTests {
