@@ -5,6 +5,7 @@ import java.util.Map;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 
 import de.mknoll.thesis.datastructures.graph.writer.RecommenderRelationshipTypes;
@@ -23,6 +24,13 @@ public class Neo4jFileWriter implements Neo4jWriter {
 	 * Holds a connection to graph database
 	 */
 	private GraphDatabaseService graphDb;
+	
+	
+	
+	/**
+	 * Holds current neo4j transaction
+	 */
+	private Transaction currentTransaction = null;
 	
 	
 	
@@ -84,6 +92,35 @@ public class Neo4jFileWriter implements Neo4jWriter {
 			}
 		}
 		return relationship;
+	}
+
+
+
+	@Override
+	public void beginTransaction() {
+		this.currentTransaction = this.graphDb.beginTx();
+	}
+
+
+
+	@Override
+	public void finishTransaction() throws Exception {
+		if (this.currentTransaction != null) {
+			this.currentTransaction.finish();
+		} else {
+			throw new Exception("Cannot finish transaction, as no transaction exists!");
+		}
+	}
+
+
+
+	@Override
+	public void successTransaction() throws Exception {
+		if (this.currentTransaction != null) {
+			this.currentTransaction.success();
+		} else {
+			throw new Exception("Cannot call success on transaction, as no transaction exists!");
+		}
 	}
 	
 }

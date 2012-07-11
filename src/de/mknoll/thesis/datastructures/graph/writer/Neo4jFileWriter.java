@@ -52,7 +52,7 @@ public class Neo4jFileWriter extends Neo4jWriter {
 	
 	
 	private void writeGraphToDestination(RecommendationGraph graph) throws Exception {
-		Transaction tx = graphDb.beginTx();
+		this.writer.beginTransaction();
 		try {
 			for(Recommendation rec: graph.getAllRecommendations()) {
 					
@@ -68,10 +68,10 @@ public class Neo4jFileWriter extends Neo4jWriter {
 				
 			}
 			
-			tx.success();
+			this.writer.successTransaction();
 			
 		} finally {
-			tx.finish();
+			this.writer.finishTransaction();
 		}
 	}
 

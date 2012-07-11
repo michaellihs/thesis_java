@@ -40,4 +40,27 @@ public interface Neo4jWriter {
 	public Relationship createRelationship(Node sourceNode, Node targetNode, 
 			RecommenderRelationshipTypes type, Map<String,Object> properties);
 	
+	
+	
+	/**
+	 * Starts a new transaction
+	 */
+	public void beginTransaction();
+	
+	
+	
+	/**
+	 * Calls tx.success()
+	 * @throws Exception 
+	 */
+	public void successTransaction() throws Exception;
+	
+	
+	
+	/**
+	 * Finishes transaction
+	 * @throws Exception 
+	 */
+	public void finishTransaction() throws Exception;
+	
 }

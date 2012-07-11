@@ -67,4 +67,29 @@ public class Neo4jDbWriter implements Neo4jWriter {
 		return relationship;
 	}
 
+
+
+	@Override
+	public void beginTransaction() {
+		// Nothing to do here - every REST call is handled in transaction
+		// http://lists.neo4j.org/pipermail/user/2011-August/011266.html
+	}
+
+
+
+	@Override
+	public void finishTransaction() {
+		// Nothing to do here - every REST call is handled in transaction
+		// http://lists.neo4j.org/pipermail/user/2011-August/011266.html
+		
+	}
+
+
+
+	@Override
+	public void successTransaction() {
+		// Nothing to do here - every REST call is handled in transaction
+		// http://lists.neo4j.org/pipermail/user/2011-August/011266.html
+	}
+
 }
