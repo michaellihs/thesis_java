@@ -58,7 +58,7 @@ public class SetDifferenceTagComparatorStrategyTest {
 		c1.addTag("tag1");
 		c2.addTag("tag3");
 		c2.addTag("tag4");
-		Assert.assertTrue(this.comparator.compare(c1.allTags(), c2.allTags()) == 2F);
+		Assert.assertTrue(this.comparator.compare(c1.allTags(), c2.allTags()) == 4F);
 	}
 	
 	
@@ -69,6 +69,19 @@ public class SetDifferenceTagComparatorStrategyTest {
 		c1.addTag("tag2");
 		c1.addTag("tag1");
 		Assert.assertTrue(this.comparator.compare(c1.allTags(), c1.allTags()) == 0F);
+	}
+	
+	
+	
+	@Test
+	public void compareReturnsExpectedValueOnDisjunctTagsets() {
+		Cloud c1 = new Cloud();
+		c1.addTag("tag2");
+		c1.addTag("tag1");
+		Cloud c2 = new Cloud();
+		c2.addTag("tag3");
+		c2.addTag("tag4");
+		Assert.assertTrue(this.comparator.compare(c1.allTags(), c2.allTags()) == 4F);
 	}
 	
 }
