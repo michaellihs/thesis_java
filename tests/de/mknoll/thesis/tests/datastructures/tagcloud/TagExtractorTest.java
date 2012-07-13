@@ -30,4 +30,21 @@ public class TagExtractorTest {
 		Assert.assertTrue(tags.get(2).getName().equals("tag3"));
 	}
 	
+	
+	
+	@Test
+	public void extractTagsReplacesSpecialCharsFromTags() {
+		TagExtractor tagExtractor = new TagExtractor();
+		String testString = "$tag?with-special::chars\"";
+		List<Tag> tags = tagExtractor.extractTags(testString);
+		Assert.assertTrue(tags.size() == 1);
+		Assert.assertTrue(tags.get(0).getName().equals("tagwithspecialchars"));
+		
+		testString = "\"quotedTag\" -anotherspecialchartag?";
+		tags = tagExtractor.extractTags(testString);
+		Assert.assertTrue(tags.size() == 2);
+		Assert.assertTrue(tags.get(0).getName().equals("quotedTag"));
+		Assert.assertTrue(tags.get(1).getName().equals("anotherspecialchartag"));
+	}
+	
 }
