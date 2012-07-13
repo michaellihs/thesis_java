@@ -18,6 +18,7 @@ import de.mknoll.thesis.tests.di.DependencyInjectionTest;
 import de.mknoll.thesis.tests.framework.core.BootstrapTest;
 import de.mknoll.thesis.tests.framework.database.PostgresConnectionTest;
 import de.mknoll.thesis.tests.datastructures.graph.RecommendationGraphTest;
+import de.mknoll.thesis.tests.datastructures.tagcloud.CosineSimilarityTagComparatorStrategyTest;
 import de.mknoll.thesis.tests.datastructures.tagcloud.DefaultTagCloudTest;
 import de.mknoll.thesis.tests.datastructures.tagcloud.NormalizedSetDifferenceTagComparatorStrategyTest;
 import de.mknoll.thesis.tests.datastructures.tagcloud.SetDifferenceTagComparatorStrategyTest;
@@ -52,7 +53,8 @@ import de.mknoll.thesis.tests.neo4j.Neo4jTest;
 	DefaultTagCloudTest.class,
 	RecommenderObjectTest.class,
 	SetDifferenceTagComparatorStrategyTest.class,
-	NormalizedSetDifferenceTagComparatorStrategyTest.class
+	NormalizedSetDifferenceTagComparatorStrategyTest.class,
+	CosineSimilarityTagComparatorStrategyTest.class
 } )
 
 public class AllTests {

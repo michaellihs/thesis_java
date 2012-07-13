@@ -13,6 +13,6 @@ import org.mcavallo.opencloud.Tag;
  */
 public interface TagComparatorStrategy {
 
-	public Float compare(List<Tag> tags1, List<Tag> tags2);
+	public Double compare(List<Tag> tags1, List<Tag> tags2);
 	
 }

@@ -28,15 +28,15 @@ import org.mcavallo.opencloud.Tag;
 public class NormalizedSetDifferenceTagComparatorStrategy extends SetDifferenceTagComparatorStrategy {
 
 	@Override
-	public Float compare(List<Tag> tags1, List<Tag> tags2) {
-		Float absDifference = super.compare(tags1, tags2);
-		Float result;
+	public Double compare(List<Tag> tags1, List<Tag> tags2) {
+		Double absDifference = super.compare(tags1, tags2);
+		Double result;
 		if (absDifference == (tags1.size() + tags2.size())) {
-			result = 1F;
-		} else if (absDifference == 0F) {
-			result = 0F;
+			result = 1D;
+		} else if (absDifference == 0D) {
+			result = 0D;
 		} else {
-			Float intersectCount = (tags1.size() + tags2.size() - absDifference) / 2;
+			Double intersectCount = (tags1.size() + tags2.size() - absDifference) / 2;
 			result = intersectCount / (tags1.size() + tags2.size() - intersectCount); 
 		}
 		

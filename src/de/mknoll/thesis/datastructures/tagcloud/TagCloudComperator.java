@@ -41,13 +41,13 @@ public class TagCloudComperator {
 	 * @param cloud2 Second cloud to be compared
 	 * @return Similarity measure for given clouds
 	 */
-	public Float compare(Cloud cloud1, Cloud cloud2) {
+	public Double compare(Cloud cloud1, Cloud cloud2) {
 		return this.compareTags(cloud1.allTags(), cloud2.allTags());
 	}
 	
 	
 	
-	protected Float compareTags(List<Tag> tags1, List<Tag> tags2) {
+	protected Double compareTags(List<Tag> tags1, List<Tag> tags2) {
 		return this.comperatorStrategy.compare(tags1, tags2);
 	}
 	
