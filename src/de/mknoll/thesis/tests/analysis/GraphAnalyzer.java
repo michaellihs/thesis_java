@@ -119,6 +119,7 @@ public class GraphAnalyzer extends AbstractTest{
 		Double bcEdgeCount = new Double(this.biggestComponentSubgraph.edgeSet().size());
 		Double bcMeanDegree = (2 * bcEdgeCount) / bcVertexCount;
 		Double bcDensity = bcMeanDegree / (bcVertexCount - 1);
+		Double bcVertexFraction = bcVertexCount / vertexCount;
 		
 		fw.write("Biggest component:\n");
 		fw.write("==================\n\n");
@@ -127,6 +128,7 @@ public class GraphAnalyzer extends AbstractTest{
 		fw.write("|E| = " + bcEdgeCount + "\n");
 		fw.write("mean degree = " + bcMeanDegree + "\n");
 		fw.write("density = " + bcDensity + "\n");
+		fw.write("fraction of vertices in largest component = " + bcVertexFraction + "\n");
 		
 		fw.close();
 	}

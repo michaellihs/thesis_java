@@ -47,7 +47,7 @@ g <- graph.data.frame(edges, directed = F)
 overallAverageDegree <- 2 * length(E(g)) / length(V(g))
  ## Number of nodes with degree n
 table(degree(g, mode="out"))
- ## Number of clusters with size n
+ ## Number of components with size n
 table(clusters(g)["csize"])
 
 
@@ -62,12 +62,15 @@ maxComponent <- decompose.graph(g, min.vertices=(maxComponentSize -1), max.comps
  ## Plot distribution of degrees of nodes.
 pdf(paste(args[2], "averageDegree.pdf"))
 
-# TODO calculate maximum degree and use this instead of xlim=c(2,60)
+graphDegreeDistribution <- degree.distribution(g)
+maxComponentDegreeDistribution <- degree.distribution(maxComponent)
 
-plot(degree.distribution(maxComponent)[2:60], xlab="degree", ylab="frequency", col='blue', type="l", xlim=c(2,60), lwd=3, bty="n")
-lines(degree.distribution(g)[2:60], col='red', lwd=3)
+plot(maxComponentDegreeDistribution[2:length(graphDegreeDistribution)], log="x", xlab="degree (log)", ylab="frequency", col='blue', type="l", xlim=c(2,length(graphDegreeDistribution)), ylim=c(0,0.4), lwd=3, bty="n")
+lines(graphDegreeDistribution[2:length(graphDegreeDistribution)], xlim=c(2,length(graphDegreeDistribution)), col='red', lwd=3)
 xline(sum(degree(g, mode="out")) / length(V(g)), col='red')
 xline(sum(degree(maxComponent, mode="out")) / length(V(maxComponent)), col='blue')
+
+legend("topright", c("max component","mean degree max component","overall graph", "mean degree overall graph"), col=c("blue","blue","red","red"), lty=c(1,1,1,1), lwd=c(3,1,3,1))
 
 dev.off()
 
@@ -78,7 +81,7 @@ dev.off()
 #################################################################
 
 pdf(paste(args[2], "componentSizeComponentCount.pdf"))
-barplot(table(clusters(g)$csize), xlab="Component Size", ylab="Frequency")
+barplot(table(clusters(g)$csize), xlab="component size", ylab="count")
 
 dev.off()
 
