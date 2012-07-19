@@ -116,11 +116,6 @@ public class NewmanTest extends AbstractTest {
 		this.edgeListWriter.write(this.recommendationGraph, edgeListFilePath);
 		
 		
-		// Plot component size / component count using R
-		ComponentSizeComponentCountAnalyzer cscaAnalyzer = this.container.getComponent(ComponentSizeComponentCountAnalyzer.class);
-		cscaAnalyzer.plotComponentSizeComponentCount(edgeListFilePath);
-		
-		
 		// Calling Newman algorithm implementation to cluster recommendation graph
 		HashMap<String, String> arguments = new HashMap<String, String>();
 		arguments.put("-f", edgeListFilePath);

@@ -1,8 +1,78 @@
 LoggerClass: de.mknoll.thesis.framework.logger.ConsoleLogger
 BaseDirectory: /Users/mimi/Dropbox/Diplomarbeit/Framework/Testruns/
 Tests:
+
+########################################
+#
+# Graph Analysis
+#
+########################################
+
   - 
     Activated: 1
+    Class: de.mknoll.thesis.tests.analysis.GraphAnalyzer
+    PostgresDsn: jdbc:postgresql://localhost/dipf_dbs
+    PostgresUser: bibtip
+    PostgresPassword: bibtip
+    PostgresRecTable: recommendationtime
+    PostgresDescTable: descriptions
+  - 
+    Activated: 1
+    Class: de.mknoll.thesis.tests.analysis.GraphAnalyzer
+    PostgresDsn: jdbc:postgresql://localhost/dnb
+    PostgresUser: bibtip
+    PostgresPassword: bibtip
+    PostgresRecTable: recommendationtime
+    PostgresDescTable: descriptions
+  - 
+    Activated: 1
+    Class: de.mknoll.thesis.tests.analysis.GraphAnalyzer
+    PostgresDsn: jdbc:postgresql://localhost/ubka
+    PostgresUser: bibtip
+    PostgresPassword: bibtip
+    PostgresRecTable: recommendationtime
+    PostgresDescTable: descriptions
+  - 
+    Activated: 1
+    Class: de.mknoll.thesis.tests.analysis.GraphAnalyzer
+    PostgresDsn: jdbc:postgresql://localhost/ub_hd
+    PostgresUser: bibtip
+    PostgresPassword: bibtip
+    PostgresRecTable: recommendationtime
+    PostgresDescTable: descriptions
+  - 
+    Activated: 1
+    Class: de.mknoll.thesis.tests.analysis.GraphAnalyzer
+    PostgresDsn: jdbc:postgresql://localhost/hsb_do
+    PostgresUser: bibtip
+    PostgresPassword: bibtip
+    PostgresRecTable: recommendationtime
+    PostgresDescTable: descriptions
+  - 
+    Activated: 1
+    Class: de.mknoll.thesis.tests.analysis.GraphAnalyzer
+    PostgresDsn: jdbc:postgresql://localhost/mpil
+    PostgresUser: bibtip
+    PostgresPassword: bibtip
+    PostgresRecTable: recommendationtime
+    PostgresDescTable: descriptions
+  - 
+    Activated: 1
+    Class: de.mknoll.thesis.tests.analysis.GraphAnalyzer
+    PostgresDsn: jdbc:postgresql://localhost/stb_hb
+    PostgresUser: bibtip
+    PostgresPassword: bibtip
+    PostgresRecTable: recommendationtime
+    PostgresDescTable: descriptions
+    
+########################################
+#
+# Clustering tests
+#
+########################################    
+    
+  - 
+    Activated: 0
     Class: de.mknoll.thesis.tests.newman.NewmanTest
     PostgresDsn: jdbc:postgresql://localhost/recdata
     PostgresUser: bibtip
@@ -11,7 +81,7 @@ Tests:
     PostgresDescTable: descriptions
     Neo4jUrl: http://localhost:7474/db/data/
   - 
-    Activated: 1
+    Activated: 0
     Class: de.mknoll.thesis.tests.rgmc.RandomizedGreedyModularityTest
     PostgresDsn: jdbc:postgresql://localhost/recdata
     PostgresUser: bibtip

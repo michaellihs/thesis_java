@@ -36,6 +36,7 @@ public class TestSuite extends ArrayList<Test> {
 	public TestSuiteResult run() throws Exception {
 		Iterator it = this.iterator();
 		TestSuiteResult testSuiteResult = new TestSuiteResult();
+		Runtime r = Runtime.getRuntime();
 		while (it.hasNext()){
 			Test test = (Test) it.next();
 			this.logger.log("Running test " + test.toString());
@@ -43,6 +44,8 @@ public class TestSuite extends ArrayList<Test> {
 			testSuiteResult.add(testResult);
 			test.shutdown();
 			this.logger.log("Finished running test " + test.toString());
+			test = null;
+			r.gc();
 		}
 		return testSuiteResult;
 	}
