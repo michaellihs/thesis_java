@@ -51,41 +51,6 @@ public class NewmanTest extends AbstractTest {
 	
 	
 	/**
-	 * Holds an instance of DI container
-	 */
-	@Inject private MutablePicoContainer parentContainer;
-	
-	
-	
-	/**
-	 * Holds our own container instance for this test
-	 */
-	private MutablePicoContainer container;
-	
-	
-	
-	/**
-	 * Holds logger instance
-	 */
-	@Inject private LoggerInterface logger;
-	
-	
-	
-	/**
-	 * Holds graph reader to read graphs from different sources
-	 */
-	private GraphReader graphReader;
-	
-	
-	
-	/**
-	 * Holds file manager
-	 */
-	@Inject private FileManager fileManager;
-	
-	
-	
-	/**
 	 * Holds recommendation graph to be clustered here
 	 */
 	private RecommendationGraph recommendationGraph;
@@ -250,14 +215,9 @@ public class NewmanTest extends AbstractTest {
 	/**
 	 * Initializes this test
 	 */
-	private void init() {
-		this.container = new PicoBuilder(this.parentContainer)
-			.withCaching()
-			.build();
-
-		// We add test-wide singleton of file manager
-		this.container.addComponent(FileManager.class, this.fileManager);
-		
+	protected void init() {
+		super.init();
+				
 		this.container.addComponent(
 				EdgeListWriter.class, 
 				EdgeListWriter.class, 
@@ -274,15 +234,8 @@ public class NewmanTest extends AbstractTest {
 		this.container.addComponent(NewmanJoinsDendrogramReader.class);
 		this.container.addComponent(XmlDendrogramWriter.class);
 		
-		this.container.addComponent(IdNodeMap.class, new DefaultIdNodeMap());
-		this.container.addComponent(GraphReader.class, PostgresReader.class);
-		
 		this.container.addComponent(ClusterSizeAtStepAnalyzer.class, ClusterSizeAtStepAnalyzer.class);
 		this.container.addComponent(ComponentSizeComponentCountAnalyzer.class, ComponentSizeComponentCountAnalyzer.class);
-		
-		this.graphReader = this.container.getComponent(GraphReader.class);
-		
-		this.fileManager.setCurrentTest(this.index(), this.getClass().getName());
 		
 		this.neo4jWriter = new Neo4jFileWriter(this.fileManager.getCurrentNeo4jPath());
 		

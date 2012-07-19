@@ -2,11 +2,6 @@ package de.mknoll.thesis.tests.rgmc;
 
 import java.util.HashMap;
 
-import org.jgrapht.alg.ConnectivityInspector;
-import org.neo4j.rest.graphdb.RestAPI;
-import org.picocontainer.MutablePicoContainer;
-import org.picocontainer.PicoBuilder;
-import org.picocontainer.annotations.Inject;
 import org.picocontainer.parameters.ConstantParameter;
 
 import de.mknoll.thesis.analysis.ClusterSizeAtStepAnalyzer;
@@ -16,19 +11,12 @@ import de.mknoll.thesis.datastructures.dendrogram.NewmanJoinsDendrogramReader;
 import de.mknoll.thesis.datastructures.dendrogram.RecommenderObjectDendrogramBuilder;
 import de.mknoll.thesis.datastructures.dendrogram.RgmcDendrogramBuilder;
 import de.mknoll.thesis.datastructures.dendrogram.XmlDendrogramWriter;
-import de.mknoll.thesis.datastructures.graph.DefaultIdNodeMap;
-import de.mknoll.thesis.datastructures.graph.IdNodeMap;
 import de.mknoll.thesis.datastructures.graph.RecommendationGraph;
 import de.mknoll.thesis.datastructures.graph.RecommenderObject;
 import de.mknoll.thesis.datastructures.graph.inspectors.RecommendationGraphConnectivityInspector;
-import de.mknoll.thesis.datastructures.graph.reader.GraphReader;
-import de.mknoll.thesis.datastructures.graph.reader.PostgresReader;
-import de.mknoll.thesis.datastructures.graph.writer.EdgeListWriter;
 import de.mknoll.thesis.datastructures.graph.writer.MetisWriter;
 import de.mknoll.thesis.externaltools.wrapper.RandomizedGreedyModularityClustering;
 import de.mknoll.thesis.framework.data.TestResult;
-import de.mknoll.thesis.framework.filesystem.FileManager;
-import de.mknoll.thesis.framework.logger.ConsoleLogger;
 import de.mknoll.thesis.framework.logger.LoggerInterface;
 import de.mknoll.thesis.framework.testsuite.AbstractTest;
 
@@ -47,41 +35,6 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 	
 	
 	/**
-	 * Holds an instance of DI container
-	 */
-	@Inject private MutablePicoContainer parentContainer;
-	
-	
-	
-	/**
-	 * Holds our own container instance for this test
-	 */
-	private MutablePicoContainer container;
-	
-	
-	
-	/**
-	 * Holds logger instance
-	 */
-	@Inject private LoggerInterface logger;
-	
-	
-	
-	/**
-	 * Holds graph reader to read graphs from different sources
-	 */
-	private GraphReader graphReader;
-	
-	
-	
-	/**
-	 * Holds file manager
-	 */
-	@Inject private FileManager fileManager;
-	
-	
-	
-	/**
 	 * Holds recommendation graph to be clustered here
 	 */
 	private RecommendationGraph recommendationGraph;
@@ -92,15 +45,6 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 	 * Holds Metis writer for writing graph in Metis format
 	 */
 	private MetisWriter metisWriter;
-	
-	
-	
-	/**
-	 * Holds configuration for edgelist file writer
-	 * 
-	 * TODO put parts of configuration in generic configuration for this test
-	 */
-	private HashMap<String, String> edgeListWriterConfiguration;
 
 	
 	
@@ -178,13 +122,8 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 	
 	
 	
-	private void init() {
-		this.container = new PicoBuilder(this.parentContainer)
-			.withCaching()
-			// TODO when activating this, we get problems when having only constructor arguments
-			//.withComponentFactory(new MultiInjection())
-			.build();
-		
+	protected void init() {
+		super.init();
 		this.container.addComponent(MetisWriter.class);
 		
 		// Adding clustering wrapper to container
@@ -198,15 +137,7 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 		this.container.addComponent(NewmanJoinsDendrogramReader.class);
 		this.container.addComponent(XmlDendrogramWriter.class);
 		
-		this.container.addComponent(IdNodeMap.class, new DefaultIdNodeMap());
-		
-		this.container.addComponent(GraphReader.class, PostgresReader.class);
-
 		this.container.addComponent(ClusterSizeAtStepAnalyzer.class, ClusterSizeAtStepAnalyzer.class);
-		
-		this.graphReader = this.container.getComponent(GraphReader.class);
-		
-		this.fileManager.setCurrentTest(this.index(), this.getClass().getName());
 	}
 
 }

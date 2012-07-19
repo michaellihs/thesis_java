@@ -14,6 +14,25 @@ import org.mcavallo.opencloud.Tag;
 /**
  * Class implements tag comparator strategy using cosine similarity
  * 
+ * Cosine similarity of two Vectors A and B is defined as
+ * 
+ *                      sum_i (A_i * B_i)
+ * sim(A,B) = ----------------------------------------
+ *            sqrt(sum_i (A_i^2)) * sqrt(sum_i(B_i^2))
+ *            
+ * When comparing tag sets, we first of all create a merged vector of the two input vectors
+ * merging given scores on the same index for each tag.
+ * 
+ * E.g. for input 
+ * t1 = {tag1=10,         tag3=5, tag4=3        }
+ * t2 = {         tag2=7,         tag4=5, tag5=3}
+ * 
+ * we get tag vectors
+ * tagVector1 = {10,0,5,3,0}
+ * tagVector2 = { 0,7,0,5,3}
+ * 
+ * We can then calculate cosine similarity with the formula given above
+ * 
  * @author Michael Knoll <mimi@kaktusteam.de>
  * @see de.mknoll.thesis.tests.datastructures.tagcloud.CosineSimilarityTagComparatorStrategyTest
  */
