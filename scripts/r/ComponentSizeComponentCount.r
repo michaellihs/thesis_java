@@ -65,8 +65,11 @@ pdf(paste(args[2], "averageDegree.pdf"))
 graphDegreeDistribution <- degree.distribution(g)
 maxComponentDegreeDistribution <- degree.distribution(maxComponent)
 
-plot(maxComponentDegreeDistribution[2:length(graphDegreeDistribution)], log="x", xlab="degree (log)", ylab="frequency", col='blue', type="l", xlim=c(2,length(graphDegreeDistribution)), ylim=c(0,0.4), lwd=3, bty="n")
-lines(graphDegreeDistribution[2:length(graphDegreeDistribution)], xlim=c(2,length(graphDegreeDistribution)), col='red', lwd=3)
+maxX <- min(c(length(graphDegreeDistribution),500))
+maxX
+
+plot(maxComponentDegreeDistribution[2:maxX], log="x", xlab="degree (log)", ylab="frequency", col='blue', type="l", xlim=c(2,maxX), ylim=c(0,0.4), lwd=3, bty="n")
+lines(graphDegreeDistribution[2:maxX], xlim=c(2,maxX), col='red', lwd=3)
 xline(sum(degree(g, mode="out")) / length(V(g)), col='red')
 xline(sum(degree(maxComponent, mode="out")) / length(V(maxComponent)), col='blue')
 
