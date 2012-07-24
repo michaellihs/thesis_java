@@ -129,7 +129,9 @@ public abstract class AbstractTest implements Test {
 		this.container.addComponent(GraphReader.class, PostgresReader.class);
 		
 		this.graphReader = this.container.getComponent(GraphReader.class);
-		
+
+		// Always set graph name BEFORE current test, as latter will create directories!
+		this.fileManager.setGraphName(this.testConfiguration.getGraphName());
 		this.fileManager.setCurrentTest(this.index(), this.getClass().getName());
 	}
 	

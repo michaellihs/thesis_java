@@ -133,6 +133,17 @@ public class TestConfiguration {
 	}
 	
 	
+
+	/**
+	 * Returns yaml setting of graph name in current test configuration
+	 * 
+	 * @return Graph name of current test configuration
+	 */
+	public String getGraphName() {
+		return (String) this.yamlTestConfiguration.get("Graph");
+	}
+	
+	
 	
 	private String getConfigurationForKey(String key) {
 		return (String) this.yamlTestConfiguration.get(key);

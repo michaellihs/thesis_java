@@ -67,6 +67,13 @@ public class FileManager {
 	
 	
 	/**
+	 * Holds graph name of test configuration
+	 */
+	private String graphName;
+	
+	
+	
+	/**
 	 * Constructor takes framework configuration and logger as arguments
 	 * 
 	 * @param frameworkConfiguration
@@ -87,7 +94,7 @@ public class FileManager {
 	 * @param testClassName
 	 */
 	public void setCurrentTest(Integer testIndex, String testClassName) {
-		this.currentTest = testIndex.toString() + "_" + testClassName + "/";
+		this.currentTest = testIndex.toString() + "_" + this.graphName + "_" + testClassName + "/";
 		File currentTestDir = new File(this.currentTest); 
 		if (!currentTestDir.exists()) {
 			this.createDirectory(this.testRunDirectory + this.currentTest);
@@ -103,7 +110,7 @@ public class FileManager {
 	
 	
 	public String getCurrentResultsPath(Boolean createIfNotExists) {
-		String currentResultsPath = this.testRunDirectory + this.currentTest + RESULTS_PATH;
+		String currentResultsPath = this.currentWorkingDirectory(RESULTS_PATH);
 		File currentResultsDir = new File(currentResultsPath);
 		if (!currentResultsDir.exists() && createIfNotExists) {
 			this.createDirectory(currentResultsPath);
@@ -120,7 +127,7 @@ public class FileManager {
 	
 	
 	public String getCurrentSettingsPath(Boolean createIfNotExists) {
-		String currentSettingsPath = this.testRunDirectory + this.currentTest + SETTINGS_PATH;
+		String currentSettingsPath = this.currentWorkingDirectory(SETTINGS_PATH);
 		File currentSettingsDir = new File(currentSettingsPath);
 		if (!currentSettingsDir.exists() && createIfNotExists) {
 			this.createDirectory(currentSettingsPath);
@@ -137,7 +144,7 @@ public class FileManager {
 	
 	
 	public String getCurrentPlotsPath(Boolean createIfNotExists) {
-		String currentPlotsPath = this.testRunDirectory + this.currentTest + PLOTS_PATH;
+		String currentPlotsPath = this.currentWorkingDirectory(PLOTS_PATH);
 		File currentPlotsDir = new File(currentPlotsPath);
 		if (!currentPlotsDir.exists() && createIfNotExists) {
 			this.createDirectory(currentPlotsPath);
@@ -154,7 +161,7 @@ public class FileManager {
 	
 	
 	public String getCurrentTempPath(Boolean createIfNotExists) {
-		String currentTempPath = this.testRunDirectory + this.currentTest + TMP_PATH;
+		String currentTempPath = this.currentWorkingDirectory(TMP_PATH);
 		File currentTempDir = new File(currentTempPath);
 		if (!currentTempDir.exists() && createIfNotExists) {
 			this.createDirectory(currentTempPath);
@@ -171,7 +178,7 @@ public class FileManager {
 	
 	
 	public String getCurrentNeo4jPath(Boolean createIfNotExists) {
-		String currentNeo4jPath = this.testRunDirectory + this.currentTest + NEO4J_PATH;
+		String currentNeo4jPath = this.currentWorkingDirectory(NEO4J_PATH);
 		File currentNeo4jDir = new File(currentNeo4jPath);
 		if (!currentNeo4jDir.exists() && createIfNotExists) {
 			this.createDirectory(currentNeo4jPath);
@@ -318,6 +325,18 @@ public class FileManager {
 		}
 		return this.createFileWriterForPath(this.getNeo4jFilePath(fileName));
 	}
+	
+	
+	
+	/**
+	 * Returns full working directory path for given subdir
+	 * 
+	 * @param subdir Directory within working directory
+	 * @return Full working directory for given subdir
+	 */
+	private String currentWorkingDirectory(String subdir) {
+		return this.testRunDirectory + this.currentTest + subdir;
+	}
 
 
 
@@ -408,6 +427,12 @@ public class FileManager {
 	private FileWriter createFileWriterForPath(String path) throws IOException {
 		FileWriter fileWriter = new FileWriter(path);
 		return fileWriter;
+	}
+
+
+
+	public void setGraphName(String graphName) {
+		this.graphName = graphName;
 	}
 
 }

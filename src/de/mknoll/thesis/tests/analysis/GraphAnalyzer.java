@@ -41,6 +41,9 @@ public class GraphAnalyzer extends AbstractTest{
 
 
 
+	/**
+	 * Holds an instance of an edgelist writer
+	 */
 	private EdgeListWriter edgeListWriter;
 
 	

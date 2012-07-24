@@ -5,20 +5,24 @@ import java.util.HashMap;
 import org.picocontainer.parameters.ConstantParameter;
 
 import de.mknoll.thesis.analysis.ClusterSizeAtStepAnalyzer;
+import de.mknoll.thesis.analysis.NodeStepCluserSizeAnalyzer;
 import de.mknoll.thesis.datastructures.dendrogram.LinkDendrogram;
 import de.mknoll.thesis.datastructures.dendrogram.Neo4jDendrogramWriter;
 import de.mknoll.thesis.datastructures.dendrogram.NewmanJoinsDendrogramReader;
 import de.mknoll.thesis.datastructures.dendrogram.RecommenderObjectDendrogramBuilder;
 import de.mknoll.thesis.datastructures.dendrogram.RgmcDendrogramBuilder;
 import de.mknoll.thesis.datastructures.dendrogram.XmlDendrogramWriter;
+import de.mknoll.thesis.datastructures.graph.IdNodeMap;
 import de.mknoll.thesis.datastructures.graph.RecommendationGraph;
 import de.mknoll.thesis.datastructures.graph.RecommenderObject;
 import de.mknoll.thesis.datastructures.graph.inspectors.RecommendationGraphConnectivityInspector;
 import de.mknoll.thesis.datastructures.graph.writer.MetisWriter;
+import de.mknoll.thesis.datastructures.graph.writer.Neo4jWriter;
 import de.mknoll.thesis.externaltools.wrapper.RandomizedGreedyModularityClustering;
 import de.mknoll.thesis.framework.data.TestResult;
 import de.mknoll.thesis.framework.logger.LoggerInterface;
 import de.mknoll.thesis.framework.testsuite.AbstractTest;
+import de.mknoll.thesis.neo4j.Neo4jFileWriter;
 
 
 
@@ -46,6 +50,18 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 	 */
 	private MetisWriter metisWriter;
 
+
+
+	private Neo4jFileWriter neo4jWriter;
+
+
+
+	private Boolean writeRecommendationGraphToNeo4j;
+
+
+
+	private Boolean writeDendrogramToNeo4j;
+
 	
 	
 	@Override
@@ -63,14 +79,24 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 				+ this.recommendationGraph.vertexSet().size() + " nodes"
 		);
 		
+		
 		// Use this to get biggest component of graph
 		RecommendationGraphConnectivityInspector connectivityInspector = new RecommendationGraphConnectivityInspector(this.recommendationGraph);
 		RecommendationGraph biggestComponentSubgraph = connectivityInspector.biggestComponentAsSubgraph();
+		
 		
 		// Write recommendation graph to Neo4J graph database
 		//this.logger.log("Writing recommendation graph to N4J database...");
 		//Neo4jWriter n4jWriter = new Neo4jWriter();
 		//n4jWriter.write(this.recommendationGraph, "http://localhost:7474/db/data/");
+		
+		
+		// Write recommendation graph to Neo4J file
+		if (this.writeRecommendationGraphToNeo4j) {
+			this.logger.log("Writing recommendation graph to N4J file...");
+			Neo4jWriter n4jWriter = new Neo4jWriter(this.neo4jWriter);
+			n4jWriter.write(this.recommendationGraph);
+		}
 		
 		
 		// Writing recommendation graph to an Metis file required by Randomized Greedy Modularity Clustering
@@ -105,6 +131,11 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 		analyzer1.plotClusterSizeAtStep(dBuilder);
 		
 		
+		// Plot node-step-cluster size (for each node plots cluster sizes at step 1,2,4,8)
+		NodeStepCluserSizeAnalyzer nscsAnalyzer = this.container.getComponent(NodeStepCluserSizeAnalyzer.class);
+		nscsAnalyzer.plotNodeStepClusterSize(dBuilder, dendrogram);
+		
+		
 		// Write cluster results (dendrogram) to neo4j graph database
 		/*
 		String uri = "http://localhost:7474/db/data/";
@@ -117,6 +148,16 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 		
 		this.logger.log("Finished running test " + this.getClass().toString());
 		*/
+		
+		
+		// Write cluster results (dendrogram) to neo4j graph database
+		if (this.writeDendrogramToNeo4j) {
+			Neo4jDendrogramWriter<RecommenderObject> writer = new Neo4jDendrogramWriter<RecommenderObject>(logger, this.neo4jWriter, this.container.getComponent(IdNodeMap.class));
+			this.logger.log("Start writing dendrogram into neo4j");
+			writer.write(dendrogram);
+			this.logger.log("Finished writing dendrogram into neo4j");
+		}
+		
 		return null;
 	}
 	
@@ -124,6 +165,7 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 	
 	protected void init() {
 		super.init();
+		this.initConfiguration();
 		this.container.addComponent(MetisWriter.class);
 		
 		// Adding clustering wrapper to container
@@ -138,6 +180,16 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 		this.container.addComponent(XmlDendrogramWriter.class);
 		
 		this.container.addComponent(ClusterSizeAtStepAnalyzer.class, ClusterSizeAtStepAnalyzer.class);
+		this.container.addComponent(NodeStepCluserSizeAnalyzer.class, NodeStepCluserSizeAnalyzer.class);
+		
+		this.neo4jWriter = new Neo4jFileWriter(this.fileManager.getCurrentNeo4jPath());
+	}
+
+
+
+	private void initConfiguration() {
+		this.writeRecommendationGraphToNeo4j = (Boolean)this.testConfiguration.getYamlConfiguration().get("WriteRecommendationGraphToNeo4j");
+		this.writeDendrogramToNeo4j = (Boolean)this.testConfiguration.getYamlConfiguration().get("WriteDendrogramToNeo4j");
 	}
 
 }

@@ -9,7 +9,8 @@ Tests:
 ########################################
 
   - 
-    Activated: 1
+    Activated: 0
+    Graph: dipfdbs
     Class: de.mknoll.thesis.tests.analysis.GraphAnalyzer
     PostgresDsn: jdbc:postgresql://localhost/dipf_dbs
     PostgresUser: bibtip
@@ -17,7 +18,8 @@ Tests:
     PostgresRecTable: recommendationtime
     PostgresDescTable: descriptions
   - 
-    Activated: 1
+    Activated: 0
+    Graph: dnb
     Class: de.mknoll.thesis.tests.analysis.GraphAnalyzer
     PostgresDsn: jdbc:postgresql://localhost/dnb
     PostgresUser: bibtip
@@ -25,7 +27,8 @@ Tests:
     PostgresRecTable: recommendationtime
     PostgresDescTable: descriptions
   - 
-    Activated: 1
+    Activated: 0
+    Graph: ubka
     Class: de.mknoll.thesis.tests.analysis.GraphAnalyzer
     PostgresDsn: jdbc:postgresql://localhost/ubka
     PostgresUser: bibtip
@@ -33,7 +36,8 @@ Tests:
     PostgresRecTable: recommendationtime
     PostgresDescTable: descriptions
   - 
-    Activated: 1
+    Activated: 0
+    Graph: ubhd
     Class: de.mknoll.thesis.tests.analysis.GraphAnalyzer
     PostgresDsn: jdbc:postgresql://localhost/ub_hd
     PostgresUser: bibtip
@@ -41,7 +45,8 @@ Tests:
     PostgresRecTable: recommendationtime
     PostgresDescTable: descriptions
   - 
-    Activated: 1
+    Activated: 0
+    Graph: hsbdo
     Class: de.mknoll.thesis.tests.analysis.GraphAnalyzer
     PostgresDsn: jdbc:postgresql://localhost/hsb_do
     PostgresUser: bibtip
@@ -49,7 +54,8 @@ Tests:
     PostgresRecTable: recommendationtime
     PostgresDescTable: descriptions
   - 
-    Activated: 1
+    Activated: 0
+    Graph: mpil
     Class: de.mknoll.thesis.tests.analysis.GraphAnalyzer
     PostgresDsn: jdbc:postgresql://localhost/mpil
     PostgresUser: bibtip
@@ -57,7 +63,8 @@ Tests:
     PostgresRecTable: recommendationtime
     PostgresDescTable: descriptions
   - 
-    Activated: 1
+    Activated: 0
+    Graph: stbhb
     Class: de.mknoll.thesis.tests.analysis.GraphAnalyzer
     PostgresDsn: jdbc:postgresql://localhost/stb_hb
     PostgresUser: bibtip
@@ -73,21 +80,23 @@ Tests:
     
   - 
     Activated: 0
+    Graph: dipfdbs
     Class: de.mknoll.thesis.tests.newman.NewmanTest
-    PostgresDsn: jdbc:postgresql://localhost/recdata
+    PostgresDsn: jdbc:postgresql://localhost/dipf_dbs
     PostgresUser: bibtip
     PostgresPassword: bibtip
     PostgresRecTable: recommendationtime
     PostgresDescTable: descriptions
     Neo4jUrl: http://localhost:7474/db/data/
   - 
-    Activated: 0
+    Activated: 1
+    Graph: dipfdbs
     Class: de.mknoll.thesis.tests.rgmc.RandomizedGreedyModularityTest
-    PostgresDsn: jdbc:postgresql://localhost/recdata
+    PostgresDsn: jdbc:postgresql://localhost/dipf_dbs
     PostgresUser: bibtip
     PostgresPassword: bibtip
     PostgresRecTable: recommendationtime
     PostgresDescTable: descriptions
     Neo4jUrl: http://localhost:7474/db/data/
-#  - 
-#   Class: Testclass30
+    WriteRecommendationGraphToNeo4j: false
+    WriteDendrogramToNeo4j: false

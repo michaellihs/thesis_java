@@ -82,12 +82,36 @@ public class LeafDendrogram<T extends TagCloudContainer> extends Dendrogram<T> {
 	
 	
 	/**
+	 * Template method for getting leaf set of dendrogram
+	 * 
+	 * @return Leaves of dendrogram
+	 */
+	public Set<LeafDendrogram<T>> leaves() {
+		HashSet<LeafDendrogram<T>> leaves = new HashSet<LeafDendrogram<T>>();
+		leaves.add(this);
+		return leaves;
+	}
+	
+	
+	
+	/**
 	 * Adds objects contained by this dendrogram into given set
 	 * 
 	 * @param Set to add contained object to
 	 */
 	public void addMembers(Set<T> set) {
 		set.add(this.containedObject);
+	}
+	
+	
+	
+	/**
+	 * Adds this leaf to given set of leaves
+	 * 
+	 * @param Set of leaves for this dendrogram
+	 */
+	public void addLeaves(Set<LeafDendrogram<T>> leaves) {
+		leaves.add(this);
 	}
 
 

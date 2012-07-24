@@ -8,6 +8,10 @@ import de.mknoll.thesis.datastructures.graph.DefaultNamespaces;
 import de.mknoll.thesis.datastructures.graph.IdNodeMap;
 import de.mknoll.thesis.datastructures.graph.RecommenderObject;
 import de.mknoll.thesis.datastructures.graph.writer.RecommenderRelationshipTypes;
+import de.mknoll.thesis.datastructures.tagcloud.CosineSimilarityTagComparatorStrategy;
+import de.mknoll.thesis.datastructures.tagcloud.NormalizedSetDifferenceTagComparatorStrategy;
+import de.mknoll.thesis.datastructures.tagcloud.SetDifferenceTagComparatorStrategy;
+import de.mknoll.thesis.datastructures.tagcloud.TagCloudComperator;
 import de.mknoll.thesis.datastructures.tagcloud.TagCloudContainer;
 import de.mknoll.thesis.framework.logger.LoggerInterface;
 import de.mknoll.thesis.neo4j.Neo4jWriter;
@@ -46,6 +50,18 @@ public class Neo4jDendrogramWriter<T extends TagCloudContainer> {
 	
 	
 	
+	private TagCloudComperator setDifferenceComperator;
+	
+	
+	
+	private TagCloudComperator normalizedSetDifferenceComperator;
+	
+	
+	
+	private TagCloudComperator cosineSimilarityComperator;
+	
+	
+	
 	/**
 	 * Constructor takes logger as argument
 	 * 
@@ -55,6 +71,10 @@ public class Neo4jDendrogramWriter<T extends TagCloudContainer> {
 		this.logger = logger;
 		this.writer = writer;
 		this.idNodeMap = idNodeMap;
+		
+		this.setDifferenceComperator = new TagCloudComperator(new SetDifferenceTagComparatorStrategy());
+		this.normalizedSetDifferenceComperator = new TagCloudComperator(new NormalizedSetDifferenceTagComparatorStrategy());
+		this.cosineSimilarityComperator = new TagCloudComperator(new CosineSimilarityTagComparatorStrategy());
 	}
 
 	
@@ -125,6 +145,30 @@ public class Neo4jDendrogramWriter<T extends TagCloudContainer> {
 		HashMap<String, Object> properties = new HashMap<String, Object>();
 		properties.put("cluster_size", dendrogram.size());
 		properties.put("tags", dendrogram.tagCloud().getTagsAsStringArray());
+		
+		// Write some tag cloud measures
+		properties.put(
+				"set_difference", 
+				this.setDifferenceComperator.compare(
+						dendrogram.dendrogram1().tagCloud, 
+						dendrogram.dendrogram2().tagCloud
+				)
+		);
+		properties.put(
+				"normalized_set_difference", 
+				this.normalizedSetDifferenceComperator.compare(
+						dendrogram.dendrogram1().tagCloud, 
+						dendrogram.dendrogram2().tagCloud
+				)
+		);
+		properties.put(
+				"cosine_similarity", 
+				this.cosineSimilarityComperator.compare(
+						dendrogram.dendrogram1().tagCloud, 
+						dendrogram.dendrogram2().tagCloud
+				)
+		);
+		
 		return this.writer.createNode(properties);
 	}
 

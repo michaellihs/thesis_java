@@ -6,6 +6,8 @@ import java.util.Set;
 
 import org.mcavallo.opencloud.Cloud;
 
+import de.mknoll.thesis.datastructures.tagcloud.TagCloudContainer;
+
 
 
 /**
@@ -16,7 +18,7 @@ import org.mcavallo.opencloud.Cloud;
  * @author Michael Knoll <mimi@kaktusteam.de>
  * @see de.mknoll.thesis.tests.datastructures.dendrogram.LinkDendrogramTest
  */
-public class LinkDendrogram<T> extends Dendrogram<T> {
+public class LinkDendrogram<T extends TagCloudContainer> extends Dendrogram<T> {
 
 	/**
 	 * First child of this node
@@ -63,6 +65,19 @@ public class LinkDendrogram<T> extends Dendrogram<T> {
 	
 	
 	/**
+	 * Template method for getting leaf set of dendrogram
+	 * 
+	 * @return Leaves of dendrogram
+	 */
+	public Set<LeafDendrogram<T>> leaves() {
+		HashSet<LeafDendrogram<T>> leaves = new HashSet<LeafDendrogram<T>>();
+		this.addLeaves(leaves);
+		return leaves;
+	}
+	
+	
+	
+	/**
 	 * Returns a set of all members (leaves) of this dendrogram
 	 */
 	public Set<T> memberSet() {
@@ -79,6 +94,18 @@ public class LinkDendrogram<T> extends Dendrogram<T> {
 	public void addMembers(Set<T> set) {
 		this.dendrogram1.addMembers(set);
 		this.dendrogram2.addMembers(set);
+	}
+	
+	
+	
+	/**
+	 * Template method for adding leaves of dendrogram to given set
+	 * 
+	 * @param Set of leaves to add leaves of current dendrogram to
+	 */
+	public void addLeaves(Set<LeafDendrogram<T>> leaves) {
+		this.dendrogram1.addLeaves(leaves);
+		this.dendrogram2.addLeaves(leaves);
 	}
 	
 	

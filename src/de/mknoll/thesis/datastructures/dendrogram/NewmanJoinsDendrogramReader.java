@@ -21,7 +21,6 @@ import de.mknoll.thesis.framework.logger.LoggerInterface;
  * algorithm.
  *  
  * @author Michael Knoll <mimi@kaktusteam.de>
- *
  */
 public class NewmanJoinsDendrogramReader {
 

@@ -6,6 +6,8 @@ import java.util.Set;
 
 import org.mcavallo.opencloud.Cloud;
 
+import de.mknoll.thesis.datastructures.tagcloud.TagCloudContainer;
+
 
 
 /**
@@ -13,7 +15,7 @@ import org.mcavallo.opencloud.Cloud;
  * 
  * @author Michael Knoll <mimi@kaktusteam.de>
  */
-public abstract class Dendrogram<T> {
+public abstract class Dendrogram<T extends TagCloudContainer> {
 
 	/**
 	 * Holds parent of dendrogram
@@ -204,6 +206,23 @@ public abstract class Dendrogram<T> {
 	
 	
 	
+	/**
+	 * Returns depth of current node within dendrogram (path length to root)
+	 * 
+	 * @return Depth of current node
+	 */
+	public Integer depth() {
+		Dendrogram<T> parent = this.parent;
+		Integer depth = 0;
+		while (parent != null) {
+			depth++;
+			parent = parent.parent();
+		}
+		return depth;
+	}
+	
+	
+	
 	abstract protected void createTagCloud();
 
 
@@ -214,6 +233,15 @@ public abstract class Dendrogram<T> {
 	 * @return Members of dendrogram
 	 */
 	abstract public Set<T> memberSet();
+	
+	
+	
+	/**
+	 * Template method for getting leaf set of dendrogram
+	 * 
+	 * @return Leaves of dendrogram
+	 */
+	abstract public Set<LeafDendrogram<T>> leaves();
 
 	
 	
@@ -221,9 +249,17 @@ public abstract class Dendrogram<T> {
 	 * Template method for adding members of dendrogram to given set
 	 * 
 	 * @param Set to add members of dendrogram to
-	 * @return Set of members
 	 */
 	abstract public void addMembers(Set<T> set);
+	
+	
+	
+	/**
+	 * Template method for adding leaves of dendrogram to given set
+	 * 
+	 * @param Set of leaves to add leaves of current dendrogram to
+	 */
+	abstract public void addLeaves(Set<LeafDendrogram<T>> leaves);
 	
 	
 	
