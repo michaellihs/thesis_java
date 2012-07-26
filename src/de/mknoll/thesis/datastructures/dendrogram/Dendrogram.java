@@ -1,7 +1,9 @@
 package de.mknoll.thesis.datastructures.dendrogram;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import org.mcavallo.opencloud.Cloud;
@@ -42,6 +44,13 @@ public abstract class Dendrogram<T extends TagCloudContainer> {
 	 * Holds id for Dendrogram (for debugging only!)
 	 */
 	protected String id;
+
+
+
+	/**
+	 * Holds entropy of clustering on this step within dendrogram
+	 */
+	private Double entropy;
 	
 	
 	
@@ -219,6 +228,63 @@ public abstract class Dendrogram<T extends TagCloudContainer> {
 			parent = parent.parent();
 		}
 		return depth;
+	}
+	
+	
+	
+	/**
+	 * Returns list of cluster sizes one for each step upwards within dendrogram
+	 * 
+	 * @return List of cluster sizes one for each step upwards within dendrogram
+	 */
+	public List<Integer> clusterSizes() {
+		Dendrogram<T> parent = this.parent;
+		List<Integer> clusterSizes = new ArrayList<Integer>();
+		while (parent != null) {
+			clusterSizes.add(parent.size());
+			parent = parent.parent();
+		}
+		return clusterSizes;
+	}
+	
+	
+	
+	/**
+	 * Returns list of entropies from given node upwards within dendrogram
+	 * 
+	 * @return List of entropies from given node upwards within dendrogram
+	 */
+	public List<Double> entropies() {
+		Dendrogram<T> parent = this.parent;
+		List<Double> entropies = new ArrayList<Double>();
+		entropies.add(this.entropy());
+		while (parent != null) {
+			entropies.add(parent.entropy());
+			parent = parent.parent();
+		}
+		return entropies;
+	}
+	
+	
+	
+	/**
+	 * Returns entropy of clustering on current step within dendrogram
+	 * 
+	 * @return Entropy of clustering on current step within dendrogram
+	 */
+	public Double entropy() {
+		return this.entropy;
+	}
+	
+	
+	
+	/**
+	 * Sets entropy on current step within histogram
+	 * 
+	 * @param Entropy on current step within histogram
+	 */
+	public void setEntropy(Double entropy) {
+		this.entropy = entropy;
 	}
 	
 	

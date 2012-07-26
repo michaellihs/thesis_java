@@ -1,10 +1,12 @@
 package de.mknoll.thesis.datastructures.graph;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.mcavallo.opencloud.Cloud;
 import org.mcavallo.opencloud.Tag;
 
+import de.mknoll.thesis.datastructures.dendrogram.LeafDendrogram;
 import de.mknoll.thesis.datastructures.tagcloud.DefaultTagCloud;
 import de.mknoll.thesis.datastructures.tagcloud.TagCloudContainer;
 import de.mknoll.thesis.datastructures.tagcloud.TagExtractor;
@@ -88,6 +90,13 @@ public class RecommenderObject
 	 * Tags are filtered!
 	 */
 	private String[] tagsAsStrings;
+	
+	
+	
+	/**
+	 * Holds leaf of dendrogram to which this recommender object is attached
+	 */
+	private LeafDendrogram<RecommenderObject> leafDendrogram;
 	
 	
 	
@@ -179,6 +188,17 @@ public class RecommenderObject
 	
 	
 	/**
+	 * Returns node to which this recommender object is attached
+	 * 
+	 * @return
+	 */
+	public Node getNode() {
+		return this.node;
+	}
+	
+	
+	
+	/**
 	 * Setter for internal id
 	 */
 	public void setInternalId(Integer internalId) {
@@ -226,6 +246,39 @@ public class RecommenderObject
 		properties.put(DefaultNamespaces.BIBTIP.toString(), this.docId);
 		properties.put("internalId", new Integer(this.node.internalId()).toString());
 		return properties;
+	}
+	
+	
+	
+	/**
+	 * Sets given leaf dendrogram as dendrogram to which this recommender object is attached to
+	 * 
+	 * @param leafDendrogram
+	 */
+	public void setDendrogramLeaf(LeafDendrogram<RecommenderObject> leafDendrogram) {
+		this.leafDendrogram = leafDendrogram;
+	}
+	
+	
+	
+	/**
+	 * Returns leaf dendrogram to which this recommender object is attached to
+	 * 
+	 * @return Leaf dendrogram to which this recommender object is attached to
+	 */
+	public LeafDendrogram<RecommenderObject> getDendrogramLeaf() {
+		return this.leafDendrogram;
+	}
+	
+	
+	
+	/**
+	 * Returns a list of cluster sizes, one for each step upwards within the histogram
+	 * 
+	 * @return Cluster sizes one for each step within histogram
+	 */
+	public List<Integer> clusterSizes() {
+		return this.leafDendrogram.clusterSizes();
 	}
 
 

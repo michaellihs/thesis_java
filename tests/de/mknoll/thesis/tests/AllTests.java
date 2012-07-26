@@ -3,6 +3,7 @@ package de.mknoll.thesis.tests;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import de.mknoll.thesis.tests.analysis.ModularityAnalyzerTest;
 import de.mknoll.thesis.tests.datastructures.dendrogram.JsonDendrogramWriterTest;
 import de.mknoll.thesis.tests.datastructures.dendrogram.LeafDendrogramTest;
 import de.mknoll.thesis.tests.datastructures.dendrogram.LinkDendrogramTest;
@@ -54,7 +55,8 @@ import de.mknoll.thesis.tests.neo4j.Neo4jTest;
 	RecommenderObjectTest.class,
 	SetDifferenceTagComparatorStrategyTest.class,
 	NormalizedSetDifferenceTagComparatorStrategyTest.class,
-	CosineSimilarityTagComparatorStrategyTest.class
+	CosineSimilarityTagComparatorStrategyTest.class,
+	ModularityAnalyzerTest.class
 } )
 
 public class AllTests {
