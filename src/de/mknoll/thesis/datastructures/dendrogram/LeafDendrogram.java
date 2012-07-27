@@ -7,6 +7,7 @@ import java.util.Stack;
 
 import org.hibernate.type.descriptor.sql.SmallIntTypeDescriptor;
 
+import de.mknoll.thesis.datastructures.graph.AttachableToNode;
 import de.mknoll.thesis.datastructures.graph.Recommendation;
 import de.mknoll.thesis.datastructures.tagcloud.TagCloudContainer;
 
@@ -23,7 +24,7 @@ import de.mknoll.thesis.datastructures.tagcloud.TagCloudContainer;
  * @param <T> Type of object that should be stored within dendrogram
  * @see de.mknoll.thesis.tests.datastructures.dendrogram.LeafDendrogramTest
  */
-public class LeafDendrogram<T extends TagCloudContainer> extends Dendrogram<T> {
+public class LeafDendrogram<T extends TagCloudContainer & AttachableToNode> extends Dendrogram<T> {
 	
 	/**
 	 * Holds object that is actually contained by this leaf

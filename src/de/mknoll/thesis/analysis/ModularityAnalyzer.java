@@ -6,8 +6,16 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.jgrapht.DirectedGraph;
+import org.jgrapht.UndirectedGraph;
+import org.jgrapht.WeightedGraph;
+import org.jgrapht.graph.AsUndirectedGraph;
+
+import de.mknoll.thesis.datastructures.dendrogram.Dendrogram;
 import de.mknoll.thesis.datastructures.graph.Node;
+import de.mknoll.thesis.datastructures.graph.Recommendation;
 import de.mknoll.thesis.datastructures.graph.RecommendationGraph;
+import de.mknoll.thesis.datastructures.graph.RecommenderObject;
 
 
 
@@ -27,12 +35,34 @@ public class ModularityAnalyzer {
 	
 	
 	/**
-	 * Constructor takes recommendation graph to calculate modularity upon
+	 * Constructor takes recommendation graph to calculate modularity upon.
+	 * 
+	 * ATTENTION: Graph needs to be given as its maximum component for which clustering is calculated!
 	 * 
 	 * @param recommendationGraph
 	 */
-	public ModularityAnalyzer(RecommendationGraph recommendationGraph) {
-		this.graph = recommendationGraph;
+	public ModularityAnalyzer(RecommendationGraph graph) {
+		this.graph = graph;
+	}
+	
+	
+	
+	/**
+	 * Returns a set of modularities for each merging step within dendrogram.
+	 * 
+	 * Remind that first merging step is at the end of the array and "whole" dendrogram is first element.
+	 * 
+	 * @param Dendrogram to calculate modularities for
+	 * @return Modularities for each merging step of given dendrogram
+	 * @throws Exception if wrong parameter is given to nodePartitioning (this shouldn't happen!)
+	 */
+	public Double[] modularityByStep(Dendrogram<RecommenderObject> d) throws Exception {
+		int dendrogramSize = d.size();
+		Double[] q = new Double[dendrogramSize - 1];
+		for (int i = 0; i < dendrogramSize - 1; i++) {
+			q[i] = this.modularity(d.nodePartitioning(i + 1));
+		}
+		return q;
 	}
 	
 	
@@ -44,6 +74,107 @@ public class ModularityAnalyzer {
 	 * @return Modularity for given clustering
 	 * @throws Exception if internal IDs of nodes in graph are not within range [1...|V|] where V is vertex set of graph 
 	 */
+	public Double modularity(HashSet<HashSet<Node>> clustering) {
+		int vertexCount = this.graph.vertexSet().size();
+		int clusterCount = clustering.size();
+		int edgeCount = this.graph.edgeSet().size();
+		
+		int[] clustermap = new int[vertexCount];
+		ArrayList<HashMap<Integer,Double>> beta = new ArrayList<HashMap<Integer,Double>>(clusterCount);
+		
+		// Initialize cluster map
+		int currentCluster = 0; // Start counting clusters at 0
+		Iterator<HashSet<Node>> clusterIterator = clustering.iterator();
+		while (clusterIterator.hasNext()) {
+			Iterator<Node> nodeIterator = clusterIterator.next().iterator(); 
+			while (nodeIterator.hasNext()) {
+				clustermap[nodeIterator.next().internalId() - 1] = currentCluster; // Internal ID starts with 1, clustermap indexing starts with 0!
+			}
+			currentCluster++;
+		}
+		
+		// Initialize beta
+		for (int i = 0; i < clusterCount; i++) {
+			beta.add(new HashMap<Integer, Double>());
+		}
+		
+		// Precalculate beta
+		for (Node node : this.graph.vertexSet()) {
+			Set<Node> neighbors = graph.getUndirectedNeighborsOf(node);
+			for (Node neighbor : neighbors) {
+				int from = clustermap[node.internalId() - 1]; 	// Internal ID starts with 1, clustermap indexing starts with 0!
+				int to = clustermap[neighbor.internalId() - 1];	// Internal ID starts with 1, clustermap indexing starts with 0!
+				if (!beta.get(from).containsKey(to)) {
+					beta.get(from).put(to, 0.0);
+				}
+				beta.get(from).put(to, beta.get(from).get(to) + 1);
+			}
+		}
+		
+		this.printBeta(beta, clusterCount);
+		
+		// Calculate modularity
+		Double Q = 0.0;
+		int m = 2 * edgeCount;
+		for (int i = 0; i < clusterCount; i++) {
+			double a_i = 0;
+			for (Integer j : beta.get(i).keySet()) {
+				beta.get(i).put(j, beta.get(i).get(j) / m);
+				a_i += beta.get(i).get(j);
+			}
+			if (beta.get(i).containsKey(i)) {
+				Q += beta.get(i).get(i) - a_i * a_i;
+			} else {
+				// beta_ij = 0 here --> unset!
+				Q -= a_i * a_i; 
+			}
+		}
+		
+		//this.printA(a);
+		
+		return Q;
+	}
+
+
+
+	private void printA(double[] a) {
+		System.out.print("a[i] = [ ");
+		for (int i = 0; i < a.length; i++) {
+			System.out.print(a[i] + " ");
+		}
+		System.out.println(" ]");
+		
+	}
+
+
+
+	private void printBeta(ArrayList<HashMap<Integer, Double>> beta, int clusterCount) {
+		System.out.println("beta = ");
+		for (int i = 0; i < clusterCount; i++) {
+			System.out.print("| ");
+			for (int j = 0; j < clusterCount; j++) {
+				Double b_ij = 0.0;
+				if (beta.get(i).containsKey(j)) {
+					b_ij = beta.get(i).get(j);
+				}
+				System.out.print(b_ij + " ");
+			}
+			System.out.println("|");
+		}
+	}
+	
+	
+	
+	/**
+	 * Calculates modularity for given clustering on graph set via constructor
+	 * 
+	 * @param Clustering to calculate modularity for
+	 * @return Modularity for given clustering
+	 * @throws Exception if internal IDs of nodes in graph are not within range [1...|V|] where V is vertex set of graph 
+	 */
+	/*
+	 * Old implementation - does not work!
+	 
 	public Double modularity(HashSet<HashSet<Node>> clustering) throws Exception {
 		int clusterCount = clustering.size();
 		
@@ -65,6 +196,10 @@ public class ModularityAnalyzer {
 			}
 			currentCluster++;
 		}
+		
+		
+		this.printClusterMap(clustermap);
+		
 		
 		ArrayList<HashMap<Integer, Double>> e = new ArrayList<HashMap<Integer, Double>>();
 		for (int i = 0; i < clusterCount; i++) {
@@ -110,8 +245,19 @@ public class ModularityAnalyzer {
 		return Q;
 		
 	}
+
+
+
+	private void printClusterMap(int[] clustermap) {
+		System.out.print("Clustermap: [");
+		for (int i : clustermap) {
+			System.out.print(i + " ");
+		}
+		System.out.println("]");
+	}
 	
 }
+*/
 
 /*
 double RGModularityClusterer::getModularityFromClustering(Graph* graph, Partition* clusters) {
@@ -199,5 +345,5 @@ double RGModularityClusterer::getModularityFromClustering(Graph* graph, Partitio
     delete e;
 
     return Q;
+ */
 }
-*/

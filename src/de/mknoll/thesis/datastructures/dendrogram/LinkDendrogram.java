@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.mcavallo.opencloud.Cloud;
 
+import de.mknoll.thesis.datastructures.graph.AttachableToNode;
 import de.mknoll.thesis.datastructures.tagcloud.TagCloudContainer;
 
 
@@ -18,7 +19,7 @@ import de.mknoll.thesis.datastructures.tagcloud.TagCloudContainer;
  * @author Michael Knoll <mimi@kaktusteam.de>
  * @see de.mknoll.thesis.tests.datastructures.dendrogram.LinkDendrogramTest
  */
-public class LinkDendrogram<T extends TagCloudContainer> extends Dendrogram<T> {
+public class LinkDendrogram<T extends TagCloudContainer & AttachableToNode> extends Dendrogram<T> {
 
 	/**
 	 * First child of this node

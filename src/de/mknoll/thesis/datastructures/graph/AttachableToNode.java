@@ -21,6 +21,15 @@ public interface AttachableToNode extends NodeProperty {
 	 * @param node
 	 */
 	public void attachTo(Node node);
+	
+	
+	
+	/**
+	 * Returns node to which object is attached to
+	 * 
+	 * @return Node to which object is attached to
+	 */
+	public Node getNode();
 
 	
 	
