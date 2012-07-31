@@ -6,14 +6,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.jgrapht.DirectedGraph;
-import org.jgrapht.UndirectedGraph;
-import org.jgrapht.WeightedGraph;
-import org.jgrapht.graph.AsUndirectedGraph;
-
 import de.mknoll.thesis.datastructures.dendrogram.Dendrogram;
 import de.mknoll.thesis.datastructures.graph.Node;
-import de.mknoll.thesis.datastructures.graph.Recommendation;
 import de.mknoll.thesis.datastructures.graph.RecommendationGraph;
 import de.mknoll.thesis.datastructures.graph.RecommenderObject;
 
@@ -61,6 +55,7 @@ public class ModularityAnalyzer {
 		Double[] q = new Double[dendrogramSize - 1];
 		for (int i = 0; i < dendrogramSize - 1; i++) {
 			q[i] = this.modularity(d.nodePartitioning(i + 1));
+			System.out.println("Writing merge step " + i + " modularity: " + q[i]);
 		}
 		return q;
 	}
@@ -79,7 +74,7 @@ public class ModularityAnalyzer {
 		int clusterCount = clustering.size();
 		int edgeCount = this.graph.edgeSet().size();
 		
-		int[] clustermap = new int[vertexCount];
+		HashMap<Integer, Integer> clustermap = new HashMap<Integer,Integer>();
 		ArrayList<HashMap<Integer,Double>> beta = new ArrayList<HashMap<Integer,Double>>(clusterCount);
 		
 		// Initialize cluster map
@@ -88,7 +83,8 @@ public class ModularityAnalyzer {
 		while (clusterIterator.hasNext()) {
 			Iterator<Node> nodeIterator = clusterIterator.next().iterator(); 
 			while (nodeIterator.hasNext()) {
-				clustermap[nodeIterator.next().internalId() - 1] = currentCluster; // Internal ID starts with 1, clustermap indexing starts with 0!
+				Node node = nodeIterator.next();
+				clustermap.put(node.internalId(), currentCluster);
 			}
 			currentCluster++;
 		}
@@ -102,8 +98,8 @@ public class ModularityAnalyzer {
 		for (Node node : this.graph.vertexSet()) {
 			Set<Node> neighbors = graph.getUndirectedNeighborsOf(node);
 			for (Node neighbor : neighbors) {
-				int from = clustermap[node.internalId() - 1]; 	// Internal ID starts with 1, clustermap indexing starts with 0!
-				int to = clustermap[neighbor.internalId() - 1];	// Internal ID starts with 1, clustermap indexing starts with 0!
+				int from = clustermap.get(node.internalId());
+				int to = clustermap.get(neighbor.internalId());
 				if (!beta.get(from).containsKey(to)) {
 					beta.get(from).put(to, 0.0);
 				}
@@ -111,7 +107,7 @@ public class ModularityAnalyzer {
 			}
 		}
 		
-		this.printBeta(beta, clusterCount);
+		//this.printBeta(beta, clusterCount);
 		
 		// Calculate modularity
 		Double Q = 0.0;

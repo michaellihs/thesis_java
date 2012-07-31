@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.picocontainer.parameters.ConstantParameter;
 
 import de.mknoll.thesis.analysis.ClusterSizeAtStepAnalyzer;
+import de.mknoll.thesis.analysis.DendrogramModularityAnalyzer;
 import de.mknoll.thesis.analysis.NodeStepCluserSizeAnalyzer;
 import de.mknoll.thesis.datastructures.dendrogram.LinkDendrogram;
 import de.mknoll.thesis.datastructures.dendrogram.Neo4jDendrogramWriter;
@@ -158,6 +159,13 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 			this.logger.log("Finished writing dendrogram into neo4j");
 		}
 		
+		
+		// Plot modularities for dendrogram
+		this.logger.log("Start plotting modularities in dendrogram...");
+		DendrogramModularityAnalyzer dendrogramModularityAnalyzer = this.container.getComponent(DendrogramModularityAnalyzer.class);
+		dendrogramModularityAnalyzer.plotModularityFor(dendrogram, biggestComponentSubgraph);
+		
+		
 		return null;
 	}
 	
@@ -181,6 +189,7 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 		
 		this.container.addComponent(ClusterSizeAtStepAnalyzer.class, ClusterSizeAtStepAnalyzer.class);
 		this.container.addComponent(NodeStepCluserSizeAnalyzer.class, NodeStepCluserSizeAnalyzer.class);
+		this.container.addComponent(DendrogramModularityAnalyzer.class, DendrogramModularityAnalyzer.class);
 		
 		this.neo4jWriter = new Neo4jFileWriter(this.fileManager.getCurrentNeo4jPath());
 	}
