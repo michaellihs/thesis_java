@@ -63,6 +63,18 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 
 	private Boolean writeDendrogramToNeo4j;
 
+
+
+	private boolean plotNodeStepClusterSize;
+
+
+
+	private boolean plotClusterSizeAtStep;
+
+
+
+	private boolean plotModularitiesForDendrogram;
+
 	
 	
 	@Override
@@ -128,13 +140,17 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 		
 		
 		// Plot step-cluster-size
-		ClusterSizeAtStepAnalyzer analyzer1 = this.container.getComponent(ClusterSizeAtStepAnalyzer.class);
-		analyzer1.plotClusterSizeAtStep(dBuilder);
+		if (this.plotClusterSizeAtStep) {
+			ClusterSizeAtStepAnalyzer analyzer1 = this.container.getComponent(ClusterSizeAtStepAnalyzer.class);
+			analyzer1.plotClusterSizeAtStep(dBuilder);
+		}
 		
 		
 		// Plot node-step-cluster size (for each node plots cluster sizes at step 1,2,4,8)
-		NodeStepCluserSizeAnalyzer nscsAnalyzer = this.container.getComponent(NodeStepCluserSizeAnalyzer.class);
-		nscsAnalyzer.plotNodeStepClusterSize(dBuilder, dendrogram);
+		if (this.plotNodeStepClusterSize) {
+			NodeStepCluserSizeAnalyzer nscsAnalyzer = this.container.getComponent(NodeStepCluserSizeAnalyzer.class);
+			nscsAnalyzer.plotNodeStepClusterSize(dBuilder, dendrogram);
+		}
 		
 		
 		// Write cluster results (dendrogram) to neo4j graph database
@@ -161,9 +177,11 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 		
 		
 		// Plot modularities for dendrogram
-		this.logger.log("Start plotting modularities in dendrogram...");
-		DendrogramModularityAnalyzer dendrogramModularityAnalyzer = this.container.getComponent(DendrogramModularityAnalyzer.class);
-		dendrogramModularityAnalyzer.plotModularityFor(dendrogram, biggestComponentSubgraph);
+		if (this.plotModularitiesForDendrogram) {
+			this.logger.log("Start plotting modularities in dendrogram...");
+			DendrogramModularityAnalyzer dendrogramModularityAnalyzer = this.container.getComponent(DendrogramModularityAnalyzer.class);
+			dendrogramModularityAnalyzer.plotModularityFor(dendrogram, biggestComponentSubgraph);
+		}
 		
 		
 		return null;
@@ -199,6 +217,9 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 	private void initConfiguration() {
 		this.writeRecommendationGraphToNeo4j = (Boolean)this.testConfiguration.getYamlConfiguration().get("WriteRecommendationGraphToNeo4j");
 		this.writeDendrogramToNeo4j = (Boolean)this.testConfiguration.getYamlConfiguration().get("WriteDendrogramToNeo4j");
+		this.plotNodeStepClusterSize = (Boolean)this.testConfiguration.getYamlConfiguration().get("PlotNodeStepClusterSize");
+		this.plotClusterSizeAtStep = (Boolean)this.testConfiguration.getYamlConfiguration().get("PlotClusterSizeAtStep");
+		this.plotModularitiesForDendrogram = (Boolean)this.testConfiguration.getYamlConfiguration().get("PlotModularitiesForDendrogram");
 	}
 
 }

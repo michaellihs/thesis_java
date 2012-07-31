@@ -100,3 +100,6 @@ Tests:
     Neo4jUrl: http://localhost:7474/db/data/
     WriteRecommendationGraphToNeo4j: false
     WriteDendrogramToNeo4j: false
+    PlotNodeStepClusterSize: false
+    PlotClusterSizeAtStep: false
+    PlotModularitiesForDendrogram: false

@@ -282,9 +282,13 @@ public class RecommendationGraph extends DefaultDirectedWeightedGraph<Node, Reco
 		
 		// Write neighbors of nodes into metis edge list
 		for (Node n : this.vertexSet()) {
-			for (Recommendation rec : this.edgesOf(n)) {
-				metisEdgeList.get(n.internalId() - 1).add(rec.getTarget().internalId());
-				metisEdgeList.get(rec.getTarget().internalId() - 1).add(n.internalId());
+			// for (Recommendation rec : this.edgesOf(n)) {
+			//	metisEdgeList.get(n.internalId() - 1).add(rec.getTarget().internalId());
+			//	metisEdgeList.get(rec.getTarget().internalId() - 1).add(n.internalId());
+			//}
+			for (Node rec : this.getUndirectedNeighborsOf(n)) {
+				metisEdgeList.get(n.internalId() - 1).add(rec.internalId());
+				metisEdgeList.get(rec.internalId() - 1).add(n.internalId());
 			}
 		}
 		
