@@ -31,6 +31,13 @@ public class DefaultTagCloud extends Cloud {
 	
 	
 	
+	public DefaultTagCloud(Cloud other) {
+		super(other);
+		this.buildAndSetDefaultFilters();
+	}
+	
+	
+	
 	public DefaultTagCloud() {
 		this.buildAndSetDefaultFilters();
 	}
@@ -42,6 +49,25 @@ public class DefaultTagCloud extends Cloud {
 		Filter<Tag> dictionaryFilter = new DictionaryFilter(ResourceBundle.getBundle(DefaultTagCloud.blacklist, Locale.GERMAN));
 		Filter<Tag> defaultFilter = new AndFilter<Tag>(minLengthFilter, dictionaryFilter);
 		this.addInputFilter(defaultFilter);
+	}
+	
+	
+	
+	@Override
+	public String toString() {
+		String result = new String();
+		for (Tag tag : this.tags()) {
+			result += "\"" + tag.getName() + "\", ";
+		}
+		return result;
+	}
+	
+	
+
+	public void addTags(String ... tags) {
+		for(String tag : tags) {
+			this.addTag(tag);
+		}
 	}
 
 }

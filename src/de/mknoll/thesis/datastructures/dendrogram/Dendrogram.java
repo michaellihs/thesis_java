@@ -88,6 +88,17 @@ public abstract class Dendrogram<T extends TagCloudContainer & AttachableToNode>
 	
 	
 	/**
+	 * Returns true, if dendrogram node has parent
+	 * 
+	 * @return True, if dendrogram node has parent
+	 */
+	public Boolean hasParent() {
+		return (this.parent != null);
+	}
+	
+	
+	
+	/**
 	 * Returns true, if given element is contained in dendrogram
 	 * 
 	 * @param element

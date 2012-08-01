@@ -26,6 +26,9 @@ args <- commandArgs(TRUE)
 modularities <- scan(args[1])
 modularities <- as.numeric(modularities)
 
+# We have started calculating modularity at root of dendrogram --> we have to reverse it
+modularities <- rev(modularities)
+
 # Open up a new pdf file for output given as cmd-line argument 2
 pdf(args[2])
 

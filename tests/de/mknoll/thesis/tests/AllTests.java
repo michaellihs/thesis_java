@@ -22,6 +22,7 @@ import de.mknoll.thesis.tests.datastructures.graph.RecommendationGraphTest;
 import de.mknoll.thesis.tests.datastructures.tagcloud.CosineSimilarityTagComparatorStrategyTest;
 import de.mknoll.thesis.tests.datastructures.tagcloud.DefaultTagCloudTest;
 import de.mknoll.thesis.tests.datastructures.tagcloud.NormalizedSetDifferenceTagComparatorStrategyTest;
+import de.mknoll.thesis.tests.datastructures.tagcloud.NormalizedSetDifferenceTopNTagComparatorStrategyTest;
 import de.mknoll.thesis.tests.datastructures.tagcloud.SetDifferenceTagComparatorStrategyTest;
 import de.mknoll.thesis.tests.datastructures.tagcloud.TagExtractorTest;
 import de.mknoll.thesis.tests.neo4j.Neo4jTest;
@@ -56,9 +57,15 @@ import de.mknoll.thesis.tests.neo4j.Neo4jTest;
 	SetDifferenceTagComparatorStrategyTest.class,
 	NormalizedSetDifferenceTagComparatorStrategyTest.class,
 	CosineSimilarityTagComparatorStrategyTest.class,
-	ModularityAnalyzerTest.class
+	ModularityAnalyzerTest.class,
+	NormalizedSetDifferenceTopNTagComparatorStrategyTest.class
 } )
 
 public class AllTests {
+
+	/**
+	 * Holds constant for equality comparison of doubles
+	 */
+	public static final double EPSILON = 0.0000000000001;
 
 }

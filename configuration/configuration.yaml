@@ -103,3 +103,5 @@ Tests:
     PlotNodeStepClusterSize: false
     PlotClusterSizeAtStep: false
     PlotModularitiesForDendrogram: false
+    PlotDendrogramDepthPerNode: false
+    PlotTagCloudAnalysisForDendrogram: true

@@ -5,7 +5,9 @@ import java.util.HashMap;
 import org.picocontainer.parameters.ConstantParameter;
 
 import de.mknoll.thesis.analysis.ClusterSizeAtStepAnalyzer;
+import de.mknoll.thesis.analysis.DendrogramDepthPerNodeAnalyzer;
 import de.mknoll.thesis.analysis.DendrogramModularityAnalyzer;
+import de.mknoll.thesis.analysis.DendrogramTagCloudAnalyzer;
 import de.mknoll.thesis.analysis.NodeStepCluserSizeAnalyzer;
 import de.mknoll.thesis.datastructures.dendrogram.LinkDendrogram;
 import de.mknoll.thesis.datastructures.dendrogram.Neo4jDendrogramWriter;
@@ -74,6 +76,14 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 
 
 	private boolean plotModularitiesForDendrogram;
+
+
+
+	private boolean plotDendrogramDepthPerNode;
+
+
+
+	private boolean plotTagCloudAnalysisForDendrogram;
 
 	
 	
@@ -184,6 +194,23 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 		}
 		
 		
+		// Plot dendrogram depth per node for dendrogram
+		if (this.plotDendrogramDepthPerNode) {
+			this.logger.log("Start plotting dendrogram depth per node...");
+			DendrogramDepthPerNodeAnalyzer dendrogramDepthPerNodeAnalyzer = this.container.getComponent(DendrogramDepthPerNodeAnalyzer.class);
+			dendrogramDepthPerNodeAnalyzer.plotPerLeafDepthFor(dendrogram);
+		}
+		
+		
+		// Plot tag cloud analysis for dendrogram
+		if (this.plotTagCloudAnalysisForDendrogram) {
+			this.logger.log("Start plotting tag cloud analysis for dendrogram...");
+			DendrogramTagCloudAnalyzer dendrogramTagCloudAnalyzer = this.container.getComponent(DendrogramTagCloudAnalyzer.class);
+			int[] leaves = {1,10,1000};
+			dendrogramTagCloudAnalyzer.analyzeTagCloudsByLeavesFor(dendrogram, leaves);
+		}
+		
+		
 		return null;
 	}
 	
@@ -208,6 +235,8 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 		this.container.addComponent(ClusterSizeAtStepAnalyzer.class, ClusterSizeAtStepAnalyzer.class);
 		this.container.addComponent(NodeStepCluserSizeAnalyzer.class, NodeStepCluserSizeAnalyzer.class);
 		this.container.addComponent(DendrogramModularityAnalyzer.class, DendrogramModularityAnalyzer.class);
+		this.container.addComponent(DendrogramDepthPerNodeAnalyzer.class, DendrogramDepthPerNodeAnalyzer.class);
+		this.container.addComponent(DendrogramTagCloudAnalyzer.class, DendrogramTagCloudAnalyzer.class);
 		
 		this.neo4jWriter = new Neo4jFileWriter(this.fileManager.getCurrentNeo4jPath());
 	}
@@ -220,6 +249,8 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 		this.plotNodeStepClusterSize = (Boolean)this.testConfiguration.getYamlConfiguration().get("PlotNodeStepClusterSize");
 		this.plotClusterSizeAtStep = (Boolean)this.testConfiguration.getYamlConfiguration().get("PlotClusterSizeAtStep");
 		this.plotModularitiesForDendrogram = (Boolean)this.testConfiguration.getYamlConfiguration().get("PlotModularitiesForDendrogram");
+		this.plotDendrogramDepthPerNode = (Boolean)this.testConfiguration.getYamlConfiguration().get("PlotDendrogramDepthPerNode");
+		this.plotTagCloudAnalysisForDendrogram = (Boolean)this.testConfiguration.getYamlConfiguration().get("PlotTagCloudAnalysisForDendrogram");
 	}
 
 }

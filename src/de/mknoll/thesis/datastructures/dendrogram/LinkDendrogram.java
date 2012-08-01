@@ -7,6 +7,7 @@ import java.util.Set;
 import org.mcavallo.opencloud.Cloud;
 
 import de.mknoll.thesis.datastructures.graph.AttachableToNode;
+import de.mknoll.thesis.datastructures.tagcloud.DefaultTagCloud;
 import de.mknoll.thesis.datastructures.tagcloud.TagCloudContainer;
 
 
@@ -157,7 +158,7 @@ public class LinkDendrogram<T extends TagCloudContainer & AttachableToNode> exte
 	 * of both children.
 	 */
 	protected void createTagCloud() {
-		this.tagCloud = new Cloud(this.dendrogram1.tagCloud());
+		this.tagCloud = new DefaultTagCloud(this.dendrogram1.tagCloud());
 		this.tagCloud.addTags(this.dendrogram2.tagCloud().tags());
 	}
 	

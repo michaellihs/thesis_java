@@ -355,7 +355,7 @@ public class RecommenderObject
 	 * @Override
 	 */
 	public Cloud getTagCloud() {
-		Cloud tagCloud = new Cloud();
+		Cloud tagCloud = new DefaultTagCloud();
 		if (this.tags == null) {
 			this.createTags();
 		}

@@ -12,7 +12,7 @@ import de.mknoll.thesis.datastructures.graph.writer.RecommenderRelationshipTypes
 import de.mknoll.thesis.datastructures.tagcloud.CosineSimilarityTagComparatorStrategy;
 import de.mknoll.thesis.datastructures.tagcloud.NormalizedSetDifferenceTagComparatorStrategy;
 import de.mknoll.thesis.datastructures.tagcloud.SetDifferenceTagComparatorStrategy;
-import de.mknoll.thesis.datastructures.tagcloud.TagCloudComperator;
+import de.mknoll.thesis.datastructures.tagcloud.TagCloudComparator;
 import de.mknoll.thesis.datastructures.tagcloud.TagCloudContainer;
 import de.mknoll.thesis.framework.logger.LoggerInterface;
 import de.mknoll.thesis.neo4j.Neo4jWriter;
@@ -51,15 +51,15 @@ public class Neo4jDendrogramWriter<T extends TagCloudContainer & AttachableToNod
 	
 	
 	
-	private TagCloudComperator setDifferenceComperator;
+	private TagCloudComparator setDifferenceComperator;
 	
 	
 	
-	private TagCloudComperator normalizedSetDifferenceComperator;
+	private TagCloudComparator normalizedSetDifferenceComperator;
 	
 	
 	
-	private TagCloudComperator cosineSimilarityComperator;
+	private TagCloudComparator cosineSimilarityComperator;
 	
 	
 	
@@ -73,9 +73,9 @@ public class Neo4jDendrogramWriter<T extends TagCloudContainer & AttachableToNod
 		this.writer = writer;
 		this.idNodeMap = idNodeMap;
 		
-		this.setDifferenceComperator = new TagCloudComperator(new SetDifferenceTagComparatorStrategy());
-		this.normalizedSetDifferenceComperator = new TagCloudComperator(new NormalizedSetDifferenceTagComparatorStrategy());
-		this.cosineSimilarityComperator = new TagCloudComperator(new CosineSimilarityTagComparatorStrategy());
+		this.setDifferenceComperator = new TagCloudComparator(new SetDifferenceTagComparatorStrategy());
+		this.normalizedSetDifferenceComperator = new TagCloudComparator(new NormalizedSetDifferenceTagComparatorStrategy());
+		this.cosineSimilarityComperator = new TagCloudComparator(new CosineSimilarityTagComparatorStrategy());
 	}
 
 	

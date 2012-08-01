@@ -15,6 +15,7 @@ import de.mknoll.thesis.datastructures.graph.Node;
 import de.mknoll.thesis.datastructures.graph.RecommendationGraph;
 import de.mknoll.thesis.datastructures.graph.RecommenderObject;
 import de.mknoll.thesis.datastructures.graph.UniqueNodeIdProvider;
+import de.mknoll.thesis.tests.AllTests;
 
 
 
@@ -28,14 +29,16 @@ import de.mknoll.thesis.datastructures.graph.UniqueNodeIdProvider;
  */
 public class ModularityAnalyzerTest {
 	
-	private static final double EPSILON = 0.0000000000001;
-
-
-
+	/**
+	 * Holds a set of nodes to be used for testing
+	 */
 	private RecommenderObject[] nodes = new RecommenderObject[5];
 	
 	
 	
+	/**
+	 * Holds id to node map for testing
+	 */
 	private DefaultIdNodeMap idNodeMap;
 
 	
@@ -47,7 +50,7 @@ public class ModularityAnalyzerTest {
 		ModularityAnalyzer modularityAnalyzer = new ModularityAnalyzer(graph);
 		Double modularity = modularityAnalyzer.modularity(partitioning);
 		Double reference = new Double((-1.0 / 72.0));
-		Assert.assertTrue(Math.abs(modularity - reference) < EPSILON);
+		Assert.assertTrue(Math.abs(modularity - reference) < AllTests.EPSILON);
 	}
 	
 	
@@ -59,7 +62,7 @@ public class ModularityAnalyzerTest {
 		ModularityAnalyzer modularityAnalyzer = new ModularityAnalyzer(graph);
 		Double modularity = modularityAnalyzer.modularity(partitioning);
 		Double reference = new Double(1.0/9.0);
-		Assert.assertTrue(Math.abs(modularity - reference) < EPSILON);
+		Assert.assertTrue(Math.abs(modularity - reference) < AllTests.EPSILON);
 	}
 	
 	
@@ -100,7 +103,7 @@ public class ModularityAnalyzerTest {
 		Assert.assertEquals(q.length, 4);  // We need one modularity measure for each merge
 		Assert.assertEquals(q[0], new Double(0.0));
 		Double reference =  new Double(-1.0 / 72.0);
-		Assert.assertTrue(Math.abs(q[1] - reference) < EPSILON);
+		Assert.assertTrue(Math.abs(q[1] - reference) < AllTests.EPSILON);
 		
 	}
 

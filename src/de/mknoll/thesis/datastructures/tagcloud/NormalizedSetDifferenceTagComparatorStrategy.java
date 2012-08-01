@@ -31,16 +31,34 @@ public class NormalizedSetDifferenceTagComparatorStrategy extends SetDifferenceT
 	public Double compare(List<Tag> tags1, List<Tag> tags2) {
 		Double absDifference = super.compare(tags1, tags2);
 		Double result;
-		if (absDifference == (tags1.size() + tags2.size())) {
-			result = 1D;
-		} else if (absDifference == 0D) {
+		if (absDifference == (tags1.size() + tags2.size())) {  // Both tag-lists are totally disjunct --> return 0
+//			System.out.println("Disjunct case: absDifference = " + absDifference + " tags1.size = " + tags1.size() + " tags2.size = " + tags2.size());
+//			this.print(tags1);
+//			this.print(tags2);
+//			System.out.println();
 			result = 0D;
+		} else if (absDifference == 0D) {   // Both tag-lists are similar --> return 1
+//			System.out.println("Equivalent case: absDifference = " + absDifference);
+			result = 1D;
+//			this.print(tags1);
+//			this.print(tags2);
+//			System.out.println();
 		} else {
 			Double intersectCount = (tags1.size() + tags2.size() - absDifference) / 2;
 			result = intersectCount / (tags1.size() + tags2.size() - intersectCount); 
 		}
 		
-		return (1 - result);
+		return result;
+		// return (1 - result);
+	}
+	
+	
+	
+	private void print(List<Tag> tags) {
+		for (Tag tag : tags) {
+			System.out.print("\"" + tag.getName() + "\", ");
+		}
+		System.out.println("\n");
 	}
 
 }

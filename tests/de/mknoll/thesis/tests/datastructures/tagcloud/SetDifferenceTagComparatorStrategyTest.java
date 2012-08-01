@@ -5,6 +5,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.mcavallo.opencloud.Cloud;
 
+import de.mknoll.thesis.datastructures.tagcloud.DefaultTagCloud;
 import de.mknoll.thesis.datastructures.tagcloud.SetDifferenceTagComparatorStrategy;
 
 
@@ -82,6 +83,23 @@ public class SetDifferenceTagComparatorStrategyTest {
 		c2.addTag("tag3");
 		c2.addTag("tag4");
 		Assert.assertTrue(this.comparator.compare(c1.allTags(), c2.allTags()) == 4F);
+	}
+	
+	
+	
+	@Test
+	public void compareReturnsExpectedValueOnBigTagsets() {
+		DefaultTagCloud c1 = new DefaultTagCloud();
+		c1.addTags("allgemein", "als", "arbeit", "auf", "aus", "bachelor", "badenwürttemberg", "bereich", "berufliche", "bildung", "datenbanken", "den", "des", "deutsch", "deutsche", "deutschen", "deutschland", "durch", "eb", "erwachsenenbildung", "erwachsenenbildungsrecht", "ev", "forschung", "frauen", "für", "handbuch", "heft", "hochschulen", "hochschullehre", "im", "in", "lernen", "linkempfehlungen", "mit", "nach", "nordrheinwestfalen", "online", "projekte", "soziale", "sozialen", "sprache", "studiengänge", "studierende", "studium", "von", "weiterbildung", "zeitschrift", "zu", "zum", "zur");
+
+		DefaultTagCloud c2 = new DefaultTagCloud();
+		c2.addTags("aufstiegsstipendium", "begabte", "begabtenförderung", "berufstätige", "bestimmungen", "bildungssponsoring", "förderalmanach", "förderprogramme", "für", "gesetz", "handbuch", "hochschulbereich", "im", "in", "individuelle", "nationalen", "nrwstipendienprogramm", "rechtliche", "schaffung", "schule", "schulsponsoring", "sponsoring", "stipendienprogrammgesetz", "stipendienprogramms", "stipg", "studienförderung", "studienstiftungen", "werbung", "zum", "zur"); 
+		
+
+		System.out.println(c1.allTags().size());
+		System.out.println(c2.allTags().size());
+		System.out.println(this.comparator.compare(c1.allTags(), c2.allTags()));
+		Assert.assertTrue(this.comparator.compare(c1.allTags(), c2.allTags()) == 68F);
 	}
 	
 }

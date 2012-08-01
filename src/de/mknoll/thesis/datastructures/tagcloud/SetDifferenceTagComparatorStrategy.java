@@ -27,6 +27,13 @@ import org.mcavallo.opencloud.Tag;
 public class SetDifferenceTagComparatorStrategy implements TagComparatorStrategy {
 
 	/**
+	 * Holds value added to difference if tag is in one cloud but not in the other.
+	 */
+	protected Double diffCount = 1.0;
+	
+	
+	
+	/**
 	 * Binary merge?
 	 * 
 	 * @Override
@@ -47,19 +54,19 @@ public class SetDifferenceTagComparatorStrategy implements TagComparatorStrategy
 		if (it2.hasNext()) t2 = it2.next(); else t2 = null;
 		while (t1 != null || t2 != null) {
 			if (t1 == null) {
-				difference += 1;
+				difference += this.diffCount;
 				if (it2.hasNext()) t2 = it2.next(); else t2 = null;
 			} else if (t2 == null) {
-				difference += 1;
+				difference += this.diffCount;
 				if (it1.hasNext()) t1 = it1.next(); else t1 = null;
 			} else if (t1.equals(t2)) {
 				if (it1.hasNext()) t1 = it1.next(); else t1 = null; 
 				if (it2.hasNext()) t2 = it2.next(); else t2 = null;
 			} else if (t1.getName().compareToIgnoreCase(t2.getName()) < 0) {
-				difference += 1;
+				difference += this.diffCount;
 				if (it1.hasNext()) t1 = it1.next(); else t1 = null;
 			} else {
-				difference += 1;
+				difference += this.diffCount;
 				if (it2.hasNext()) t2 = it2.next(); else t2 = null;
 			}
 		}
