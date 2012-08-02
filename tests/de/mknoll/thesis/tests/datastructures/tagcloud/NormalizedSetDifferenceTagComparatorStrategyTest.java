@@ -103,5 +103,33 @@ public class NormalizedSetDifferenceTagComparatorStrategyTest {
 		System.out.println(similarity);
 		Assert.assertTrue(similarity == (3.0/37));
 	}
+	
+	
+	
+	@Test
+	public void compareReturnsExpectedValue3() {
+		DefaultTagCloud c1 = new DefaultTagCloud();
+		c1.addTags("2012", "and", "bildung", "bildungsserver", "chemie", "conference", "deutschen", "deutschland", "education", "entwicklung", "fachtagung", "förderung", "geschichte", "grundschule", "heft", "informationskompetenz", "international", "internationale", "kinder", "konferenz", "learning", "lernen", "linktipps", "materialien", "neue", "pädagogik", "schule", "schulen", "thema", "unterricht", "unterrichtsanregung", "unterrichtseinheit", "unterrichtsmaterial", "zeitschrift");
+		
+		DefaultTagCloud c2 = new DefaultTagCloud();
+		c2.addTags("1949", "1961", "19611989", "20", "50", "alltag", "arbeitsblätter", "aufarbeitung", "bau", "berliner", "beziehungen", "bildungsangebote", "chronik", "ddr", "ddrdiktatur", "ddrgeschichte", "defafilm", "demokratiebewusstsein", "deutschdeutsche", "deutsche", "diktatur", "drei", "einheit", "fwu", "handreichungen", "heile", "herrschaft", "informationen", "jahre", "materialien", "mauer", "mauerbau", "offlinemedien", "perspektiven", "plakatausstellung", "politische", "sedherrschaft", "sodis", "stasi", "stärken", "themenfeld", "thüringen", "unterricht", "unterrichtseinheit");
+		
+		Double similarity = this.comparator.compare(c1.allTags(), c2.allTags()); 
+		System.out.println(similarity);
+	}
+	
+	
+	
+	@Test
+	public void compareReturnsExpectedValue4() {
+		DefaultTagCloud c1 = new DefaultTagCloud();
+		c1.addTags("2012", "and", "bildung", "bildungsserver", "chemie", "conference", "deutschen", "deutschland", "education", "entwicklung", "fachtagung", "förderung", "geschichte", "grundschule", "heft", "informationen", "international", "internationale", "kinder", "konferenz", "learning", "lernen", "linktipps", "materialien", "neue", "pädagogik", "schule", "schulen", "thema", "unterricht", "unterrichtsanregung", "unterrichtseinheit", "unterrichtsmaterial", "zeitschrift"); 
+
+		DefaultTagCloud c2 = new DefaultTagCloud();
+		c2.addTags("510", "afrika", "afrikas", "aids", "analysen", "bekanntem", "bevölkerungsentwicklung", "bildung", "bücher", "ca", "deutschland", "fremdem", "grundschulalter", "grundschulunterricht", "jahre", "kartografixschule", "kinder", "kinderalltag", "kinderarbeit", "kindergarten", "land", "länder", "nil", "projekt", "regionen", "sag", "suche", "südafrika", "teil", "umbruch", "unterrichtsanregung", "unterrichtseinheit", "unterrichtsprojekt", "vergleich", "video", "ägypten");
+		
+		Double similarity = this.comparator.compare(c1.allTags(), c2.allTags()); 
+		System.out.println(similarity);
+	}
 
 }

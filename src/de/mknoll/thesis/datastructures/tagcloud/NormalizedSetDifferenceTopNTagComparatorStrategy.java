@@ -61,6 +61,7 @@ public class NormalizedSetDifferenceTopNTagComparatorStrategy extends Normalized
 		// 2. n calculated by #tags in given lists
 		
 		// make sure, we don't have bigger n than elements in tags list
+		if (tags1.size() == 0 || tags2.size() == 0) return 0D; // assertion: |tags1| > 0 AND |tags2| > 0
 		if (tags1.size() <= this.n) this.n = tags1.size() - 1;
 		if (tags2.size() <= this.n) this.n = tags2.size() - 1;
 		
