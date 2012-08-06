@@ -105,3 +105,11 @@ Tests:
     PlotModularitiesForDendrogram: false
     PlotDendrogramDepthPerNode: false
     PlotTagCloudAnalysisForDendrogram: true
+  - 
+    Activated: 0
+    Class: de.mknoll.thesis.tests.infohiermap.InfoHierarchicalMapTest
+    PostgresDsn: jdbc:postgresql://localhost/dipf_dbs
+    PostgresUser: bibtip
+    PostgresPassword: bibtip
+    PostgresRecTable: recommendationtime
+    PostgresDescTable: descriptions

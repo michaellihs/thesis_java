@@ -3,12 +3,9 @@ package de.mknoll.thesis.datastructures.dendrogram;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
-import java.util.Stack;
 
-import org.hibernate.type.descriptor.sql.SmallIntTypeDescriptor;
 
 import de.mknoll.thesis.datastructures.graph.AttachableToNode;
-import de.mknoll.thesis.datastructures.graph.Recommendation;
 import de.mknoll.thesis.datastructures.tagcloud.TagCloudContainer;
 
 
@@ -127,6 +124,15 @@ public class LeafDendrogram<T extends TagCloudContainer & AttachableToNode> exte
 	@Override
 	public boolean isLeaf() {
 		return true;
+	}
+	
+	
+	
+	/**
+	 * Resets pre-calculated tag cloud of this dendrogram
+	 */
+	public void resetTagCloud() {
+		this.tagCloud = null;
 	}
 	
 	

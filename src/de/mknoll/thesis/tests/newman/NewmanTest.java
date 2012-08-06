@@ -104,9 +104,9 @@ public class NewmanTest extends AbstractTest {
 		
 		
 		// Write recommendation graph to Neo4J file
-		this.logger.log("Writing recommendation graph to N4J file...");
-		Neo4jWriter n4jWriter = new Neo4jWriter(this.neo4jWriter);
-		n4jWriter.write(this.recommendationGraph);
+//		this.logger.log("Writing recommendation graph to N4J file...");
+//		Neo4jWriter n4jWriter = new Neo4jWriter(this.neo4jWriter);
+//		n4jWriter.write(this.recommendationGraph);
 
 		
 		// Writing recommendation graph to an edge list file required by Newman algorithm implementation
@@ -138,10 +138,10 @@ public class NewmanTest extends AbstractTest {
 		
 		
 		// Write cluster results (dendrogram) to neo4j graph database
-		Neo4jDendrogramWriter<RecommenderObject> writer = new Neo4jDendrogramWriter<RecommenderObject>(logger, this.neo4jWriter, this.container.getComponent(IdNodeMap.class));
-		this.logger.log("Start writing dendrogram into neo4j");
-		writer.write(dendrogram);
-		this.logger.log("Finished writing dendrogram into neo4j");
+//		Neo4jDendrogramWriter<RecommenderObject> writer = new Neo4jDendrogramWriter<RecommenderObject>(logger, this.neo4jWriter, this.container.getComponent(IdNodeMap.class));
+//		this.logger.log("Start writing dendrogram into neo4j");
+//		writer.write(dendrogram);
+//		this.logger.log("Finished writing dendrogram into neo4j");
 		
 		// Write dendrogram to JSON file
 		//JsonDendrogramWriter<RecommenderObject> writer = new JsonDendrogramWriter<RecommenderObject>();

@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 
-import org.mcavallo.opencloud.Cloud;
+import org.mcavallo.opencloud.Tag;
 
 import de.mknoll.thesis.datastructures.graph.AttachableToNode;
 import de.mknoll.thesis.datastructures.tagcloud.DefaultTagCloud;
@@ -21,7 +21,14 @@ import de.mknoll.thesis.datastructures.tagcloud.TagCloudContainer;
  * @see de.mknoll.thesis.tests.datastructures.dendrogram.LinkDendrogramTest
  */
 public class LinkDendrogram<T extends TagCloudContainer & AttachableToNode> extends Dendrogram<T> {
+	
+	/**
+	 * Set to true if we want to get some debug output
+	 */
+	private final static boolean DEBUG = false; 
 
+	
+	
 	/**
 	 * First child of this node
 	 */
@@ -154,12 +161,46 @@ public class LinkDendrogram<T extends TagCloudContainer & AttachableToNode> exte
 	
 	
 	/**
+	 * Resets pre-calculated tag clouds of this dendrogram
+	 */
+	public void resetTagCloud() {
+		this.tagCloud = null;
+		this.dendrogram1.resetTagCloud();
+		this.dendrogram2.resetTagCloud();
+	}
+	
+	
+	
+	/**
 	 * Creates tag cloud for this inner node by combining tag clouds
 	 * of both children.
 	 */
 	protected void createTagCloud() {
 		this.tagCloud = new DefaultTagCloud(this.dendrogram1.tagCloud());
-		this.tagCloud.addTags(this.dendrogram2.tagCloud().tags());
+		this.tagCloud.addTags(this.dendrogram2.tagCloud().allTags());
+		if (LinkDendrogram.DEBUG) {
+			this.assertTagsOfDendrogram1AndDendrogram2AreContainedInTagCloud();
+		}
+	}
+
+
+
+	private void assertTagsOfDendrogram1AndDendrogram2AreContainedInTagCloud() {
+		try {
+			for (Tag tag : this.dendrogram1.tagCloud().allTags()) {
+					if (!this.tagCloud.containsName(tag.getName())) {
+						throw new Exception("Tag Cloud for dendrogram should contain " + tag.getName() + " but did not!");
+					}
+			}
+			for (Tag tag: this.dendrogram2.tagCloud().allTags()) {
+				if (!this.tagCloud.containsName(tag.getName())) {
+					throw new Exception("Tag Cloud for dendrogram should contain " + tag.getName() + " but did not!");
+				}
+			}
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+			System.exit(0);
+		}
 	}
 	
 }

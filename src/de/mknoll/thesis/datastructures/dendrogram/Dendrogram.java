@@ -261,6 +261,15 @@ public abstract class Dendrogram<T extends TagCloudContainer & AttachableToNode>
 	
 	
 	/**
+	 * Resets all pre-calculated tag clouds within this dendrogram
+	 * 
+	 * TODO think about which methods should call this method
+	 */
+	abstract public void resetTagCloud();
+	
+	
+	
+	/**
 	 * Returns depth of current node within dendrogram (path length to root)
 	 * 
 	 * @return Depth of current node

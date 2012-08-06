@@ -42,7 +42,7 @@ public class TagCloudComparator {
 	 * @return Similarity measure for given clouds
 	 */
 	public Double compare(Cloud cloud1, Cloud cloud2) {
-		return this.compareTags(cloud1.allTags(), cloud2.allTags());
+		return this.compareTags(cloud1.allTags(new Tag.NameComparatorAsc()), cloud2.allTags(new Tag.NameComparatorAsc()));
 	}
 	
 	

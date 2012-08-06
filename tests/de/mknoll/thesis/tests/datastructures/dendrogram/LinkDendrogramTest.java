@@ -2,7 +2,6 @@ package de.mknoll.thesis.tests.datastructures.dendrogram;
 
 import static org.junit.Assert.*;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import junit.framework.Assert;
@@ -12,7 +11,6 @@ import org.mcavallo.opencloud.Cloud;
 
 import de.mknoll.thesis.datastructures.dendrogram.LeafDendrogram;
 import de.mknoll.thesis.datastructures.dendrogram.LinkDendrogram;
-import de.mknoll.thesis.datastructures.graph.Recommendation;
 import de.mknoll.thesis.datastructures.graph.RecommenderObject;
 
 
@@ -24,16 +22,6 @@ import de.mknoll.thesis.datastructures.graph.RecommenderObject;
  * @see de.mknoll.thesis.datastructures.dendrogram.LinkDendrogram
  */
 public class LinkDendrogramTest {
-	
-	@Test
-	public void linkDendrogramCanBeConstructedForTwoGivenLeaves() {
-		LeafDendrogram<RecommenderObject> leaf1 = new LeafDendrogram<RecommenderObject>(new RecommenderObject("String1"));
-		LeafDendrogram<RecommenderObject> leaf2 = new LeafDendrogram<RecommenderObject>(new RecommenderObject("String2"));
-		
-		LinkDendrogram<RecommenderObject> link = new LinkDendrogram<RecommenderObject>(leaf1, leaf2);
-	}
-	
-	
 	
 	@Test
 	public void memberSetReturnsSetOfMembersOfLinkedDendrograms() {

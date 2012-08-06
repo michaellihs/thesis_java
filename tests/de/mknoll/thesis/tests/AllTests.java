@@ -24,6 +24,7 @@ import de.mknoll.thesis.tests.datastructures.tagcloud.DefaultTagCloudTest;
 import de.mknoll.thesis.tests.datastructures.tagcloud.NormalizedSetDifferenceTagComparatorStrategyTest;
 import de.mknoll.thesis.tests.datastructures.tagcloud.NormalizedSetDifferenceTopNTagComparatorStrategyTest;
 import de.mknoll.thesis.tests.datastructures.tagcloud.SetDifferenceTagComparatorStrategyTest;
+import de.mknoll.thesis.tests.datastructures.tagcloud.StopWordFilteredTagCloudTest;
 import de.mknoll.thesis.tests.datastructures.tagcloud.TagExtractorTest;
 import de.mknoll.thesis.tests.neo4j.Neo4jTest;
 
@@ -58,7 +59,8 @@ import de.mknoll.thesis.tests.neo4j.Neo4jTest;
 	NormalizedSetDifferenceTagComparatorStrategyTest.class,
 	CosineSimilarityTagComparatorStrategyTest.class,
 	ModularityAnalyzerTest.class,
-	NormalizedSetDifferenceTopNTagComparatorStrategyTest.class
+	NormalizedSetDifferenceTopNTagComparatorStrategyTest.class,
+	StopWordFilteredTagCloudTest.class
 } )
 
 public class AllTests {

@@ -1,14 +1,11 @@
 package de.mknoll.thesis.tests.datastructures.tagcloud;
 
-import static org.junit.Assert.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.junit.internal.runners.statements.Fail;
 import org.mcavallo.opencloud.Tag;
 
 import de.mknoll.thesis.datastructures.tagcloud.CosineSimilarityTagComparatorStrategy;
