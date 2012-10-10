@@ -16,16 +16,9 @@
 library("igraph")
 library("Rlab") # For xline command
 
-
-
 # Make this script executeable and call it via ./ScriptName.R
 # You can add arbitrary command line arguments which will then be read via
 args <- commandArgs(TRUE)
-
-
-
-
-
 
 #################################################################
 # Reading graph from edgelist file
@@ -37,8 +30,6 @@ edges <- read.table(args[1], header=FALSE)
  ## Create undirected graph from edges
 g <- graph.data.frame(edges, directed = F)
 
-
-
 #################################################################
 # Some statistics on the overall graph
 #################################################################
@@ -49,8 +40,6 @@ overallAverageDegree <- 2 * length(E(g)) / length(V(g))
 table(degree(g, mode="out"))
  ## Number of components with size n
 table(clusters(g)["csize"])
-
-
 
 #################################################################
 # Some statistics on the biggest component of the graph
@@ -76,8 +65,6 @@ xline(sum(degree(maxComponent, mode="out")) / length(V(maxComponent)), col='blue
 legend("topright", c("max component","mean degree max component","overall graph", "mean degree overall graph"), col=c("blue","blue","red","red"), lty=c(1,1,1,1), lwd=c(3,1,3,1))
 
 dev.off()
-
-
 
 #################################################################
 # Get bar plot for component size / component count

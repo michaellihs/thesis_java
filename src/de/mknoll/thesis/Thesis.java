@@ -1,7 +1,5 @@
 package de.mknoll.thesis;
 
-import org.yaml.snakeyaml.scanner.Constant;
-
 import de.mknoll.thesis.framework.core.Bootstrap;
 
 
@@ -29,6 +27,7 @@ public class Thesis {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		// TODO use cli argument for configuration file
 		Bootstrap bootstrap = new Bootstrap("/Users/mimi/Dropbox/Diplomarbeit/Workspace/thesis/configuration/configuration.yaml");
 		bootstrap.run();
 	}

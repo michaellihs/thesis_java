@@ -34,7 +34,7 @@ public class TestSuite extends ArrayList<Test> {
 	 * @throws Exception 
 	 */
 	public TestSuiteResult run() throws Exception {
-		Iterator it = this.iterator();
+		Iterator<Test> it = this.iterator();
 		TestSuiteResult testSuiteResult = new TestSuiteResult();
 		Runtime r = Runtime.getRuntime();
 		while (it.hasNext()){

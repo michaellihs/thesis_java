@@ -1,6 +1,13 @@
 package de.mknoll.thesis.analysis;
 
 import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.mcavallo.opencloud.Cloud;
 
 import de.mknoll.thesis.datastructures.dendrogram.Dendrogram;
 import de.mknoll.thesis.datastructures.dendrogram.LeafDendrogram;
@@ -15,6 +22,7 @@ import de.mknoll.thesis.datastructures.tagcloud.TagCloudComparator;
 import de.mknoll.thesis.externaltools.wrapper.R;
 import de.mknoll.thesis.framework.filesystem.FileManager;
 import de.mknoll.thesis.framework.logger.LoggerInterface;
+import de.mknoll.thesis.util.Pair;
 
 
 
@@ -45,12 +53,31 @@ public class DendrogramTagCloudAnalyzer {
 
 
 	private LeafDendrogram<RecommenderObject>[] leaves;
+
+
+
+	private Map<String, TagCloudComparator> comparatorMap;
+	
+	
+	
+	/**
+	 * Holds a map of file writers each with an individual name to write results
+	 */
+	private Map<String, FileWriter> fileWriterMap;
+
+
+
+	/**
+	 * Holds number of tags to be taken in calculation for top-n set difference
+	 */
+	private int topN = 10;
 	
 	
 	
 	public DendrogramTagCloudAnalyzer(FileManager fileManager, LoggerInterface logger) {
 		this.fileManager = fileManager;
 		this.logger = logger;
+		this.fileWriterMap = new HashMap<String, FileWriter>();
 	}
 	
 	
@@ -58,19 +85,57 @@ public class DendrogramTagCloudAnalyzer {
 	@SuppressWarnings("unchecked")
 	public void analyzeTagCloudsByLeavesFor(Dendrogram<RecommenderObject> dendrogram, int[] leaves) throws Exception {
 		this.dendrogram = dendrogram;
+		this.setUpComparators();
 		
-		// Reset tag clouds of dendrogram
-		dendrogram.resetTagCloud();
+		// Reset tag clouds of dendrogram (should not be necessary any more)
+		// dendrogram.resetTagCloud();
 		
 		this.leaves = (LeafDendrogram<RecommenderObject>[])this.dendrogram.leaves().toArray(new LeafDendrogram[this.dendrogram.leaves().size()]);
 		for (int i = 0; i < leaves.length; i++) {
 			this.analyzeTagCloudsForGivenLeaf(leaves[i]);
+		}
+		this.closeFileWriters();
+		for (int i = 0; i < leaves.length; i++) {
+			this.drawPlots(i);
+		}
+	}
+
+
+
+	private void closeFileWriters() throws IOException {
+		for (String name : this.fileWriterMap.keySet()) {
+			this.fileWriterMap.get(name).close();
 		}
 	}
 
 
 
 	private void analyzeTagCloudsForGivenLeaf(int i) throws Exception {
+		Dendrogram<RecommenderObject> child = this.leaves[i];
+		Dendrogram<RecommenderObject> parent = child.parent();
+		
+		int currentDepth = 1;
+		int maxDepth = child.depth();
+		
+		while (parent != null) {
+			List<Pair<String, Pair<Cloud, Cloud>>> cloudPairs = this.getCloudPairs(child, parent);
+			
+			for (Pair<String, Pair<Cloud, Cloud>> cloudPair : cloudPairs) {
+				
+				for (String comparatorName : this.comparatorMap.keySet()) {
+					this.compare(comparatorName, cloudPair, i, currentDepth, maxDepth);
+				}
+				
+			}
+			
+			child = parent;
+			parent = parent.parent();
+			currentDepth++;
+		}
+		
+		/*
+		
+		
 		// TODO refactor this to prevent duplicated code
 		
 		// Without any tag modification
@@ -93,6 +158,158 @@ public class DendrogramTagCloudAnalyzer {
 		
 		// Do comparison plot
 		this.plotComparison(i);
+		
+		*/
+	}
+
+
+
+	private void drawPlots(int i) throws Exception {
+		// Draw single plots
+		for (String fileName : this.fileWriterMap.keySet()) {
+			String tmpFile = this.fileManager.getTempFilePath(fileName + ".txt");
+			String plotFile = this.fileManager.getPlotsFilePath(fileName + ".pdf");
+			R r = new R(this.logger);
+			// We set x-axis label as 3rd parameter
+			r.run(
+					"TagCloudNormalizedTopNSetDifference.r", 
+					tmpFile + " " + plotFile + " similarity" 
+			);
+		}
+		
+		// TODO how to plot multi-plots???
+	}
+
+
+
+	/**
+	 * Compares given tag cloud pair using given comparator
+	 * 
+	 * @param comparatorName
+	 * @param cloudPair
+	 * @param leaveNumber
+	 * @param step
+	 * @param maxDepth
+	 * @throws Exception
+	 */
+	private void compare(String comparatorName, Pair<String, Pair<Cloud, Cloud>> cloudPair, int leaveNumber, int step, int maxDepth) throws Exception {
+		/**
+		 * What should be done here:
+		 * 
+		 * 1. Get a result file writer for string given in pair (nonFiltered, stop-word...) and comparatorName
+		 * 2. Compare tag clouds given in pair using comparator given in comparator Name
+		 * 3. Write special statistics (like equal tags...) into special files using stats-writer method (to be implemented)
+		 */
+		TagCloudComparator comparator = this.comparatorMap.get(comparatorName);
+		FileWriter compareFileWriter = this.getFileWriterByFilteringAndComparator(leaveNumber, cloudPair.getFirst(), comparatorName); // TODO to be implemented
+		Double similarity = comparator.compare(cloudPair.getSecond().getFirst(), cloudPair.getSecond().getSecond());
+		compareFileWriter.write(similarity.toString() + "\n");
+		this.writeAdditionalInformation(leaveNumber, comparatorName, cloudPair, step, similarity); // TODO to be implemented
+	}
+
+
+
+	/**
+	 * Writes additional information for given cloud pairs
+	 * 
+	 * @param leaveNumber Number of leave that is currently analyzed
+	 * @param comparatorName Name of comparator that is currently used
+	 * @param cloudPair Pair of tag clouds to be compared
+	 * @param step Depth of dendrogram currently analyzed
+	 * @param similarity Similarity calculated by comparator
+	 */
+	private void writeAdditionalInformation(
+			int leaveNumber, 
+			String comparatorName, 
+			Pair<String, Pair<Cloud, Cloud>> cloudPair,	
+			int step, 
+			Double similarity) {
+		
+		// TODO implement me... what has to be done here?!?
+		// We want to have a txt-file with tag clouds that occur for certain similarity values
+		
+	}
+
+
+
+	/**
+	 * Returns fileWriter for given parameters
+	 * 
+	 * @param leaveNumber
+	 * @param filterName
+	 * @param comparatorName
+	 * @return FileWriter for given parameters
+	 * @throws Exception
+	 */
+	private FileWriter getFileWriterByFilteringAndComparator(int leaveNumber, String filterName, String comparatorName) throws Exception {
+		String fileName = this.getFileNameByFilteringAndComparator(leaveNumber, filterName, comparatorName);
+		if (!this.fileWriterMap.containsKey(fileName)) {
+			this.fileWriterMap.put(fileName, this.fileManager.getNewTempFileWriter(fileName + ".txt"));
+		}
+		return this.fileWriterMap.get(fileName);
+	}
+	
+	
+	
+	/**
+	 * Creates a file name for a given set of parameters to describe result file
+	 * 
+	 * @param leaveNumber
+	 * @param filterName
+	 * @param comparatorName
+	 * @return File name for given parameters
+	 */
+	private String getFileNameByFilteringAndComparator(int leaveNumber, String filterName, String comparatorName) {
+		return filterName + "_" + comparatorName + "_" + leaveNumber;
+	}
+
+
+
+	/**
+	 * Generates an array of cloud pairs for each given child and parent
+	 * 
+	 * @param child Cluster contained by parent
+	 * @param parent Cluster containing child
+	 * @return Named pairs of clouds for parent and child (like no filtering, stop-word filtering, lemmatization...)
+	 */
+	private List<Pair<String, Pair<Cloud, Cloud>>> getCloudPairs(Dendrogram<RecommenderObject> child, Dendrogram<RecommenderObject> parent) {
+		List<Pair<String, Pair<Cloud, Cloud>>> cloudPairs = new ArrayList<Pair<String,Pair<Cloud,Cloud>>>();
+		
+		// Non filtered clouds
+		cloudPairs.add(new Pair<String, Pair<Cloud,Cloud>>("nonFiltered", new Pair<Cloud, Cloud>(child.tagCloud(), parent.tagCloud())));
+		
+		// Stop-word filtered clouds
+		Cloud swfCloud1 = new StopWordFilteredTagCloud(child.tagCloud());
+		Cloud swfCloud2 = new StopWordFilteredTagCloud(parent.tagCloud());
+		cloudPairs.add(new Pair<String, Pair<Cloud,Cloud>>("stopWordFiltered", new Pair<Cloud, Cloud>(swfCloud1, swfCloud2)));
+		
+		return cloudPairs;
+	}
+
+
+
+	private void setUpComparators() {
+		this.comparatorMap = new HashMap<String, TagCloudComparator>();
+		
+		// Set up set difference comparator
+		SetDifferenceTagComparatorStrategy sdComparatorStrategy = new SetDifferenceTagComparatorStrategy();
+		TagCloudComparator sdComparator = new TagCloudComparator(sdComparatorStrategy);
+		this.comparatorMap.put("setDifferenceComparator", sdComparator);
+		
+		// Set up normalized set difference comparator
+		NormalizedSetDifferenceTagComparatorStrategy nsdComparatorStrategy = new NormalizedSetDifferenceTagComparatorStrategy();
+		TagCloudComparator nsdComparator = new TagCloudComparator(nsdComparatorStrategy);
+		this.comparatorMap.put("normalizedSetDifferenceComparator", nsdComparator);
+		
+		// Set up top-n normalized set difference comparator
+		NormalizedSetDifferenceTopNTagComparatorStrategy ntnsdComparatorStrategy = new NormalizedSetDifferenceTopNTagComparatorStrategy(this.topN );
+		TagCloudComparator ntnsdComparator = new TagCloudComparator(ntnsdComparatorStrategy);
+		this.comparatorMap.put("normalizedTopNSetDifferenceComparator", ntnsdComparator);
+		
+		// Set up cosine similarity comparator
+		CosineSimilarityTagComparatorStrategy csComparatorStrategy = new CosineSimilarityTagComparatorStrategy();
+		TagCloudComparator csComparator = new TagCloudComparator(csComparatorStrategy);
+		this.comparatorMap.put("cosineSimilarityComparator", csComparator);
 	}
 
 
@@ -132,6 +349,7 @@ public class DendrogramTagCloudAnalyzer {
 			//}
 			
 			fw.write(similarity.toString() + "\n");
+			child = parent;
 			parent = parent.parent();
 			depth++;
 		}
