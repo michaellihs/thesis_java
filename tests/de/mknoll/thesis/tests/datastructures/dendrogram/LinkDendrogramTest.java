@@ -2,12 +2,15 @@ package de.mknoll.thesis.tests.datastructures.dendrogram;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
 import org.mcavallo.opencloud.Cloud;
+import org.mcavallo.opencloud.Tag;
 
 import de.mknoll.thesis.datastructures.dendrogram.LeafDendrogram;
 import de.mknoll.thesis.datastructures.dendrogram.LinkDendrogram;
@@ -83,12 +86,12 @@ public class LinkDendrogramTest {
 	
 	
 	@Test
-	public void partitionThrowsExceptionOnWrongParameter() {
+	public void partitionThrowsNoExceptionOnCorrectParameter() {
 		LeafDendrogram<RecommenderObject> leaf = new LeafDendrogram<RecommenderObject>(new RecommenderObject("String1"));
 		try {
 			leaf.partition(1);
-			fail("Expected exception because of wrong parameter, but no exception has been thrown");
 		} catch (Exception e) {
+			fail("Expected exception because of wrong parameter, but no exception has been thrown");
 			return;
 		}
 	}
@@ -112,6 +115,12 @@ public class LinkDendrogramTest {
 	public void tagCloudReturnsExpectedTagCloud() {
 		RecommenderObject recObj1 = new RecommenderObject("1","tag1 tag2 tag3");
 		RecommenderObject recObj2 = new RecommenderObject("2","tag1 tag2 tag4");
+		List<Tag> tags1 = new ArrayList<Tag>();
+		tags1.add(new Tag("tag1"));tags1.add(new Tag("tag2"));tags1.add(new Tag("tag3"));
+		recObj1.setTags(tags1);
+		List<Tag> tags2 = new ArrayList<Tag>();
+		tags2.add(new Tag("tag1"));tags2.add(new Tag("tag2"));tags2.add(new Tag("tag4"));
+		recObj2.setTags(tags2);
 		LeafDendrogram<RecommenderObject> leaf1 = new LeafDendrogram<RecommenderObject>(recObj1);
 		LeafDendrogram<RecommenderObject> leaf2 = new LeafDendrogram<RecommenderObject>(recObj2);
 		LinkDendrogram<RecommenderObject> link1 = new LinkDendrogram<RecommenderObject>(leaf1, leaf2);

@@ -2,12 +2,15 @@ package de.mknoll.thesis.tests.datastructures.dendrogram;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
 import org.mcavallo.opencloud.Cloud;
+import org.mcavallo.opencloud.Tag;
 
 import de.mknoll.thesis.datastructures.dendrogram.LeafDendrogram;
 import de.mknoll.thesis.datastructures.graph.RecommenderObject;
@@ -56,6 +59,11 @@ public class LeafDendrogramTest {
 	@Test
 	public void tagCloudContainsExpectedTags() {
 		RecommenderObject recObj = new RecommenderObject("id:1234", "tag1 tag2 tag3 tag4");
+		List<Tag> tags = new ArrayList<Tag>();
+		tags.add(new Tag("tag1"));
+		tags.add(new Tag("tag2"));
+		tags.add(new Tag("tag3"));
+		recObj.setTags(tags);
 		LeafDendrogram<RecommenderObject> leaf = new LeafDendrogram<RecommenderObject>(recObj);
 		Cloud c = leaf.tagCloud();
 		Assert.assertTrue(c.containsName("tag1"));

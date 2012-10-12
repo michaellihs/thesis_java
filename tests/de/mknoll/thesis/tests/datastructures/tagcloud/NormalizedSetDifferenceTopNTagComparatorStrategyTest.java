@@ -83,7 +83,8 @@ public class NormalizedSetDifferenceTopNTagComparatorStrategyTest {
 		
 		System.out.println(result);
 		
-		Assert.assertTrue((Math.abs(result - (2.0/3.0)) < AllTests.EPSILON));
+		// There are 3 different tags with 1 match --> result should be 1/3
+		Assert.assertTrue((Math.abs(result - (1.0/3.0)) < AllTests.EPSILON));
 	}
 	
 	

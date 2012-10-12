@@ -87,6 +87,7 @@ public class TestSuiteBuilder {
 					localContainer.addComponent(FileManager.class, fileManager);
 					localContainer.addComponent(testClass);
 					
+					
 					Test test = localContainer.getComponent(testClass);
 					test.index(testIndex);
 					

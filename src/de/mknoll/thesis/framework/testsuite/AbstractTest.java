@@ -1,5 +1,6 @@
 package de.mknoll.thesis.framework.testsuite;
 
+import org.apache.lucene.analysis.de.GermanStemmer;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoBuilder;
 import org.picocontainer.annotations.Inject;
@@ -8,6 +9,8 @@ import de.mknoll.thesis.datastructures.graph.DefaultIdNodeMap;
 import de.mknoll.thesis.datastructures.graph.IdNodeMap;
 import de.mknoll.thesis.datastructures.graph.reader.GraphReader;
 import de.mknoll.thesis.datastructures.graph.reader.PostgresReader;
+import de.mknoll.thesis.datastructures.tagcloud.Stemmer;
+import de.mknoll.thesis.datastructures.tagcloud.TagStemMap;
 import de.mknoll.thesis.framework.configuration.TestConfiguration;
 import de.mknoll.thesis.framework.filesystem.FileManager;
 import de.mknoll.thesis.framework.logger.LoggerInterface;
@@ -133,6 +136,10 @@ public abstract class AbstractTest implements Test {
 		// Always set graph name BEFORE current test, as latter will create directories!
 		this.fileManager.setGraphName(this.testConfiguration.getGraphName());
 		this.fileManager.setCurrentTest(this.index(), this.getClass().getName());
+		
+		// We add tag-stem map for current test using german stemmer
+		Stemmer stemmer = new GermanStemmer();
+		this.container.addComponent(TagStemMap.class, new TagStemMap(stemmer));
 	}
 	
 }

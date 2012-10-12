@@ -50,7 +50,21 @@ public class TagStemMapTest {
 	
 	
 	
-	/** TODO test that we really get the most important tag for a stem */
+	@Test
+	public void getMostImportantTagReturnsExpectedTagIfMoreThanOneTagAdded() {
+		Tag tag1 = new Tag("string");
+		Tag tag2 = new Tag("string");
+		Stemmer stemmer = new ReverseStemmer();
+		TagStemMap map = new TagStemMap(stemmer);
+		map.put(tag1);
+		map.put(tag2);
+		map.put(tag1);
+		Assert.assertTrue(map.getMostImportantTagForStem("gnirts").equals(tag1));
+		
+		map.put(tag2);
+		map.put(tag2);
+		Assert.assertTrue(map.getMostImportantTagForStem("gnirts").equals(tag2));
+	}
 	
 	
 	
@@ -89,7 +103,3 @@ public class TagStemMapTest {
 	}
 	
 }
-
-
-
-

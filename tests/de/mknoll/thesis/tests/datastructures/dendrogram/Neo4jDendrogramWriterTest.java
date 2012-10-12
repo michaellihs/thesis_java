@@ -1,5 +1,7 @@
 package de.mknoll.thesis.tests.datastructures.dendrogram;
 
+import java.io.File;
+
 import org.junit.Test;
 
 import de.mknoll.thesis.datastructures.dendrogram.LeafDendrogram;
@@ -36,6 +38,8 @@ public class Neo4jDendrogramWriterTest {
 
 	@Test
 	public void testWrite() throws Exception {
+		new File(this.n4jpath).delete(); // make sure, directory does not exist
+		
 		// TODO find out how to use in-memory testing database
 		LoggerInterface logger = new ConsoleLogger();
 		this.fileWriter = new Neo4jFileWriter(this.n4jpath);
@@ -50,6 +54,8 @@ public class Neo4jDendrogramWriterTest {
 		
 		
 		writer.write(this.dendrogram);
+		
+		new File(this.n4jpath).delete(); // clean directory after test
 	}
 
 	
