@@ -1,11 +1,7 @@
 package de.mknoll.thesis.tests.datastructures.graph;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Test;
-import org.mcavallo.opencloud.Tag;
 
 import de.mknoll.thesis.datastructures.graph.RecommenderObject;
 
@@ -49,9 +45,6 @@ public class RecommenderObjectTest {
 	@Test
 	public void getTagCloudReturnsExpectedTagCloud() {
 		RecommenderObject recObj = new RecommenderObject("docId:1234", "tag1 tag2 tag3");
-		List<Tag> tags = new ArrayList<Tag>();
-		tags.add(new Tag("tag1")); tags.add(new Tag("tag2")); tags.add(new Tag("tag3"));
-		recObj.setTags(tags);
 		Assert.assertTrue(recObj.getTagCloud().containsName("tag1"));
 		Assert.assertTrue(recObj.getTagCloud().containsName("tag2"));
 		Assert.assertTrue(recObj.getTagCloud().containsName("tag3"));

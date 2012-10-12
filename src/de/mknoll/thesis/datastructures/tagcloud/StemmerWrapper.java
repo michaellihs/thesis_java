@@ -13,6 +13,16 @@ import org.mcavallo.opencloud.Tag;
  * Class implements a wrapper for a stemmer.
  * 
  * This wrapper has some helper methods for easy usage of stemmers.
+ * We don't use stemmers directly here but use a tagStemMap instead which
+ * holds a stemmer and keeps track of mapping between tags and its stemmings.
+ * 
+ * E.g. if you stem "gehen" it will result in "geh". So the mapping
+ * holds "gehen" --> "geh". 
+ * 
+ * Vice versa, if you want to have a correct tag for a stem, the mapping returns 
+ * the most frequent tag that lead to a stem and returns it.
+ * E.g. let's say, you added "gehen", "gehen", "gehend" which will all result in "geh"
+ * than map.getMostFrequentTagForStem("geh") will return "gehen".
  * 
  * @author Michael Knoll <mimi@kaktusteam.de>
  */

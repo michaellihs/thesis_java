@@ -94,13 +94,6 @@ public class RecommenderObject
 	
 	
 	/**
-	 * Holds tag cloud (cached)
-	 */
-	private Cloud tagCloud = null;
-	
-	
-	
-	/**
 	 * Holds leaf of dendrogram to which this recommender object is attached
 	 */
 	private LeafDendrogram<RecommenderObject> leafDendrogram;
@@ -243,10 +236,9 @@ public class RecommenderObject
 
 	@Override
 	public HashMap<String, Object> getProperties() {
-		// Think we don't need that anymore
-		//if (this.tags == null) {
-		//	this.createTags();
-		//}
+		if (this.tags == null) {
+			this.createTags();
+		}
 		HashMap<String, Object> properties = new HashMap<String, Object>();
 		properties.put("tags", this.tagsAsStrings);
 		properties.put("description", this.description);
@@ -292,6 +284,24 @@ public class RecommenderObject
 
 
 	/**
+	 * Reads recommender object's title and creates an array of tags for 
+	 * this object.
+	 */
+	private void createTags() {
+		TagExtractor extractor = new TagExtractor();
+		DefaultTagCloud cloud = new DefaultTagCloud();
+		cloud.addTags(extractor.extractTags(this.description));
+		Tag[] tags = new Tag[cloud.tags().size()];
+		this.tags = cloud.tags().toArray(tags); 
+		this.tagsAsStrings = new String[tags.length];
+		for (int i = 0; i < tags.length; i++) {
+			this.tagsAsStrings[i] = this.tags[i].getName();
+		}
+	}
+
+
+
+	/**
 	 * Returns identifier for this object
 	 * 
 	 * @Override
@@ -329,22 +339,6 @@ public class RecommenderObject
 	
 	
 	/**
-	 * Setter for tags for this recommender object
-	 * 
-	 * @param tags
-	 */
-	public void setTags(List<Tag> tags) {
-		this.tagCloud = null; // reset tag cloud cache
-		this.tags = tags.toArray(new Tag[tags.size()]); 
-		this.tagsAsStrings = new String[tags.size()];
-		for (int i = 0; i < tags.size(); i++) {
-			this.tagsAsStrings[i] = this.tags[i].getName();
-		}
-	}
-	
-	
-	
-	/**
 	 * Returns tags as array of strings for this recommender object
 	 * 
 	 * @return Tags as array of strings for this recommender object
@@ -361,22 +355,14 @@ public class RecommenderObject
 	 * @Override
 	 */
 	public Cloud getTagCloud() {
-		if (this.tagCloud == null) {
-			// rebuild cache, if necessary
-			this.createTagCloud();
+		Cloud tagCloud = new DefaultTagCloud();
+		if (this.tags == null) {
+			this.createTags();
 		}
-		return this.tagCloud;
-	}
-	
-	
-	
-	private void createTagCloud() {
-		this.tagCloud = new DefaultTagCloud();
-		if (this.tags != null) {
-			for (Tag tag : this.tags) {
-				this.tagCloud.addTag(tag);
-			}
+		for (int i = 0; i < this.tags.length; i++) {
+			tagCloud.addTag(this.tags[i]);
 		}
+		return tagCloud;
 	}
 	
 }

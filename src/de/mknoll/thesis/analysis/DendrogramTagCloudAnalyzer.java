@@ -40,22 +40,37 @@ public class DendrogramTagCloudAnalyzer {
 	
 	
 	
+	/**
+	 * Holds file manager to get paths for result files
+	 */
 	private FileManager fileManager;
 	
 	
 	
+	/**
+	 * Holds a logger to output some debug messages
+	 */
 	private LoggerInterface logger;
 
 
 
+	/**
+	 * Holds dendrogram to be analyzed
+	 */
 	private Dendrogram<RecommenderObject> dendrogram;
 
 
 
+	/**
+	 * Holds a set of leaves that should be analyzed
+	 */
 	private LeafDendrogram<RecommenderObject>[] leaves;
 
 
 
+	/**
+	 * Holds a map of tag could comparators which should be used to compare tag clouds
+	 */
 	private Map<String, TagCloudComparator> comparatorMap;
 	
 	
@@ -74,6 +89,12 @@ public class DendrogramTagCloudAnalyzer {
 	
 	
 	
+	/**
+	 * Constructor gets some dependencies injected
+	 * 
+	 * @param fileManager File manager to be used for result files
+	 * @param logger Logger to be used for writing some debug messages
+	 */
 	public DendrogramTagCloudAnalyzer(FileManager fileManager, LoggerInterface logger) {
 		this.fileManager = fileManager;
 		this.logger = logger;
@@ -81,14 +102,17 @@ public class DendrogramTagCloudAnalyzer {
 	}
 	
 	
-	
-	@SuppressWarnings("unchecked")
+	/**
+	 * Runs analyzes on given dendrogram and a given set of leaves, encoded with their id within the dendrogram
+	 * 
+	 * @param dendrogram Dendrogram to be analyzed
+	 * @param leaves Array of leaves to be used for analyzes
+	 * @throws Exception
+	 * @SuppressWarnings("unchecked")
+	 */
 	public void analyzeTagCloudsByLeavesFor(Dendrogram<RecommenderObject> dendrogram, int[] leaves) throws Exception {
 		this.dendrogram = dendrogram;
 		this.setUpComparators();
-		
-		// Reset tag clouds of dendrogram (should not be necessary any more)
-		// dendrogram.resetTagCloud();
 		
 		this.leaves = (LeafDendrogram<RecommenderObject>[])this.dendrogram.leaves().toArray(new LeafDendrogram[this.dendrogram.leaves().size()]);
 		for (int i = 0; i < leaves.length; i++) {
@@ -282,6 +306,8 @@ public class DendrogramTagCloudAnalyzer {
 		Cloud swfCloud1 = new StopWordFilteredTagCloud(child.tagCloud());
 		Cloud swfCloud2 = new StopWordFilteredTagCloud(parent.tagCloud());
 		cloudPairs.add(new Pair<String, Pair<Cloud,Cloud>>("stopWordFiltered", new Pair<Cloud, Cloud>(swfCloud1, swfCloud2)));
+		
+		// TODO add stemmed cloud with and without stopwords
 		
 		return cloudPairs;
 	}

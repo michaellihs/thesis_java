@@ -1,21 +1,14 @@
 package de.mknoll.thesis.datastructures.graph.reader;
 
-import org.mcavallo.opencloud.Tag;
 import org.picocontainer.annotations.Inject;
 
 import de.mknoll.thesis.datastructures.graph.IdNodeMap;
 import de.mknoll.thesis.datastructures.graph.RecommendationGraph;
 import de.mknoll.thesis.datastructures.graph.RecommenderObject;
-import de.mknoll.thesis.datastructures.tagcloud.DefaultTagCloud;
-import de.mknoll.thesis.datastructures.tagcloud.Stemmer;
-import de.mknoll.thesis.datastructures.tagcloud.StemmerWrapper;
-import de.mknoll.thesis.datastructures.tagcloud.TagExtractor;
-import de.mknoll.thesis.datastructures.tagcloud.TagStemMap;
 import de.mknoll.thesis.framework.configuration.TestConfiguration;
 import de.mknoll.thesis.framework.logger.LoggerInterface;
 
 import java.sql.*;
-import java.util.List;
 import java.util.Properties;
 
 
@@ -39,14 +32,6 @@ public class PostgresReader implements GraphReader {
 	
 	
 	@Inject private TestConfiguration testConfiguration;
-	
-	
-	
-	@Inject private TagStemMap tagStemMap;
-	
-	
-	
-	@Inject private Stemmer stemmer;
 	
 	
 	
@@ -120,9 +105,6 @@ public class PostgresReader implements GraphReader {
 				//logger.log("Adding recommendation : " + rs.getString(2) + " " + rs.getString(5) + " " + rs.getString(6));
 				RecommenderObject target = new RecommenderObject(rs.getString(2), rs.getString(5), rs.getString(6));
 				
-				this.buildTagCloudForRecommenderObject(source);
-				this.buildTagCloudForRecommenderObject(target);
-				
 				// TODO find out, in which column actual weight (quality) of recommendation is stored
 				g.addRecommendation(source, target,1);
 				
@@ -135,17 +117,6 @@ public class PostgresReader implements GraphReader {
 			this.logger.log("Error whent trying to read recommendation data from database: " + e.getMessage());
 			e.printStackTrace();
 		}
-	}
-
-
-
-	private void buildTagCloudForRecommenderObject(RecommenderObject recommenderObject) {
-		TagExtractor extractor = new TagExtractor();	
-		DefaultTagCloud cloud = new DefaultTagCloud();
-		List<Tag> unstemmedTags = extractor.extractTags(recommenderObject.getDescription());
-		StemmerWrapper stemmerWrapper = new StemmerWrapper(this.tagStemMap);
-		List<Tag> stemmedTags = stemmerWrapper.stemTags(unstemmedTags);
-		recommenderObject.setTags(stemmedTags);
 	}
 
 

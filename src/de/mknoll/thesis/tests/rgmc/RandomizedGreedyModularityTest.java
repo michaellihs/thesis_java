@@ -55,34 +55,58 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 
 
 
+	/**
+	 * Holds neo4j writer to write stuff into node database
+	 */
 	private Neo4jFileWriter neo4jWriter;
 
 
 
+	/**
+	 * If set to true, graph will be written to neo4j database
+	 */
 	private Boolean writeRecommendationGraphToNeo4j;
 
 
 
+	/**
+	 * If set to true, dendrogram will be written to neo4j database
+	 */
 	private Boolean writeDendrogramToNeo4j;
 
 
 
+	/**
+	 * If set to true, diagram with cluster size at each node with given distance from leaf will be plotted
+	 */
 	private boolean plotNodeStepClusterSize;
 
 
 
+	/**
+	 * If set to true, diagram of cluster sizes along the inclusion path will be plotted
+	 */
 	private boolean plotClusterSizeAtStep;
 
 
 
+	/**
+	 * If set to true, modularity at each cut in dendrogram will be calculated (warning: takes a lot of time!)
+	 */
 	private boolean plotModularitiesForDendrogram;
 
 
 
+	/**
+	 * If set to true, the length of inclusion path for each leaf will be calculated
+	 */
 	private boolean plotDendrogramDepthPerNode;
 
 
 
+	/**
+	 * If set to true, some information on tag clouds will be calculated
+	 */
 	private boolean plotTagCloudAnalysisForDendrogram;
 
 	
