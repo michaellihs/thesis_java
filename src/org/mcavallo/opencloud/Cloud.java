@@ -26,6 +26,7 @@ import org.mcavallo.opencloud.filters.Filter;
  * Class representing a tag cloud.
  * 
  * Further functionality has been added by Michael Knoll <mimi@kaktusteam.de>
+ * 
  * @see org.mcavallo.opencloud.test.TestCloud
  */
 public class Cloud implements Serializable {
@@ -135,8 +136,7 @@ public class Cloud implements Serializable {
      * Copy constructor.
      * @param other Cloud to copy
      */
-    public Cloud(Cloud other)
-    {
+    public Cloud(Cloud other) {
     	this.setCloud(new HashMap<String, Tag>(other.getCloud()));
         this.setMinWeight(other.getMinWeight());
         this.setMaxWeight(other.getMaxWeight());
@@ -978,6 +978,32 @@ public class Cloud implements Serializable {
 		} else if (!wordPattern.equals(other.wordPattern))
 			return false;
 		return true;
+	}
+	
+	
+	
+	/**
+	 * Returns tags that are not included in current tag cloud and given tag cloud
+	 * 
+	 * @param other Tag cloud to compare with this cloud and get difference for
+	 * @return Tags not included in both tag clouds
+	 */
+	public List<Tag> getDifference(Cloud other) {
+		List<Tag> difference = new ArrayList<Tag>();
+		
+		for (Tag tag: other.tags()) {
+			if (!this.containsName(tag.getName())) {
+				difference.add(tag);
+			}
+		}
+		
+		for (Tag tag : this.tags()) {
+			if (!other.containsName(tag.getName())) {
+				difference.add(tag);
+			}
+		}
+		
+		return difference;
 	}
 
 }

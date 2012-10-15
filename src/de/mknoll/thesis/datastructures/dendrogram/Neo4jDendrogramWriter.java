@@ -48,19 +48,7 @@ public class Neo4jDendrogramWriter<T extends TagCloudContainer & AttachableToNod
 	 * Holds mapping of ids to nodes
 	 */
 	private IdNodeMap idNodeMap;
-	
-	
-	
-	private TagCloudComparator setDifferenceComperator;
-	
-	
-	
-	private TagCloudComparator normalizedSetDifferenceComperator;
-	
-	
-	
-	private TagCloudComparator cosineSimilarityComperator;
-	
+
 	
 	
 	/**
@@ -72,10 +60,6 @@ public class Neo4jDendrogramWriter<T extends TagCloudContainer & AttachableToNod
 		this.logger = logger;
 		this.writer = writer;
 		this.idNodeMap = idNodeMap;
-		
-		this.setDifferenceComperator = new TagCloudComparator(new SetDifferenceTagComparatorStrategy());
-		this.normalizedSetDifferenceComperator = new TagCloudComparator(new NormalizedSetDifferenceTagComparatorStrategy());
-		this.cosineSimilarityComperator = new TagCloudComparator(new CosineSimilarityTagComparatorStrategy());
 	}
 
 	
@@ -88,6 +72,7 @@ public class Neo4jDendrogramWriter<T extends TagCloudContainer & AttachableToNod
 	 * @throws Exception 
 	 */
 	public void write(Dendrogram<T> dendrogram) throws Exception {
+		this.logger.log("Start writing dendrogram into N4J database...");
 		this.writer.beginTransaction();
 		try {
 			if (dendrogram.isLeaf()) {
@@ -103,6 +88,7 @@ public class Neo4jDendrogramWriter<T extends TagCloudContainer & AttachableToNod
 		} finally {
 			this.writer.finishTransaction();
 		}
+		this.logger.log("Finished writing dendrogram into N4J database!");
 	}
 	
 	
@@ -147,28 +133,12 @@ public class Neo4jDendrogramWriter<T extends TagCloudContainer & AttachableToNod
 		properties.put("cluster_size", dendrogram.size());
 		properties.put("tags", dendrogram.tagCloud().getTagsAsStringArray());
 		
-		// Write some tag cloud measures
-		properties.put(
-				"set_difference", 
-				this.setDifferenceComperator.compare(
-						dendrogram.dendrogram1().tagCloud, 
-						dendrogram.dendrogram2().tagCloud
-				)
-		);
-		properties.put(
-				"normalized_set_difference", 
-				this.normalizedSetDifferenceComperator.compare(
-						dendrogram.dendrogram1().tagCloud, 
-						dendrogram.dendrogram2().tagCloud
-				)
-		);
-		properties.put(
-				"cosine_similarity", 
-				this.cosineSimilarityComperator.compare(
-						dendrogram.dendrogram1().tagCloud, 
-						dendrogram.dendrogram2().tagCloud
-				)
-		);
+		// TODO should we also write those properties into leaf nodes?!?
+		for (String key : dendrogram.getAdditionalValues().keySet()) {
+			properties.put("additional_values__" + key, dendrogram.getAdditionalValue(key).toString());
+			// System.out.println("Storing additional value " + key + " in node with value " + dendrogram.getAdditionalValue(key).toString());
+			// System.out.println("Same value from properties is: " + properties.get("additional_values__" + key));
+		}
 		
 		return this.writer.createNode(properties);
 	}

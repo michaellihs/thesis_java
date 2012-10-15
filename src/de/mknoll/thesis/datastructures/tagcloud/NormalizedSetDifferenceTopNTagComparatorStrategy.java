@@ -56,6 +56,8 @@ public class NormalizedSetDifferenceTopNTagComparatorStrategy extends Normalized
 	 */
 	public Double compare(List<Tag> tags1, List<Tag> tags2) {
 		
+		int tempN = this.n; // As we use the same object over and over again here, we have to restore n after a comparison!
+		
 		// TODO how to handle n?
 		// 1. Fixed n
 		// 2. n calculated by #tags in given lists
@@ -70,6 +72,10 @@ public class NormalizedSetDifferenceTopNTagComparatorStrategy extends Normalized
 		
 		Collections.sort(tags2, new Tag.ScoreComparatorDesc());
 		List<Tag> topN_2 = tags2.subList(0, this.n);
+
+		// this.debugComparedTags(topN_1, topN_2);
+		
+		this.n = tempN;
 		
 		return super.compare(topN_1, topN_2);
 		
@@ -86,6 +92,19 @@ public class NormalizedSetDifferenceTopNTagComparatorStrategy extends Normalized
 //		}
 //		
 //		return (1 - result);
+	}
+
+
+
+	private void debugComparedTags(List<Tag> topN_1, List<Tag> topN_2) {
+		System.out.print("Compared tags: \n topN_1: ");
+		for (Tag tag : topN_1) {
+			System.out.print(tag.getName() + " -- ");
+		}
+		System.out.print("\n topN_2: ");
+		for(Tag tag: topN_2) {
+			System.out.print(tag.getName() + " -- ");
+		}
 	}
 
 }

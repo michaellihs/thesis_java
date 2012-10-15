@@ -14,9 +14,11 @@ import de.mknoll.thesis.datastructures.dendrogram.LeafDendrogram;
 import de.mknoll.thesis.datastructures.dendrogram.LinkDendrogram;
 import de.mknoll.thesis.datastructures.graph.RecommenderObject;
 import de.mknoll.thesis.datastructures.tagcloud.CosineSimilarityTagComparatorStrategy;
+import de.mknoll.thesis.datastructures.tagcloud.DefaultTagCloud;
 import de.mknoll.thesis.datastructures.tagcloud.NormalizedSetDifferenceTagComparatorStrategy;
 import de.mknoll.thesis.datastructures.tagcloud.NormalizedSetDifferenceTopNTagComparatorStrategy;
 import de.mknoll.thesis.datastructures.tagcloud.SetDifferenceTagComparatorStrategy;
+import de.mknoll.thesis.datastructures.tagcloud.StemmedStopWordFilteredTagCloud;
 import de.mknoll.thesis.datastructures.tagcloud.StopWordFilteredTagCloud;
 import de.mknoll.thesis.datastructures.tagcloud.TagCloudComparator;
 import de.mknoll.thesis.externaltools.wrapper.R;
@@ -86,6 +88,15 @@ public class DendrogramTagCloudAnalyzer {
 	 * Holds number of tags to be taken in calculation for top-n set difference
 	 */
 	private int topN = 10;
+
+
+	
+	/**
+	 * If set to true, a new step in dendrogram depth is processed
+	 * 
+	 * TODO think about better way to handle this
+	 */
+	private boolean nextStep;
 	
 	
 	
@@ -142,6 +153,7 @@ public class DendrogramTagCloudAnalyzer {
 		int maxDepth = child.depth();
 		
 		while (parent != null) {
+			this.nextStep = true;
 			List<Pair<String, Pair<Cloud, Cloud>>> cloudPairs = this.getCloudPairs(child, parent);
 			
 			for (Pair<String, Pair<Cloud, Cloud>> cloudPair : cloudPairs) {
@@ -228,7 +240,7 @@ public class DendrogramTagCloudAnalyzer {
 		FileWriter compareFileWriter = this.getFileWriterByFilteringAndComparator(leaveNumber, cloudPair.getFirst(), comparatorName); // TODO to be implemented
 		Double similarity = comparator.compare(cloudPair.getSecond().getFirst(), cloudPair.getSecond().getSecond());
 		compareFileWriter.write(similarity.toString() + "\n");
-		this.writeAdditionalInformation(leaveNumber, comparatorName, cloudPair, step, similarity); // TODO to be implemented
+		this.writeAdditionalInformation(leaveNumber, comparatorName, cloudPair, step, similarity);
 	}
 
 
@@ -241,19 +253,46 @@ public class DendrogramTagCloudAnalyzer {
 	 * @param cloudPair Pair of tag clouds to be compared
 	 * @param step Depth of dendrogram currently analyzed
 	 * @param similarity Similarity calculated by comparator
+	 * @throws Exception 
 	 */
 	private void writeAdditionalInformation(
 			int leaveNumber, 
 			String comparatorName, 
 			Pair<String, Pair<Cloud, Cloud>> cloudPair,	
 			int step, 
-			Double similarity) {
+			Double similarity) throws Exception {
 		
-		// TODO implement me... what has to be done here?!?
-		// We want to have a txt-file with tag clouds that occur for certain similarity values
+		// TODO adding a prefix to comparator name is a kind of a hack...
+		FileWriter fw = this.getFileWriterByFilteringAndComparator(leaveNumber, "", "_additionalIformation");
+
+		/** 
+		 * How should the report look like that we write here:
+		 * 
+		 * - Name of similarity measure
+		 * - step (depth in dendrogram)
+		 * - Pair of compared cloud
+		 * - Difference in compared cloud (words that are included in first cloud, but not in second)
+		 * - similarity
+		 * 
+		 */
+		if (this.nextStep) {
+			fw.write("STEP: " + step + "\n \n");
+			//fw.write("Parent tag cloud: \n" + "=================\n" + cloudPair.getSecond().getFirst().toString() + "\n\n");
+			//fw.write("Child tag cloud: \n" + "================\n" + cloudPair.getSecond().getSecond().toString() + "\n\n");
+			
+			fw.write("Parent Cloud Size: " + cloudPair.getSecond().getFirst().size() + "\n");
+			fw.write("Child Cloud Size: " + cloudPair.getSecond().getSecond().size() + "\n\n");
+			fw.write("Tag Difference: " + "\n" + "===============" + "\n\n" + new DefaultTagCloud(cloudPair.getSecond().getFirst().getDifference(cloudPair.getSecond().getSecond())).toString() + "\n\n");
+			
+			this.nextStep = false;
+		}
 		
+		fw.write(cloudPair.getFirst() + " -- ");
+		fw.write(comparatorName + " -- ");
+		fw.write("Similarity: " + similarity + "\n");
 	}
 
+	
 
 
 	/**
@@ -292,9 +331,12 @@ public class DendrogramTagCloudAnalyzer {
 	/**
 	 * Generates an array of cloud pairs for each given child and parent
 	 * 
+	 * We can set up pairs of different tag clouds here, depending on what kinds of clouds we want to compare.
+	 * E.g. non-filtered clouds, stop-word filtered clouds, stemmed clouds...
+	 * 
 	 * @param child Cluster contained by parent
 	 * @param parent Cluster containing child
-	 * @return Named pairs of clouds for parent and child (like no filtering, stop-word filtering, lemmatization...)
+	 * @return Named pairs of clouds for parent and child (like no filtering, stop-word filtering, stemming...)
 	 */
 	private List<Pair<String, Pair<Cloud, Cloud>>> getCloudPairs(Dendrogram<RecommenderObject> child, Dendrogram<RecommenderObject> parent) {
 		List<Pair<String, Pair<Cloud, Cloud>>> cloudPairs = new ArrayList<Pair<String,Pair<Cloud,Cloud>>>();
@@ -307,7 +349,10 @@ public class DendrogramTagCloudAnalyzer {
 		Cloud swfCloud2 = new StopWordFilteredTagCloud(parent.tagCloud());
 		cloudPairs.add(new Pair<String, Pair<Cloud,Cloud>>("stopWordFiltered", new Pair<Cloud, Cloud>(swfCloud1, swfCloud2)));
 		
-		// TODO add stemmed cloud with and without stopwords
+		// Stemmed stop-word filtered clouds
+		Cloud stemSwfCloud1 = new StemmedStopWordFilteredTagCloud(child.tagCloud());
+		Cloud stemSwfCloud2 = new StemmedStopWordFilteredTagCloud(parent.tagCloud());
+		cloudPairs.add(new Pair<String, Pair<Cloud,Cloud>>("stemmedStopWordFiltered", new Pair<Cloud, Cloud>(stemSwfCloud1, stemSwfCloud2)));
 		
 		return cloudPairs;
 	}

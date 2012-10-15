@@ -40,6 +40,8 @@ public class StopWordFilteredTagCloud extends Cloud {
 	public StopWordFilteredTagCloud(Cloud other) {
 		super();
 		
+		this.initialize();
+		
 		this.setMinWeight(other.getMinWeight());
         this.setMaxWeight(other.getMaxWeight());
         this.setMaxTagsToDisplay(other.getMaxTagsToDisplay());
@@ -93,5 +95,14 @@ public class StopWordFilteredTagCloud extends Cloud {
 			this.addTag(tag);
 		}
 	}	
+	
+	
+	
+	/**
+	 * Template method for initializing this class
+	 */
+	protected void initialize() {
+		// Nothing to do here but use it to initialize extended classes
+	}
 	
 }

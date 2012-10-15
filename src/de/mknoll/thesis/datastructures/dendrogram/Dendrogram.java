@@ -1,9 +1,11 @@
 package de.mknoll.thesis.datastructures.dendrogram;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.mcavallo.opencloud.Cloud;
@@ -53,6 +55,13 @@ public abstract class Dendrogram<T extends TagCloudContainer & AttachableToNode>
 	 * Holds entropy of clustering on this step within dendrogram
 	 */
 	private Double entropy;
+	
+	
+	
+	/**
+	 * Holds a map of values to be stored with dendrogram node
+	 */
+	private Map<String, Object> additionalValues = new HashMap<String, Object>();
 	
 	
 	
@@ -343,6 +352,44 @@ public abstract class Dendrogram<T extends TagCloudContainer & AttachableToNode>
 	
 	
 	
+	/**
+	 * Sets additional value for this node.
+	 * 
+	 * @param key Key to represent stored value
+	 * @param value Value to be stored by given key
+	 */
+	public void setAdditionalValue(String key, Object value) {
+		this.additionalValues.put(key, value);
+	}
+	
+	
+	
+	/**
+	 * Returns additional value identified by key
+	 * 
+	 * @param key Key for additional value
+	 * @return Value identified by given key
+	 */
+	public Object getAdditionalValue(String key) {
+		return this.additionalValues.get(key);
+	}
+	
+	
+	
+	/**
+	 * Returns Map of additional values
+	 * 
+	 * @return Map of additional Values added to this dendrogram node
+	 */
+	public Map<String,Object> getAdditionalValues() {
+		return this.additionalValues;
+	}
+	
+	
+	
+	/**
+	 * Template method for creating tag cloud for dendrogram node
+	 */
 	abstract protected void createTagCloud();
 
 

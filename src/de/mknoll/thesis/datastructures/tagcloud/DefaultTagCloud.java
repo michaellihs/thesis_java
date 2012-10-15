@@ -1,5 +1,6 @@
 package de.mknoll.thesis.datastructures.tagcloud;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -73,6 +74,12 @@ public class DefaultTagCloud extends Cloud {
 	public DefaultTagCloud(String ... tags) {
 		super();
 		this.buildAndSetDefaultFilters();
+		this.addTags(tags);
+	}
+	
+	
+	
+	public DefaultTagCloud(List<Tag> tags) {
 		this.addTags(tags);
 	}
 

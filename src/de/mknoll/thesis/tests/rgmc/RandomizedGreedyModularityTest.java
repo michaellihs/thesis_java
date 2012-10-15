@@ -21,6 +21,12 @@ import de.mknoll.thesis.datastructures.graph.RecommenderObject;
 import de.mknoll.thesis.datastructures.graph.inspectors.RecommendationGraphConnectivityInspector;
 import de.mknoll.thesis.datastructures.graph.writer.MetisWriter;
 import de.mknoll.thesis.datastructures.graph.writer.Neo4jWriter;
+import de.mknoll.thesis.datastructures.tagcloud.CosineSimilarityTagComparatorStrategy;
+import de.mknoll.thesis.datastructures.tagcloud.DendrogramTagCloudComparator;
+import de.mknoll.thesis.datastructures.tagcloud.NormalizedSetDifferenceTagComparatorStrategy;
+import de.mknoll.thesis.datastructures.tagcloud.NormalizedSetDifferenceTopNTagComparatorStrategy;
+import de.mknoll.thesis.datastructures.tagcloud.SetDifferenceTagComparatorStrategy;
+import de.mknoll.thesis.datastructures.tagcloud.TagCloudComparator;
 import de.mknoll.thesis.externaltools.wrapper.RandomizedGreedyModularityClustering;
 import de.mknoll.thesis.framework.data.TestResult;
 import de.mknoll.thesis.framework.logger.LoggerInterface;
@@ -108,6 +114,13 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 	 * If set to true, some information on tag clouds will be calculated
 	 */
 	private boolean plotTagCloudAnalysisForDendrogram;
+
+
+	
+	/**
+	 * If set to true, dendrogram tag cloud comparator will analyze dendrogram
+	 */
+	private Boolean runDendrogramTagCloudComparator;
 
 	
 	
@@ -201,15 +214,6 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 		*/
 		
 		
-		// Write cluster results (dendrogram) to neo4j graph database
-		if (this.writeDendrogramToNeo4j) {
-			Neo4jDendrogramWriter<RecommenderObject> writer = new Neo4jDendrogramWriter<RecommenderObject>(logger, this.neo4jWriter, this.container.getComponent(IdNodeMap.class));
-			this.logger.log("Start writing dendrogram into neo4j");
-			writer.write(dendrogram);
-			this.logger.log("Finished writing dendrogram into neo4j");
-		}
-		
-		
 		// Plot modularities for dendrogram
 		if (this.plotModularitiesForDendrogram) {
 			this.logger.log("Start plotting modularities in dendrogram...");
@@ -235,7 +239,29 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 		}
 		
 		
+		// Calculate tagcloud comparison for dendrogram
+		if (this.runDendrogramTagCloudComparator) {
+			this.logger.log("Start running tag cloud comparator for dendrogram...");
+			DendrogramTagCloudComparator dendrogramTagCloudComparator = new DendrogramTagCloudComparator(dendrogram);
+			dendrogramTagCloudComparator.addComparator("setDifference", new TagCloudComparator(new SetDifferenceTagComparatorStrategy()));
+			dendrogramTagCloudComparator.addComparator("normalizedSetDifference", new TagCloudComparator(new NormalizedSetDifferenceTagComparatorStrategy()));
+			dendrogramTagCloudComparator.addComparator("normalizedTop10SetDifference", new TagCloudComparator(new NormalizedSetDifferenceTopNTagComparatorStrategy(10)));
+			dendrogramTagCloudComparator.addComparator("cosineSimilarity", new TagCloudComparator(new CosineSimilarityTagComparatorStrategy()));
+			dendrogramTagCloudComparator.runComparison();
+			this.logger.log("Finished running tag cloud comparator for dendrogram!");
+		}
+		
+		
+		// Write cluster results (dendrogram) to neo4j graph database
+		if (this.writeDendrogramToNeo4j) {
+			Neo4jDendrogramWriter<RecommenderObject> writer = new Neo4jDendrogramWriter<RecommenderObject>(logger, this.neo4jWriter, this.container.getComponent(IdNodeMap.class));
+			this.logger.log("Start writing dendrogram into neo4j");
+			writer.write(dendrogram);
+			this.logger.log("Finished writing dendrogram into neo4j");
+		}
+		
 		return null;
+		
 	}
 	
 	
@@ -275,6 +301,7 @@ public class RandomizedGreedyModularityTest extends AbstractTest {
 		this.plotModularitiesForDendrogram = (Boolean)this.testConfiguration.getYamlConfiguration().get("PlotModularitiesForDendrogram");
 		this.plotDendrogramDepthPerNode = (Boolean)this.testConfiguration.getYamlConfiguration().get("PlotDendrogramDepthPerNode");
 		this.plotTagCloudAnalysisForDendrogram = (Boolean)this.testConfiguration.getYamlConfiguration().get("PlotTagCloudAnalysisForDendrogram");
+		this.runDendrogramTagCloudComparator = (Boolean)this.testConfiguration.getYamlConfiguration().get("RunDendrogramTagCloudComparator");
 	}
 
 }

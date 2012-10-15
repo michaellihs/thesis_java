@@ -20,10 +20,8 @@ public class StemmedStopWordFilteredTagCloud extends StopWordFilteredTagCloud {
 	
 	/**
 	 * Holds mapping between tag and stemmed form of tag
-	 * 
-	 * TODO if we need the stemmer to work with other languages, we have to somehow make this injectable! 
 	 */
-	private TagStemMap tagStemMap = new TagStemMap(new GermanStemmer());
+	private TagStemMap tagStemMap;
 	
 	
 	
@@ -44,6 +42,13 @@ public class StemmedStopWordFilteredTagCloud extends StopWordFilteredTagCloud {
 	public void addTag(Tag tag) {
 		Tag stemmedTag = new Tag(this.tagStemMap.put(tag));
 		super.addTag(stemmedTag);
+	}
+	
+	
+	
+	@Override
+	protected void initialize() {
+		this.tagStemMap = new TagStemMap(new GermanStemmer());
 	}
 	
 }
